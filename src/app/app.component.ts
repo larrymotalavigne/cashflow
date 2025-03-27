@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard.component';
 import { InvestmentComponent } from './investment.component';
 import { RandomEventDialogComponent } from './random-event-dialog.component';
 import { ButtonModule } from 'primeng/button';
+import {RouterOutlet} from '@angular/router';
 
 const GAME_CONFIG = {
   jobs: [
@@ -46,36 +47,10 @@ const GAME_CONFIG = {
   standalone: true,
   imports: [
     FormsModule,
-    StartupScreenComponent,
-    DashboardComponent,
-    InvestmentComponent,
-    RandomEventDialogComponent,
-    ButtonModule
+    ButtonModule,
+    RouterOutlet
   ],
-  template: `
-    <div class="container">
-      <h1>Welcome to {{title}}!</h1>
-      <!-- Startup screen: select job, age, starting money, and name -->
-      <app-startup-screen [jobs]="jobs" (startup)="onStartup($event)"></app-startup-screen>
-      <app-dashboard [cash]="cash" [income]="income" [expenses]="expenses" [passiveIncome]="passiveIncome"></app-dashboard>
-      <app-investment [investments]="investments" [cash]="cash" (buyInvestment)="buyInvestment($event)"></app-investment>
-      <p-button label="Tour Suivant" (click)="nextTurn()" class="mt-2"></p-button>
-      <app-random-event-dialog [visible]="eventVisible" [message]="eventMessage" (visibleChange)="eventVisible = $event"></app-random-event-dialog>
-    </div>
-  `,
-  styles: [`
-    .container {
-      max-width: 600px;
-      margin: auto;
-      text-align: center;
-    }
-    p-card {
-      margin: 10px 0;
-    }
-    .mt-2 {
-      margin-top: 1rem;
-    }
-  `]
+  template: `<router-outlet></router-outlet>`,
 })
 export class AppComponent {
   title = 'Cashflow Game';
@@ -89,43 +64,4 @@ export class AppComponent {
   events = GAME_CONFIG.events;
   eventVisible = false;
   eventMessage = '';
-
-  onStartup(settings: { job: any, age: number, startingMoney: number, name: string }) {
-    if (settings && settings.job) {
-      this.age = settings.age;
-      this.cash = settings.startingMoney;
-      const minSalary = settings.job.value.minSalary;
-      const maxSalary = settings.job.value.maxSalary;
-      this.income = Math.floor(Math.random() * (maxSalary - minSalary + 1)) + minSalary;
-      this.expenses = settings.job.value.expenses;
-      // You can also store the player's name if needed: settings.name
-    }
-  }
-
-  buyInvestment(investment: any) {
-    if (this.cash >= investment.price) {
-      this.cash -= investment.price;
-      this.passiveIncome += investment.income;
-    }
-  }
-
-  nextTurn() {
-    this.cash += this.income + this.passiveIncome - this.expenses;
-    this.triggerRandomEvent();
-    this.checkWinCondition();
-  }
-
-  triggerRandomEvent() {
-    const event = this.events[Math.floor(Math.random() * this.events.length)];
-    this.eventMessage = event.message;
-    this.cash += event.impact;
-    this.eventVisible = true;
-  }
-
-  checkWinCondition() {
-    if (this.passiveIncome >= this.expenses) {
-      this.eventMessage = 'Félicitations ! Vous avez atteint la liberté financière !';
-      this.eventVisible = true;
-    }
-  }
 }
