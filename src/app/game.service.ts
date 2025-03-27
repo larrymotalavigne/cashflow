@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameConfigService } from './game-config.service';
+import { GameEvent, Investment } from './data';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -12,8 +13,10 @@ export class GameService {
   name = '';
   eventVisible = false;
   eventMessage = '';
-  investmentOpportunities: any[] = [];
-  randomEvents: any[] = [];
+  investmentOpportunities: Investment[] = [];
+  randomEvents: GameEvent[] = [];
+  investments: Investment[] = [];
+  loanTotal: number = 0;
 
   private readonly minRandomEvents = 1;
   private readonly maxRandomEvents = 3;
@@ -44,7 +47,8 @@ export class GameService {
   }
 
   nextTurn() {
-    this.cash += this.income + this.passiveIncome - this.expenses;
+    const liabilityPayments = this.calculateLiabilityPayments(); // Calculate liability payments
+    this.cash += this.income + this.passiveIncome - this.expenses - liabilityPayments; // Subtract liability payments
     this.triggerRandomEvent();
     this.checkWinCondition();
     this.age++;
@@ -58,6 +62,16 @@ export class GameService {
     const numInvestments = Math.floor(Math.random() * (this.maxInvestmentOpportunities - this.minInvestmentOpportunities + 1)) + this.minInvestmentOpportunities;
     this.randomEvents = shuffledEvents.slice(0, numEvents);
     this.investmentOpportunities = shuffledInvestments.slice(0, numInvestments);
+
+    // Apply effects from random events
+    this.randomEvents.forEach(event => {
+      if (event.effect?.type === 'cash') {
+        this.cash += event.effect.amount;
+      } else if (event.effect?.type === 'expenses') {
+        this.expenses += event.effect.amount;
+      }
+    });
+
     this.eventVisible = true;
   }
 
@@ -68,8 +82,38 @@ export class GameService {
     }
   }
 
-  addInvestment(investment: any) {
+  buyInvestment(investment: Investment) { // Updated method
     this.passiveIncome += investment.income;
-    this.cash -= investment.price;
+    this.cash -= investment.amount;
+    this.investments.push({
+      ...investment,
+      name: investment.name,
+      amount: investment.amount,
+      yearlyPayment: investment.yearlyPayment || 0
+    });
+  }
+
+  calculateLiabilityPayments(): number { // New method
+    return this.investments.reduce((sum, l) => sum + (l.yearlyPayment || 0), 0);
+  }
+
+  buyInvestmentWithLoan(investment: Investment) {
+    const loanRate = this.configService.loanRate || 0.1;
+    const loanAmount = investment.amount;
+    const loanFee = loanAmount * loanRate;
+
+    this.loanTotal += loanFee;
+    this.passiveIncome += investment.income;
+
+    this.investments.push({
+      ...investment,
+      name: investment.name + ' (emprunt)',
+      amount: loanAmount,
+      yearlyPayment: (investment.yearlyPayment || 0) + loanFee
+    });
+  }
+
+  canBuy(investment: Investment) {
+    return this.cash >= investment.amount;
   }
 }

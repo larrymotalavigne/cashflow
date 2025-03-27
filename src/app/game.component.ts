@@ -1,6 +1,5 @@
 import {Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {DashboardComponent} from './dashboard.component';
 import {RandomEventDialogComponent} from './random-event-dialog.component';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
@@ -11,13 +10,11 @@ import { ProgressChartComponent } from './progress-chart.component';
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [FormsModule, DashboardComponent, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent],
+    imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent],
     template: `
         <div class="container">
-            <app-player-info [name]="name" [age]="age" [cash]="cash" [income]="income" [expenses]="expenses"
-                             [passiveIncome]="passiveIncome"></app-player-info>
-            <app-dashboard [cash]="cash" [income]="income" [expenses]="expenses" [passiveIncome]="passiveIncome"></app-dashboard>
-            <app-progress-chart></app-progress-chart>
+            <app-player-info/>
+            <app-progress-chart/>
             <p-button label="Année Suivante" (click)="nextTurn()" class="mt-2"></p-button>
             <app-random-event-dialog [visible]="eventVisible" [message]="eventMessage"
                                      [investmentOpportunities]="investmentOpportunities"
@@ -82,6 +79,10 @@ export class GameComponent {
 
     get randomEvents() {
         return this.game.randomEvents;
+    }
+
+    get loan() {
+        return this.game.investments.reduce((sum, l) => sum + l.amount, 0);
     }
 
     nextTurn() {

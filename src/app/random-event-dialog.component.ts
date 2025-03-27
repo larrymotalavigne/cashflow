@@ -1,43 +1,74 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { InvestmentComponent } from './investment.component';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
 import {NgForOf, NgIf} from '@angular/common';
+import {GameConfigService} from './game-config.service';
+import {GameService} from './game.service';
+import {Investment} from './data';
 
 @Component({
     selector: 'app-random-event-dialog',
     standalone: true,
-    imports: [DialogModule, ButtonModule, InvestmentComponent, NgForOf, NgIf],
+    imports: [DialogModule, ButtonModule, NgForOf, NgIf],
     template: `
-    <p-dialog [(visible)]="visible" header="Événements aléatoires" [modal]="true" styleClass="w-75">
-      <div *ngIf="randomEvents.length">
-        <h3>Événements ({{ totalImpact() }})</h3>
-        <div *ngFor="let event of randomEvents" class="mb-2">
-          <ng-container *ngIf="event.impact > 0">
-            <i class="pi pi-plus-circle text-green-500" style="margin-right: 0.5rem;"></i>
-          </ng-container>
-          <ng-container *ngIf="event.impact < 0">
-            <i class="pi pi-minus-circle text-red-500" style="margin-right: 0.5rem;"></i>
-          </ng-container>
-          {{ event.message }}
-        </div>
-      </div>
+        <p-dialog [(visible)]="visible" header="Événements aléatoires" [modal]="true" styleClass="w-75">
+            <div *ngIf="randomEvents.length">
+                <h3>Événements</h3>
+                <div *ngFor="let event of randomEvents" class="mb-2">
+                    <ng-container *ngIf="event.effect?.amount > 0">📈</ng-container>
+                    <ng-container *ngIf="event.effect?.amount < 0">📉</ng-container>
+                    {{ event.message }}
+                    <span *ngIf="event.effect?.type" class="ml-2 text-sm text-gray-500">({{ event.effect.type }})</span>
+                </div>
+            </div>
 
-      <div *ngIf="investmentOpportunities.length">
-        <h3>Opportunités d'investissement</h3>
-        <app-investment [investments]="investmentOpportunities"></app-investment>
-      </div>
+            <div>
+                <h3>Opportunités d'investissement</h3>
+                <div *ngIf="investmentOpportunities.length; else noInvestments">
+                    <div *ngFor="let investment of investmentOpportunities"
+                         class="mb-3 border p-3 grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 items-start">
+                        <div>
+                            <div class="mb-2"><strong>{{ investment.name }}</strong></div>
+                            <div class="flex align-items-center mb-1">
+                                💰Prix: {{ investment.amount }} €
+                            </div>
+                            <div class="flex align-items-center">
+                                📈Revenu mensuel: {{ investment.income }} €
+                            </div>
+                        </div>
+                        <div class="flex flex-column gap-2">
+                            <p-button label="✅ Acheter" (click)="buyInvestment(investment)" severity="success"
+                                      [disabled]="gameService.canBuy(investment)"></p-button>
+                            <p-button label="❌ Refuser" (click)="deleteInvestment(investment)" severity="danger"></p-button>
+                            <p-button label="💸 Emprunt {{ configService.loanRate * 100 }}%" (click)="buyInvestmentWithLoan(investment)"
+                                      severity="info"></p-button>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #noInvestments>
+                    <p class="text-center text-sm text-gray-500 mt-2">Aucune opportunité d'investissement disponible.</p>
+                </ng-template>
+            </div>
 
-      <p-footer>
-        <p-button label="OK" (click)="close()"></p-button>
-      </p-footer>
-      <div class="text-right mt-3">
-        <p-button label="Fermer" (click)="close()"></p-button>
-      </div>
-    </p-dialog>
-  `
+            <p-footer>
+                <p-button label="OK" (click)="close()"></p-button>
+            </p-footer>
+            <div class="text-right mt-3">
+                <p-button label="Fermer" (click)="close()"></p-button>
+            </div>
+        </p-dialog>
+    `
 })
 export class RandomEventDialogComponent {
+    @Input() message: string = '';
+    @Input() randomEvents: any[] = [];
+    @Input() investmentOpportunities: any[] = [];
+    @Output() visibleChange = new EventEmitter<boolean>();
+    @Output() investmentAction = new EventEmitter<{ investment: any, action: 'buy' | 'reject' | 'loan' }>();
+
+    constructor(public configService: GameConfigService, public gameService: GameService) {
+    }
+
     private _visible: boolean = false;
 
     @Input()
@@ -52,16 +83,21 @@ export class RandomEventDialogComponent {
         }
     }
 
-    @Input() message: string = '';
-    @Input() randomEvents: any[] = [];
-    @Input() investmentOpportunities: any[] = [];
-    @Output() visibleChange = new EventEmitter<boolean>();
-
     close() {
         this.visibleChange.emit(false);
     }
 
-    totalImpact(): number {
-        return this.randomEvents.reduce((sum, event) => sum + (event.impact || 0), 0);
+    deleteInvestment(investment: Investment) {
+        this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
+    }
+
+    buyInvestmentWithLoan(investment: any) {
+        this.gameService.buyInvestmentWithLoan(investment);
+        this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
+    }
+
+    buyInvestment(investment: any) {
+        this.gameService.buyInvestment(investment);
+        this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
     }
 }
