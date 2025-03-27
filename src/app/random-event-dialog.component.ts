@@ -12,17 +12,15 @@ import {NgForOf, NgIf} from '@angular/common';
     <p-dialog [(visible)]="visible" header="Événements aléatoires" [modal]="true" styleClass="w-75">
       <div *ngIf="randomEvents.length">
         <h3>Événements ({{ totalImpact() }})</h3>
-        <ul>
-          <li *ngFor="let event of randomEvents">
-            <ng-container *ngIf="event.impact > 0">
-              <i class="pi pi-plus-circle text-green-500" style="margin-right: 0.5rem;"></i>
-            </ng-container>
-            <ng-container *ngIf="event.impact < 0">
-              <i class="pi pi-minus-circle text-red-500" style="margin-right: 0.5rem;"></i>
-            </ng-container>
-            {{ event.message }}
-          </li>
-        </ul>
+        <div *ngFor="let event of randomEvents" class="mb-2">
+          <ng-container *ngIf="event.impact > 0">
+            <i class="pi pi-plus-circle text-green-500" style="margin-right: 0.5rem;"></i>
+          </ng-container>
+          <ng-container *ngIf="event.impact < 0">
+            <i class="pi pi-minus-circle text-red-500" style="margin-right: 0.5rem;"></i>
+          </ng-container>
+          {{ event.message }}
+        </div>
       </div>
 
       <div *ngIf="investmentOpportunities.length">
@@ -33,6 +31,9 @@ import {NgForOf, NgIf} from '@angular/common';
       <p-footer>
         <p-button label="OK" (click)="close()"></p-button>
       </p-footer>
+      <div class="text-right mt-3">
+        <p-button label="Fermer" (click)="close()"></p-button>
+      </div>
     </p-dialog>
   `
 })
