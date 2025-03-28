@@ -13,6 +13,7 @@ export interface Investment {
     amount: number;
     income: number;
     yearlyPayment?: number;
+    type: 'capital' | 'real_estate' | 'business' | 'crypto' | 'fund';
 }
 
 export interface Job {

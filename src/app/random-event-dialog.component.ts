@@ -11,7 +11,7 @@ import {Investment} from './data';
     standalone: true,
     imports: [DialogModule, ButtonModule, NgForOf, NgIf],
     template: `
-        <p-dialog [(visible)]="visible" header="Événements aléatoires" [modal]="true" styleClass="w-75">
+        <p-dialog [(visible)]="visible" (onHide)="close()" header="Événements aléatoires" [modal]="true" styleClass="w-75">
             <div *ngIf="randomEvents.length">
                 <h3>Événements</h3>
                 <div *ngFor="let event of randomEvents" class="mb-2">
@@ -37,11 +37,11 @@ import {Investment} from './data';
                             </div>
                         </div>
                         <div class="flex flex-column gap-2">
-                            <p-button label="✅ Acheter" (click)="buyInvestment(investment)" severity="success"
+                            <p-button label="✅ Acheter" (click)="buyInvestment(investment)" severity="success"  size="small"
                                       [disabled]="gameService.canBuy(investment)"></p-button>
-                            <p-button label="❌ Refuser" (click)="deleteInvestment(investment)" severity="danger"></p-button>
+                            <p-button label="❌ Refuser" (click)="deleteInvestment(investment)" severity="danger"  size="small"></p-button>
                             <p-button label="💸 Emprunt {{ configService.loanRate * 100 }}%" (click)="buyInvestmentWithLoan(investment)"
-                                      severity="info"></p-button>
+                                      severity="info"  size="small"></p-button>
                         </div>
                     </div>
                 </div>
@@ -49,13 +49,9 @@ import {Investment} from './data';
                     <p class="text-center text-sm text-gray-500 mt-2">Aucune opportunité d'investissement disponible.</p>
                 </ng-template>
             </div>
-
-            <p-footer>
-                <p-button label="OK" (click)="close()"></p-button>
-            </p-footer>
-            <div class="text-right mt-3">
-                <p-button label="Fermer" (click)="close()"></p-button>
-            </div>
+            <ng-template #footer>
+                <p-button label="Next Year" (click)="close()"></p-button>
+            </ng-template>
         </p-dialog>
     `
 })
@@ -84,20 +80,25 @@ export class RandomEventDialogComponent {
     }
 
     close() {
+        console.log("close");
+        this.gameService.nextTurn();
         this.visibleChange.emit(false);
     }
 
     deleteInvestment(investment: Investment) {
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
+        if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
     }
 
     buyInvestmentWithLoan(investment: any) {
         this.gameService.buyInvestmentWithLoan(investment);
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
+        if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
     }
 
     buyInvestment(investment: any) {
         this.gameService.buyInvestment(investment);
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
+        if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
     }
 }

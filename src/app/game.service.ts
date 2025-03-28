@@ -49,21 +49,9 @@ export class GameService {
   nextTurn() {
     const liabilityPayments = this.calculateLiabilityPayments(); // Calculate liability payments
     this.cash += this.income + this.passiveIncome - this.expenses - liabilityPayments; // Subtract liability payments
-    this.triggerRandomEvent();
-    this.checkWinCondition();
-    this.age++;
-    this.turnEnded.emit();
-  }
+    console.log(`Next turn - ${this.cash} - ${this.income + this.passiveIncome - this.expenses - liabilityPayments}`)
+    this.showOpportunities();
 
-  triggerRandomEvent() {
-    const shuffledEvents = [...this.configService.events].sort(() => 0.5 - Math.random());
-    const shuffledInvestments = [...this.configService.investments].sort(() => 0.5 - Math.random());
-    const numEvents = Math.floor(Math.random() * (this.maxRandomEvents - this.minRandomEvents + 1)) + this.minRandomEvents;
-    const numInvestments = Math.floor(Math.random() * (this.maxInvestmentOpportunities - this.minInvestmentOpportunities + 1)) + this.minInvestmentOpportunities;
-    this.randomEvents = shuffledEvents.slice(0, numEvents);
-    this.investmentOpportunities = shuffledInvestments.slice(0, numInvestments);
-
-    // Apply effects from random events
     this.randomEvents.forEach(event => {
       if (event.effect?.type === 'cash') {
         this.cash += event.effect.amount;
@@ -72,6 +60,18 @@ export class GameService {
       }
     });
 
+    this.checkWinCondition();
+    this.age++;
+    this.turnEnded.emit();
+  }
+
+  showOpportunities() {
+    const shuffledEvents = [...this.configService.events].sort(() => 0.5 - Math.random());
+    const shuffledInvestments = [...this.configService.investments].sort(() => 0.5 - Math.random());
+    const numEvents = Math.floor(Math.random() * (this.maxRandomEvents - this.minRandomEvents + 1)) + this.minRandomEvents;
+    const numInvestments = Math.floor(Math.random() * (this.maxInvestmentOpportunities - this.minInvestmentOpportunities + 1)) + this.minInvestmentOpportunities;
+    this.randomEvents = shuffledEvents.slice(0, numEvents);
+    this.investmentOpportunities = shuffledInvestments.slice(0, numInvestments);
     this.eventVisible = true;
   }
 
@@ -115,5 +115,26 @@ export class GameService {
 
   canBuy(investment: Investment) {
     return this.cash >= investment.amount;
+  }
+
+  goToStartup() {
+    this.router.navigate(['/']);
+  }
+
+  startGame(selectedJob: any, age: number, startingMoney: number, name: string) {
+    localStorage.clear();
+    const minSalary = selectedJob.minSalary;
+    const maxSalary = selectedJob.maxSalary;
+
+    const income = Math.floor(Math.random() * (maxSalary - minSalary + 1)) + minSalary;
+    localStorage.setItem('income', income.toString());
+
+    this.cash = startingMoney;
+    this.income = income;
+    this.expenses = selectedJob.expenses;
+    this.age = age;
+    this.name = name;
+
+    this.router.navigate(['/game']);
   }
 }
