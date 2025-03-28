@@ -11,7 +11,7 @@ import {Investment} from './data';
     standalone: true,
     imports: [DialogModule, ButtonModule, NgForOf, NgIf],
     template: `
-        <p-dialog [(visible)]="visible" (onHide)="close()" header="Événements aléatoires" [modal]="true" styleClass="w-75">
+        <p-dialog #dialog [(visible)]="visible" [closable]="false" header="Événements aléatoires" [modal]="true" styleClass="w-75">
             <div *ngIf="randomEvents.length">
                 <h3>Événements</h3>
                 <div *ngFor="let event of randomEvents" class="mb-2">
@@ -80,7 +80,6 @@ export class RandomEventDialogComponent {
     }
 
     close() {
-        console.log("close");
         this.gameService.nextTurn();
         this.visibleChange.emit(false);
     }
