@@ -6,12 +6,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
 import { GameConfigService } from './game-config.service';
 import { GameService } from './game.service'; // Assuming GameService is imported from this path
 import { Select } from 'primeng/select';
-import {InputIcon} from 'primeng/inputicon';
-import {IconField} from 'primeng/iconfield';
-import {IftaLabel} from 'primeng/iftalabel';
+import { InputIcon } from 'primeng/inputicon';
+import { IconField } from 'primeng/iconfield';
+import { IftaLabel } from 'primeng/iftalabel';
 
 @Component({
     selector: 'app-startup-screen',
@@ -23,6 +24,7 @@ import {IftaLabel} from 'primeng/iftalabel';
         InputNumberModule,
         ButtonModule,
         CardModule,
+        DialogModule,
         Select,
         InputIcon,
         IconField,
@@ -58,11 +60,39 @@ import {IftaLabel} from 'primeng/iftalabel';
                     <p-button icon="pi pi-refresh" (click)="generateRandomName()" type="button"></p-button>
                 </p-iftalabel>
 
-                <p-button label="Démarrer le jeu"
-                          (click)="gameService.startGame(selectedJob, age, startingMoney, name)"
-                          class="mt-2"
-                          [disabled]="!selectedJob || !age || !startingMoney || !name"></p-button>
+                <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                    <p-button icon="pi pi-question-circle" label="Aide" (click)="showHelp = true" class="p-button-secondary"></p-button>
+                    <p-button label="Démarrer le jeu"
+                              (click)="gameService.startGame(selectedJob, age, startingMoney, name)"
+                              [disabled]="!selectedJob || !age || !startingMoney || !name"></p-button>
+                </div>
             </p-card>
+
+            <p-dialog header="Aide et tutoriel" [(visible)]="showHelp" [style]="{width: '80vw'}" [modal]="true">
+                <h3>Bienvenue dans Cashflow Game!</h3>
+                <p>Ce jeu vous permet de simuler votre parcours financier, de l'emploi à l'indépendance financière.</p>
+
+                <h4>Comment jouer:</h4>
+                <ol>
+                    <li><strong>Choisissez un métier</strong> - Chaque métier a un salaire différent qui détermine votre revenu mensuel.</li>
+                    <li><strong>Définissez votre âge</strong> - Votre âge influence le nombre de tours que vous aurez pour atteindre l'indépendance financière.</li>
+                    <li><strong>Capital de départ</strong> - C'est l'argent avec lequel vous commencez le jeu.</li>
+                    <li><strong>Nom</strong> - Entrez votre nom ou générez-en un aléatoirement.</li>
+                </ol>
+
+                <h4>Objectif du jeu:</h4>
+                <p>L'objectif est d'atteindre l'indépendance financière, c'est-à-dire lorsque vos revenus passifs dépassent vos dépenses.</p>
+
+                <h4>Pendant le jeu:</h4>
+                <ul>
+                    <li>À chaque tour, vous recevez votre salaire et payez vos dépenses</li>
+                    <li>Vous pouvez acheter des investissements pour générer des revenus passifs</li>
+                    <li>Des événements aléatoires peuvent affecter vos finances</li>
+                    <li>Suivez votre progression vers l'indépendance financière</li>
+                </ul>
+
+                <p>Bonne chance dans votre parcours vers la liberté financière!</p>
+            </p-dialog>
         </div>
     `,
     styles: [`
@@ -76,6 +106,7 @@ export class StartupScreenComponent {
     age: number = 25;
     startingMoney: number = 5000;
     name: string = '';
+    showHelp: boolean = false;
     private readonly randomNames;
 
     constructor(private router: Router, private configService: GameConfigService, public gameService: GameService) {

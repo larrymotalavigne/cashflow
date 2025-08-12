@@ -7,11 +7,40 @@ import {PlayerInfoComponent} from './player-info.component';
 import {GameService} from './game.service';
 import { ProgressChartComponent } from './progress-chart.component';
 import { ToolbarModule } from 'primeng/toolbar';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
     selector: 'app-game',
     standalone: true,
     imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, ToolbarModule],
+    animations: [
+        trigger('financialChange', [
+            state('increase', style({
+                backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                transform: 'scale(1.05)'
+            })),
+            state('decrease', style({
+                backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                transform: 'scale(1.05)'
+            })),
+            state('normal', style({
+                backgroundColor: 'transparent',
+                transform: 'scale(1)'
+            })),
+            transition('* => increase', [
+                animate('300ms ease-out')
+            ]),
+            transition('* => decrease', [
+                animate('300ms ease-out')
+            ]),
+            transition('increase => normal', [
+                animate('500ms ease-in')
+            ]),
+            transition('decrease => normal', [
+                animate('500ms ease-in')
+            ])
+        ])
+    ],
     template: `
         <p-toolbar class="surface-0 shadow-2">
             <div class="flex align-items-center gap-3">
@@ -33,13 +62,39 @@ import { ToolbarModule } from 'primeng/toolbar';
     `,
     styles: [`
         .container {
-            max-width: 600px;
+            width: 90%;
+            max-width: 1200px;
             margin: auto;
             text-align: center;
+            padding: 1rem;
         }
 
         .mt-2 {
             margin-top: 1rem;
+        }
+
+        /* Small devices (phones) */
+        @media (max-width: 576px) {
+            .container {
+                width: 95%;
+                padding: 0.5rem;
+            }
+        }
+
+        /* Medium devices (tablets) */
+        @media (min-width: 577px) and (max-width: 992px) {
+            .container {
+                width: 85%;
+                padding: 0.75rem;
+            }
+        }
+
+        /* Large devices (desktops) */
+        @media (min-width: 993px) {
+            .container {
+                width: 80%;
+                max-width: 1200px;
+            }
         }
     `]
 })
