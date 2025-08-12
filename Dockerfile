@@ -6,7 +6,6 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 RUN npm run build:prod
 
-
 # Install gzip and brotli compression tools and compress the build output
 RUN apk add --no-cache gzip brotli \
  && find /usr/src/app/dist -type f -name '*.js' -exec gzip -k -f {} \; \
