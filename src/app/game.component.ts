@@ -50,53 +50,23 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
                 <span class="text-xl font-medium">Tableau de Bord</span>
             </div>
         </p-toolbar>
-        <div class="container">
-            <app-player-info/>
-            <app-progress-chart/>
-            <p-button label="Voir les opportunités" (click)="this.game.showOpportunities()" class="mt-2"></p-button>
+        <div class="w-full max-w-6xl mx-auto p-4 min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+            <div class="space-y-6">
+                <app-player-info/>
+                <app-progress-chart/>
+                <div class="text-center">
+                    <p-button label="Voir les opportunités" 
+                              (click)="this.game.showOpportunities()" 
+                              class="p-button-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+                              icon="pi pi-search"></p-button>
+                </div>
+            </div>
             <app-random-event-dialog [visible]="this.game.eventVisible" [message]="this.game.eventMessage"
                                      [investmentOpportunities]="this.game.investmentOpportunities"
                                      [randomEvents]="this.game.randomEvents"
                                      (visibleChange)="this.game.eventVisible = $event"></app-random-event-dialog>
         </div>
-    `,
-    styles: [`
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        .mt-2 {
-            margin-top: 1rem;
-        }
-
-        /* Small devices (phones) */
-        @media (max-width: 576px) {
-            .container {
-                width: 95%;
-                padding: 0.5rem;
-            }
-        }
-
-        /* Medium devices (tablets) */
-        @media (min-width: 577px) and (max-width: 992px) {
-            .container {
-                width: 85%;
-                padding: 0.75rem;
-            }
-        }
-
-        /* Large devices (desktops) */
-        @media (min-width: 993px) {
-            .container {
-                width: 80%;
-                max-width: 1200px;
-            }
-        }
-    `]
+    `
 })
 export class GameComponent {
     game = inject(GameService);

@@ -31,6 +31,9 @@
     "@angular/build": "^19.2.5",
     "@angular/cli": "^19.2.5",
     "@angular/compiler-cli": "^19.2.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.5.2"
   }
 }
