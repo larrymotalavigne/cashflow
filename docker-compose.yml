@@ -4,4 +4,4 @@ services:
     container_name: cashflow
     restart: unless-stopped
     ports:
-      - "8080:8001"
+      - "8001:80"
