@@ -15,19 +15,19 @@ import {DividerModule} from 'primeng/divider';
     standalone: true,
     imports: [DialogModule, ButtonModule, NgForOf, NgIf, DropdownModule, FormsModule, InputTextModule, DividerModule],
     template: `
-        <p-dialog #dialog [(visible)]="visible" [closable]="false" header="Événements aléatoires" [modal]="true" styleClass="w-75">
-            <div *ngIf="randomEvents.length">
-                <h3>Événements</h3>
-                <div *ngFor="let event of randomEvents" class="mb-2">
+        <p-dialog #dialog [(visible)]="visible" [closable]="false" header="Événements aléatoires" [modal]="true" styleClass="w-75 theme-bg-card">
+            <div *ngIf="randomEvents.length" class="mb-4">
+                <h3 class="theme-text-card mb-3">Événements</h3>
+                <div *ngFor="let event of randomEvents" class="mb-2 theme-bg-muted p-3 rounded-lg theme-border border">
                     <ng-container *ngIf="event.effect?.amount > 0">📈</ng-container>
                     <ng-container *ngIf="event.effect?.amount < 0">📉</ng-container>
-                    {{ event.message }}
-                    <span *ngIf="event.effect?.type" class="ml-2 text-sm text-gray-500">({{ event.effect.type }})</span>
+                    <span class="theme-text-card">{{ event.message }}</span>
+                    <span *ngIf="event.effect?.type" class="ml-2 text-sm theme-text-muted">({{ event.effect.type }})</span>
                 </div>
             </div>
 
             <div>
-                <h3>Opportunités d'investissement</h3>
+                <h3 class="theme-text-card mb-3">Opportunités d'investissement</h3>
 
                 <div *ngIf="investmentOpportunities.length; else noInvestments">
                     <!-- Filtering and Sorting Controls -->
@@ -53,29 +53,29 @@ import {DividerModule} from 'primeng/divider';
                     </div>
 
                     <!-- Comparison Tool -->
-                    <div *ngIf="comparisonMode" class="mb-3 p-3 border-1 surface-border border-round">
+                    <div *ngIf="comparisonMode" class="mb-3 p-3 theme-border border rounded-lg theme-bg-muted">
                         <div class="flex justify-content-between align-items-center mb-3">
-                            <h4 class="m-0">Comparaison d'investissements</h4>
+                            <h4 class="m-0 theme-text-primary">Comparaison d'investissements</h4>
                             <p-button icon="pi pi-times" (click)="exitComparisonMode()" 
                                       styleClass="p-button-rounded p-button-text"></p-button>
                         </div>
 
                         <div class="grid">
                             <div *ngFor="let investment of selectedInvestments" class="col-12 md:col-6 lg:col-4">
-                                <div class="p-3 border-1 surface-border border-round h-full">
-                                    <h5>{{ investment.name }}</h5>
+                                <div class="p-3 theme-border border rounded-lg h-full theme-bg-card theme-shadow-sm">
+                                    <h5 class="theme-text-card">{{ investment.name }}</h5>
                                     <div class="grid">
-                                        <div class="col-6">Prix:</div>
-                                        <div class="col-6 font-bold">{{ investment.amount }}€</div>
+                                        <div class="col-6 theme-text-muted">Prix:</div>
+                                        <div class="col-6 font-bold theme-text-card">{{ investment.amount }}€</div>
 
-                                        <div class="col-6">Revenu:</div>
-                                        <div class="col-6 font-bold">{{ investment.income }}€</div>
+                                        <div class="col-6 theme-text-muted">Revenu:</div>
+                                        <div class="col-6 font-bold theme-text-card">{{ investment.income }}€</div>
 
-                                        <div class="col-6">ROI:</div>
-                                        <div class="col-6 font-bold">{{ (investment.income / investment.amount * 100).toFixed(2) }}%</div>
+                                        <div class="col-6 theme-text-muted">ROI:</div>
+                                        <div class="col-6 font-bold theme-text-card">{{ (investment.income / investment.amount * 100).toFixed(2) }}%</div>
 
-                                        <div class="col-6">Type:</div>
-                                        <div class="col-6 font-bold">{{ investment.type }}</div>
+                                        <div class="col-6 theme-text-muted">Type:</div>
+                                        <div class="col-6 font-bold theme-text-card">{{ investment.type }}</div>
                                     </div>
                                     <div class="mt-3">
                                         <p-button label="Retirer" (click)="removeFromComparison(investment)" 
@@ -90,7 +90,7 @@ import {DividerModule} from 'primeng/divider';
                         <p-button *ngIf="!comparisonMode" label="Comparer des investissements" 
                                   icon="pi pi-chart-bar" (click)="enterComparisonMode()"
                                   [disabled]="selectedInvestments.length < 2"></p-button>
-                        <span *ngIf="comparisonMode" class="text-sm">
+                        <span *ngIf="comparisonMode" class="text-sm theme-text-muted">
                             Sélectionnez des investissements pour les comparer
                         </span>
                     </div>
@@ -98,7 +98,7 @@ import {DividerModule} from 'primeng/divider';
                     <p-divider></p-divider>
 
                     <div *ngFor="let investment of filteredInvestments"
-                         class="mb-3 border p-3 grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 items-start">
+                         class="mb-3 theme-border border p-3 rounded-lg theme-bg-card theme-shadow-sm grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 items-start">
                         <div>
                             <div class="mb-2">
                                 <div class="flex align-items-center">
@@ -106,16 +106,16 @@ import {DividerModule} from 'primeng/divider';
                                         <input type="checkbox" [checked]="isInvestmentSelected(investment)" 
                                                (change)="toggleInvestmentSelection(investment)" />
                                     </div>
-                                    <strong>{{ investment.name }}</strong>
+                                    <strong class="theme-text-card">{{ investment.name }}</strong>
                                 </div>
                             </div>
-                            <div class="flex align-items-center mb-1">
+                            <div class="flex align-items-center mb-1 theme-text-card">
                                 💰Prix: {{ investment.amount }} €
                             </div>
-                            <div class="flex align-items-center mb-1">
+                            <div class="flex align-items-center mb-1 theme-text-card">
                                 📈Revenu mensuel: {{ investment.income }} €
                             </div>
-                            <div class="flex align-items-center text-sm text-primary">
+                            <div class="flex align-items-center text-sm text-primary-600 dark:text-primary-400">
                                 ROI: {{ (investment.income / investment.amount * 100).toFixed(2) }}%
                             </div>
                         </div>
@@ -131,7 +131,7 @@ import {DividerModule} from 'primeng/divider';
                     </div>
                 </div>
                 <ng-template #noInvestments>
-                    <p class="text-center text-sm text-gray-500 mt-2">Aucune opportunité d'investissement disponible.</p>
+                    <p class="text-center text-sm theme-text-muted mt-2">Aucune opportunité d'investissement disponible.</p>
                 </ng-template>
             </div>
             <ng-template #footer>

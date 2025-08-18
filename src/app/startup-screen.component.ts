@@ -7,10 +7,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { GameConfigService } from './game-config.service';
-import { GameService } from './game.service'; // Assuming GameService is imported from this path
+import { GameService } from './game.service';
 import { Select } from 'primeng/select';
 import { IftaLabel } from 'primeng/iftalabel';
+import { ThemeToggleComponent } from './theme-toggle.component';
 
 @Component({
     selector: 'app-startup-screen',
@@ -23,95 +25,119 @@ import { IftaLabel } from 'primeng/iftalabel';
         ButtonModule,
         CardModule,
         DialogModule,
+        TooltipModule,
         Select,
-        IftaLabel
+        IftaLabel,
+        ThemeToggleComponent
     ],
     template: `
-        <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-            <div class="w-full max-w-md space-y-6">
-                <div class="text-center">
-                    <h1 class="text-4xl font-bold text-gray-900 mb-2">Bienvenue dans le jeu</h1>
-                    <h2 class="text-2xl font-semibold text-indigo-600">Cashflow</h2>
-                    <p class="text-gray-600 mt-4">Simulez votre parcours vers l'indépendance financière</p>
-                </div>
-                
-                <p-card header="Démarrage du jeu" class="shadow-lg">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Métier</label>
-                            <p-select id="job" [options]="jobs" [(ngModel)]="selectedJob" 
-                                     placeholder="Sélectionnez un métier" class="w-full">
-                                <ng-template let-job pTemplate="item">
-                                    <div class="p-2">{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
-                                </ng-template>
-                                <ng-template let-job pTemplate="selectedItem">
-                                    <div>{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
-                                </ng-template>
-                                <ng-template #dropdownicon>
-                                    <i class="pi pi-briefcase"></i>
-                                </ng-template>
-                            </p-select>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <p-iftalabel>
-                                <p-inputNumber id="age" [(ngModel)]="age" mode="decimal" [min]="18" [max]="100" 
-                                              class="w-full"></p-inputNumber>
-                                <label for="age">Âge</label>
-                            </p-iftalabel>
-                            <p-iftalabel>
-                                <p-inputNumber id="startingMoney" [(ngModel)]="startingMoney" mode="currency" 
-                                              currency="EUR" locale="fr-FR" class="w-full"></p-inputNumber>
-                                <label for="startingMoney">Capital de départ</label>
-                            </p-iftalabel>
-                        </div>
-                        
-                        <p-iftalabel>
-                            <div class="flex gap-2">
-                                <input id="name" type="text" pInputText [(ngModel)]="name" 
-                                       placeholder="Nom du joueur" class="flex-1"/>
-                                <p-button icon="pi pi-refresh" (click)="generateRandomName()" 
-                                         type="button" class="p-button-outlined"></p-button>
-                            </div>
-                            <label for="name">Nom du joueur</label>
-                        </p-iftalabel>
-
-                        <div class="flex justify-between gap-4 pt-4">
-                            <p-button icon="pi pi-question-circle" label="Aide" (click)="showHelp = true" 
-                                     class="p-button-outlined flex-1"></p-button>
-                            <p-button label="Démarrer le jeu"
-                                      (click)="gameService.startGame(selectedJob, age, startingMoney, name)"
-                                      [disabled]="!selectedJob || !age || !startingMoney || !name"
-                                      class="flex-1"></p-button>
-                        </div>
+        <div class="min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30 p-4 animate-fade-in">
+            <!-- Theme Toggle - Positioned at top right -->
+            <div class="fixed top-4 right-4 z-10">
+                <app-theme-toggle></app-theme-toggle>
+            </div>
+            
+            <div class="flex flex-col items-center justify-center min-h-screen">
+                <div class="w-full max-w-md space-y-6">
+                    <div class="text-center animate-slide-down">
+                        <h1 class="text-4xl font-bold theme-text-primary mb-2 font-sans">Bienvenue dans le jeu</h1>
+                        <h2 class="text-2xl font-semibold text-primary-600 dark:text-primary-400">Cashflow</h2>
+                        <p class="theme-text-muted mt-4">Simulez votre parcours vers l'indépendance financière</p>
                     </div>
-                </p-card>
+                    
+                    <p-card header="Démarrage du jeu" class="theme-shadow-xl animate-slide-up">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium theme-text-primary mb-2">Métier</label>
+                                <p-select id="job" [options]="jobs" [(ngModel)]="selectedJob" 
+                                         placeholder="Sélectionnez un métier" class="w-full">
+                                    <ng-template let-job pTemplate="item">
+                                        <div class="p-2">{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
+                                    </ng-template>
+                                    <ng-template let-job pTemplate="selectedItem">
+                                        <div>{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
+                                    </ng-template>
+                                    <ng-template #dropdownicon>
+                                        <i class="pi pi-briefcase text-primary-500"></i>
+                                    </ng-template>
+                                </p-select>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <p-iftalabel>
+                                    <p-inputNumber id="age" [(ngModel)]="age" mode="decimal" [min]="18" [max]="100" 
+                                                  class="w-full"></p-inputNumber>
+                                    <label for="age" class="theme-text-primary">Âge</label>
+                                </p-iftalabel>
+                                <p-iftalabel>
+                                    <p-inputNumber id="startingMoney" [(ngModel)]="startingMoney" mode="currency" 
+                                                  currency="EUR" locale="fr-FR" class="w-full"></p-inputNumber>
+                                    <label for="startingMoney" class="theme-text-primary">Capital de départ</label>
+                                </p-iftalabel>
+                            </div>
+                            
+                            <p-iftalabel>
+                                <div class="flex gap-2">
+                                    <input id="name" type="text" pInputText [(ngModel)]="name" 
+                                           placeholder="Nom du joueur" class="flex-1"/>
+                                    <p-button icon="pi pi-refresh" (click)="generateRandomName()" 
+                                             type="button" 
+                                             class="p-button-outlined hover:scale-105 active:scale-95 transition-transform duration-200"
+                                             pTooltip="Générer un nom aléatoire"></p-button>
+                                </div>
+                                <label for="name" class="theme-text-primary">Nom du joueur</label>
+                            </p-iftalabel>
+
+                            <div class="flex justify-between gap-4 pt-4">
+                                <p-button icon="pi pi-question-circle" label="Aide" (click)="showHelp = true" 
+                                         class="p-button-outlined flex-1 hover:scale-105 active:scale-95 transition-transform duration-200"></p-button>
+                                <p-button label="Démarrer le jeu"
+                                          (click)="gameService.startGame(selectedJob, age, startingMoney, name)"
+                                          [disabled]="!selectedJob || !age || !startingMoney || !name"
+                                          class="flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 theme-shadow-md"></p-button>
+                            </div>
+                        </div>
+                    </p-card>
+                </div>
             </div>
 
-            <p-dialog header="Aide et tutoriel" [(visible)]="showHelp" [style]="{width: '80vw'}" [modal]="true">
-                <h3>Bienvenue dans Cashflow Game!</h3>
-                <p>Ce jeu vous permet de simuler votre parcours financier, de l'emploi à l'indépendance financière.</p>
+            <p-dialog header="Aide et tutoriel" [(visible)]="showHelp" [style]="{width: '80vw'}" [modal]="true"
+                      styleClass="theme-bg-card">
+                <div class="theme-text-card space-y-4">
+                    <div>
+                        <h3 class="text-lg font-semibold theme-text-primary mb-2">Bienvenue dans Cashflow Game!</h3>
+                        <p class="theme-text-muted">Ce jeu vous permet de simuler votre parcours financier, de l'emploi à l'indépendance financière.</p>
+                    </div>
 
-                <h4>Comment jouer:</h4>
-                <ol>
-                    <li><strong>Choisissez un métier</strong> - Chaque métier a un salaire différent qui détermine votre revenu mensuel.</li>
-                    <li><strong>Définissez votre âge</strong> - Votre âge influence le nombre de tours que vous aurez pour atteindre l'indépendance financière.</li>
-                    <li><strong>Capital de départ</strong> - C'est l'argent avec lequel vous commencez le jeu.</li>
-                    <li><strong>Nom</strong> - Entrez votre nom ou générez-en un aléatoirement.</li>
-                </ol>
+                    <div>
+                        <h4 class="font-semibold theme-text-primary mb-2">Comment jouer:</h4>
+                        <ol class="list-decimal list-inside space-y-1 theme-text-muted">
+                            <li><strong class="theme-text-primary">Choisissez un métier</strong> - Chaque métier a un salaire différent qui détermine votre revenu mensuel.</li>
+                            <li><strong class="theme-text-primary">Définissez votre âge</strong> - Votre âge influence le nombre de tours que vous aurez pour atteindre l'indépendance financière.</li>
+                            <li><strong class="theme-text-primary">Capital de départ</strong> - C'est l'argent avec lequel vous commencez le jeu.</li>
+                            <li><strong class="theme-text-primary">Nom</strong> - Entrez votre nom ou générez-en un aléatoirement.</li>
+                        </ol>
+                    </div>
 
-                <h4>Objectif du jeu:</h4>
-                <p>L'objectif est d'atteindre l'indépendance financière, c'est-à-dire lorsque vos revenus passifs dépassent vos dépenses.</p>
+                    <div>
+                        <h4 class="font-semibold theme-text-primary mb-2">Objectif du jeu:</h4>
+                        <p class="theme-text-muted">L'objectif est d'atteindre l'indépendance financière, c'est-à-dire lorsque vos revenus passifs dépassent vos dépenses.</p>
+                    </div>
 
-                <h4>Pendant le jeu:</h4>
-                <ul>
-                    <li>À chaque tour, vous recevez votre salaire et payez vos dépenses</li>
-                    <li>Vous pouvez acheter des investissements pour générer des revenus passifs</li>
-                    <li>Des événements aléatoires peuvent affecter vos finances</li>
-                    <li>Suivez votre progression vers l'indépendance financière</li>
-                </ul>
+                    <div>
+                        <h4 class="font-semibold theme-text-primary mb-2">Pendant le jeu:</h4>
+                        <ul class="list-disc list-inside space-y-1 theme-text-muted">
+                            <li>À chaque tour, vous recevez votre salaire et payez vos dépenses</li>
+                            <li>Vous pouvez acheter des investissements pour générer des revenus passifs</li>
+                            <li>Des événements aléatoires peuvent affecter vos finances</li>
+                            <li>Suivez votre progression vers l'indépendance financière</li>
+                        </ul>
+                    </div>
 
-                <p>Bonne chance dans votre parcours vers la liberté financière!</p>
+                    <p class="text-center font-medium text-secondary-600 dark:text-secondary-400 mt-4">
+                        Bonne chance dans votre parcours vers la liberté financière! 🚀
+                    </p>
+                </div>
             </p-dialog>
         </div>
     `

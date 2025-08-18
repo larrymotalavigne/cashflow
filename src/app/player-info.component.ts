@@ -40,59 +40,59 @@ import { Subscription } from 'rxjs';
     ],
     template: `
         <div class="w-full max-w-4xl mx-auto mb-6">
-            <p-card header="Informations du Joueur" class="shadow-lg">
+            <p-card header="Informations du Joueur" class="theme-shadow-lg theme-bg-card">
                 <ng-template pTemplate="content">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Personal Info Section -->
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                                <i class="pi pi-user mr-2 text-indigo-600"></i>
+                        <div class="theme-bg-muted rounded-lg p-4 theme-border border">
+                            <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center">
+                                <i class="pi pi-user mr-2 text-primary-600 dark:text-primary-400"></i>
                                 Informations Personnelles
                             </h3>
                             <div class="space-y-2">
-                                <p class="text-gray-700"><span class="font-medium">Nom:</span> {{ game.name }}</p>
-                                <p class="text-gray-700"><span class="font-medium">Âge:</span> {{ game.age }} ans</p>
+                                <p class="theme-text-primary"><span class="font-medium">Nom:</span> {{ game.name }}</p>
+                                <p class="theme-text-primary"><span class="font-medium">Âge:</span> {{ game.age }} ans</p>
                             </div>
                         </div>
                         
                         <!-- Financial Info Section -->
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                                <i class="pi pi-chart-line mr-2 text-green-600"></i>
+                        <div class="theme-bg-muted rounded-lg p-4 theme-border border">
+                            <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center">
+                                <i class="pi pi-chart-line mr-2 text-secondary-600 dark:text-secondary-400"></i>
                                 Situation Financière
                             </h3>
                             <div class="space-y-3">
-                                <div [@financialChange]="cashState" class="financial-value bg-green-100 rounded-md p-3 border-l-4 border-green-500">
-                                    <p class="text-green-800 font-semibold">💰 Cash: {{ game.cash | number:'1.0-0' }}€</p>
+                                <div [@financialChange]="cashState" class="financial-value bg-success-100 dark:bg-success-900/20 rounded-md p-3 border-l-4 border-success-500 dark:border-success-400">
+                                    <p class="text-success-800 dark:text-success-200 font-semibold">💰 Cash: {{ game.cash | number:'1.0-0' }}€</p>
                                 </div>
-                                <div [@financialChange]="incomeState" class="financial-value bg-blue-100 rounded-md p-3 border-l-4 border-blue-500">
-                                    <p class="text-blue-800 font-semibold">📈 Revenu mensuel: {{ game.income | number:'1.0-0' }}€</p>
+                                <div [@financialChange]="incomeState" class="financial-value bg-primary-100 dark:bg-primary-900/20 rounded-md p-3 border-l-4 border-primary-500 dark:border-primary-400">
+                                    <p class="text-primary-800 dark:text-primary-200 font-semibold">📈 Revenu mensuel: {{ game.income | number:'1.0-0' }}€</p>
                                 </div>
-                                <div [@financialChange]="expensesState" class="financial-value bg-red-100 rounded-md p-3 border-l-4 border-red-500">
-                                    <p class="text-red-800 font-semibold">📉 Dépenses mensuelles: {{ game.expenses | number:'1.0-0' }}€</p>
+                                <div [@financialChange]="expensesState" class="financial-value bg-error-100 dark:bg-error-900/20 rounded-md p-3 border-l-4 border-error-500 dark:border-error-400">
+                                    <p class="text-error-800 dark:text-error-200 font-semibold">📉 Dépenses mensuelles: {{ game.expenses | number:'1.0-0' }}€</p>
                                 </div>
-                                <div [@financialChange]="passiveIncomeState" class="financial-value bg-purple-100 rounded-md p-3 border-l-4 border-purple-500">
-                                    <p class="text-purple-800 font-semibold">🏠 Revenu passif: {{ game.passiveIncome | number:'1.0-0' }}€</p>
+                                <div [@financialChange]="passiveIncomeState" class="financial-value bg-accent-100 dark:bg-accent-900/20 rounded-md p-3 border-l-4 border-accent-500 dark:border-accent-400">
+                                    <p class="text-accent-800 dark:text-accent-200 font-semibold">🏠 Revenu passif: {{ game.passiveIncome | number:'1.0-0' }}€</p>
                                 </div>
-                                <div [@financialChange]="loanState" class="financial-value bg-orange-100 rounded-md p-3 border-l-4 border-orange-500">
-                                    <p class="text-orange-800 font-semibold">🏦 Emprunts: {{ game.loanTotal | number:'1.0-0' }}€</p>
+                                <div [@financialChange]="loanState" class="financial-value bg-warning-100 dark:bg-warning-900/20 rounded-md p-3 border-l-4 border-warning-500 dark:border-warning-400">
+                                    <p class="text-warning-800 dark:text-warning-200 font-semibold">🏦 Emprunts: {{ game.loanTotal | number:'1.0-0' }}€</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Investments Section -->
-                    <div *ngIf="game.investments.length > 0" class="mt-6 bg-indigo-50 rounded-lg p-4">
-                        <h3 class="text-lg font-semibold text-indigo-800 mb-3 flex items-center">
-                            <i class="pi pi-briefcase mr-2 text-indigo-600"></i>
+                    <div *ngIf="game.investments.length > 0" class="mt-6 theme-bg-muted rounded-lg p-4 theme-border border">
+                        <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center">
+                            <i class="pi pi-briefcase mr-2 text-primary-600 dark:text-primary-400"></i>
                             Portfolio d'Investissements
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div *ngFor="let investment of game.investments" 
-                                 class="bg-white rounded-md p-3 border border-indigo-200 shadow-sm">
-                                <p class="font-semibold text-gray-800">{{ investment.name }}</p>
-                                <p class="text-sm text-gray-600">Montant: {{ investment.amount | number:'1.0-0' }}€</p>
-                                <p class="text-sm text-indigo-600">Paiements annuels: {{ investment.yearlyPayment | number:'1.0-0' }}€</p>
+                                 class="theme-bg-card rounded-md p-3 theme-border border theme-shadow-sm">
+                                <p class="font-semibold theme-text-card">{{ investment.name }}</p>
+                                <p class="text-sm theme-text-muted">Montant: {{ investment.amount | number:'1.0-0' }}€</p>
+                                <p class="text-sm text-primary-600 dark:text-primary-400">Paiements annuels: {{ investment.yearlyPayment | number:'1.0-0' }}€</p>
                             </div>
                         </div>
                     </div>

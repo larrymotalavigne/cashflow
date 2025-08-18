@@ -56,6 +56,50 @@ This document outlines the tasks for implementing the CashflowGame project, orga
 - [x] Apply modern styling to all components
 - [x] Implement consistent color scheme and typography
 
+## Phase 4: Advanced Design and UI/UX Improvements
+
+### Visual Design System Enhancement
+- [x] Create comprehensive design tokens (colors, typography, spacing, shadows)
+- [x] Implement dark mode support with theme switching capability
+- [ ] Design and implement custom icon set for financial concepts
+- [x] Create branded loading states and micro-interactions
+- [x] Establish consistent spacing and layout grid system
+
+### User Experience Optimization
+- [ ] Implement responsive breakpoints for mobile, tablet, and desktop
+- [ ] Add keyboard navigation support for accessibility
+- [ ] Create smooth page transitions and component animations
+- [ ] Implement toast notifications for user feedback
+- [ ] Add confirmation dialogs for critical actions
+
+### Dashboard and Data Visualization
+- [ ] Enhance progress chart with multiple data series and time ranges
+- [ ] Create financial goal tracking with milestone indicators
+- [ ] Implement interactive tooltips for financial data points
+- [ ] Design comparison charts for investment performance
+- [ ] Add export functionality for financial reports
+
+### Component Enhancement and Interactions
+- [ ] Redesign investment cards with better visual hierarchy
+- [ ] Add drag-and-drop functionality for portfolio management
+- [ ] Implement advanced filtering and search for investments
+- [ ] Create animated counters for financial metrics
+- [ ] Design interactive financial calculator tools
+
+### Mobile and Touch Experience
+- [ ] Optimize touch targets for mobile devices
+- [ ] Implement swipe gestures for navigation
+- [ ] Create mobile-first responsive layouts
+- [ ] Add pull-to-refresh functionality
+- [ ] Optimize performance for mobile devices
+
+### Accessibility and Usability
+- [ ] Implement WCAG 2.1 AA compliance
+- [ ] Add screen reader support for financial data
+- [ ] Create high contrast mode option
+- [ ] Implement focus management and skip links
+- [ ] Add multilingual support (English/French toggle)
+
 ### Startup Screen
 - [x] Create job selection interface
 - [x] Implement name input/generation
@@ -83,9 +127,35 @@ This document outlines the tasks for implementing the CashflowGame project, orga
 - [ ] Add milestone achievements
 - [ ] Implement statistics dashboard
 
+## Task Priorities and Implementation Order
+
+### High Priority (Phase 4A - Core UX Improvements)
+1. Implement responsive breakpoints for mobile, tablet, and desktop
+2. Add toast notifications for user feedback
+3. Create comprehensive design tokens (colors, typography, spacing, shadows)
+4. Enhance progress chart with multiple data series and time ranges
+5. Implement WCAG 2.1 AA compliance
+
+### Medium Priority (Phase 4B - Enhanced Features)
+1. Implement dark mode support with theme switching capability
+2. Add confirmation dialogs for critical actions
+3. Create financial goal tracking with milestone indicators
+4. Redesign investment cards with better visual hierarchy
+5. Create mobile-first responsive layouts
+
+### Low Priority (Phase 4C - Advanced Features)
+1. Design and implement custom icon set for financial concepts
+2. Add drag-and-drop functionality for portfolio management
+3. Implement swipe gestures for navigation
+4. Add multilingual support (English/French toggle)
+5. Create interactive financial calculator tools
+
 ## Task Dependencies
 
 - Player Management must be completed before Investment System
 - Core Data Models must be completed before Game Mechanics Implementation
 - Basic Services must be completed before User Interface Development
 - Game Mechanics Implementation must be substantially complete before Testing and Refinement
+- Phase 3 (Basic UI) must be completed before Phase 4 (Advanced Design Improvements)
+- Visual Design System Enhancement should be completed before Component Enhancement
+- Accessibility features should be implemented alongside all new UI components
