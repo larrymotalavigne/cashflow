@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
 import { inject } from '@angular/core';
 import { GameService } from './game.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -9,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-player-info',
     standalone: true,
-    imports: [CommonModule, CardModule],
+    imports: [CommonModule, CardModule, ButtonModule],
     animations: [
         trigger('financialChange', [
             state('increase', style({
@@ -57,22 +58,31 @@ import { Subscription } from 'rxjs';
                         
                         <!-- Financial Info Section -->
                         <div class="theme-bg-muted rounded-lg p-4 theme-border border">
-                            <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center">
-                                <i class="pi pi-chart-line mr-2 text-secondary-600 dark:text-secondary-400"></i>
-                                Situation Financière
+                            <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="pi pi-chart-line mr-2 text-secondary-600 dark:text-secondary-400"></i>
+                                    Situation Financière
+                                </div>
+                                <p-button 
+                                    [label]="isYearlyView ? 'Annuel' : 'Mensuel'" 
+                                    (click)="toggleView()" 
+                                    class="p-button-sm p-button-outlined"
+                                    [icon]="isYearlyView ? 'pi pi-calendar' : 'pi pi-clock'"
+                                    size="small">
+                                </p-button>
                             </h3>
                             <div class="space-y-3">
                                 <div [@financialChange]="cashState" class="financial-value bg-success-100 dark:bg-success-900/20 rounded-md p-3 border-l-4 border-success-500 dark:border-success-400">
                                     <p class="text-success-800 dark:text-success-200 font-semibold">💰 Cash: {{ game.cash | number:'1.0-0' }}€</p>
                                 </div>
                                 <div [@financialChange]="incomeState" class="financial-value bg-primary-100 dark:bg-primary-900/20 rounded-md p-3 border-l-4 border-primary-500 dark:border-primary-400">
-                                    <p class="text-primary-800 dark:text-primary-200 font-semibold">📈 Revenu mensuel: {{ game.income | number:'1.0-0' }}€</p>
+                                    <p class="text-primary-800 dark:text-primary-200 font-semibold">📈 Revenu {{ isYearlyView ? 'annuel' : 'mensuel' }}: {{ getDisplayIncome() | number:'1.0-0' }}€</p>
                                 </div>
                                 <div [@financialChange]="expensesState" class="financial-value bg-error-100 dark:bg-error-900/20 rounded-md p-3 border-l-4 border-error-500 dark:border-error-400">
-                                    <p class="text-error-800 dark:text-error-200 font-semibold">📉 Dépenses mensuelles: {{ game.expenses | number:'1.0-0' }}€</p>
+                                    <p class="text-error-800 dark:text-error-200 font-semibold">📉 Dépenses {{ isYearlyView ? 'annuelles' : 'mensuelles' }}: {{ getDisplayExpenses() | number:'1.0-0' }}€</p>
                                 </div>
                                 <div [@financialChange]="passiveIncomeState" class="financial-value bg-accent-100 dark:bg-accent-900/20 rounded-md p-3 border-l-4 border-accent-500 dark:border-accent-400">
-                                    <p class="text-accent-800 dark:text-accent-200 font-semibold">🏠 Revenu passif: {{ game.passiveIncome | number:'1.0-0' }}€</p>
+                                    <p class="text-accent-800 dark:text-accent-200 font-semibold">🏠 Revenu passif {{ isYearlyView ? 'annuel' : 'mensuel' }}: {{ getDisplayPassiveIncome() | number:'1.0-0' }}€</p>
                                 </div>
                                 <div [@financialChange]="loanState" class="financial-value bg-warning-100 dark:bg-warning-900/20 rounded-md p-3 border-l-4 border-warning-500 dark:border-warning-400">
                                     <p class="text-warning-800 dark:text-warning-200 font-semibold">🏦 Emprunts: {{ game.loanTotal | number:'1.0-0' }}€</p>
@@ -103,6 +113,9 @@ import { Subscription } from 'rxjs';
 })
 export class PlayerInfoComponent implements OnInit, OnDestroy {
     game = inject(GameService);
+
+    // Toggle state for monthly/yearly view
+    isYearlyView = false;
 
     // Animation states
     cashState = 'normal';
@@ -195,5 +208,24 @@ export class PlayerInfoComponent implements OnInit, OnDestroy {
         this.previousExpenses = this.game.expenses;
         this.previousPassiveIncome = this.game.passiveIncome;
         this.previousLoanTotal = this.game.loanTotal;
+    }
+
+    toggleView() {
+        this.isYearlyView = !this.isYearlyView;
+    }
+
+    getDisplayIncome(): number {
+        // Game service stores yearly values, so divide by 12 for monthly view
+        return this.isYearlyView ? this.game.income : Math.round(this.game.income / 12);
+    }
+
+    getDisplayExpenses(): number {
+        // Game service stores yearly values, so divide by 12 for monthly view
+        return this.isYearlyView ? this.game.expenses : Math.round(this.game.expenses / 12);
+    }
+
+    getDisplayPassiveIncome(): number {
+        // Game service stores yearly values, so divide by 12 for monthly view
+        return this.isYearlyView ? this.game.passiveIncome : Math.round(this.game.passiveIncome / 12);
     }
 }

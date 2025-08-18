@@ -125,7 +125,7 @@ import {CommonModule} from '@angular/common';
                                         <i class="pi pi-cog mr-2 text-secondary-600 dark:text-secondary-400"></i>
                                         Actions Rapides
                                     </h3>
-                                    <div class="space-y-3">
+                                    <div class="space-y-3 space-x-1">
                                         <p-button label="Voir les opportunités"
                                                   (click)="this.game.showOpportunities()"
                                                   class="w-full p-button-outlined"
