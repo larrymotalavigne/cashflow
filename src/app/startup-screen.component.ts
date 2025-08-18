@@ -31,31 +31,31 @@ import { ThemeToggleComponent } from './theme-toggle.component';
         ThemeToggleComponent
     ],
     template: `
-        <div class="min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30 p-4 animate-fade-in">
+        <div class="min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30 px-3 sm:px-4 py-4 sm:py-6 animate-fade-in">
             <!-- Theme Toggle - Positioned at top right -->
-            <div class="fixed top-4 right-4 z-10">
+            <div class="fixed top-3 sm:top-4 right-3 sm:right-4 z-10">
                 <app-theme-toggle></app-theme-toggle>
             </div>
             
-            <div class="flex flex-col items-center justify-center min-h-screen">
-                <div class="w-full max-w-md space-y-6">
+            <div class="flex flex-col items-center justify-start sm:justify-center min-h-screen pt-16 sm:pt-0">
+                <div class="w-full max-w-sm sm:max-w-md space-y-4 sm:space-y-6">
                     <div class="text-center animate-slide-down">
-                        <h1 class="text-4xl font-bold theme-text-primary mb-2 font-sans">Bienvenue dans le jeu</h1>
-                        <h2 class="text-2xl font-semibold text-primary-600 dark:text-primary-400">Cashflow</h2>
-                        <p class="theme-text-muted mt-4">Simulez votre parcours vers l'indépendance financière</p>
+                        <h1 class="text-2xl sm:text-4xl font-bold theme-text-primary mb-2 font-sans">Bienvenue dans le jeu</h1>
+                        <h2 class="text-lg sm:text-2xl font-semibold text-primary-600 dark:text-primary-400">Cashflow</h2>
+                        <p class="theme-text-muted mt-2 sm:mt-4 text-sm sm:text-base">Simulez votre parcours vers l'indépendance financière</p>
                     </div>
                     
                     <p-card header="Démarrage du jeu" class="theme-shadow-xl animate-slide-up">
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
                             <div>
                                 <label class="block text-sm font-medium theme-text-primary mb-2">Métier</label>
                                 <p-select id="job" [options]="jobs" [(ngModel)]="selectedJob" 
-                                         placeholder="Sélectionnez un métier" class="w-full">
+                                         placeholder="Sélectionnez un métier" class="w-full touch-manipulation">
                                     <ng-template let-job pTemplate="item">
-                                        <div class="p-2">{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
+                                        <div class="p-3 text-sm">{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
                                     </ng-template>
                                     <ng-template let-job pTemplate="selectedItem">
-                                        <div>{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
+                                        <div class="text-sm">{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
                                     </ng-template>
                                     <ng-template #dropdownicon>
                                         <i class="pi pi-briefcase text-primary-500"></i>
@@ -63,38 +63,39 @@ import { ThemeToggleComponent } from './theme-toggle.component';
                                 </p-select>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <p-iftalabel>
                                     <p-inputNumber id="age" [(ngModel)]="age" mode="decimal" [min]="18" [max]="100" 
-                                                  class="w-full"></p-inputNumber>
-                                    <label for="age" class="theme-text-primary">Âge</label>
+                                                  class="w-full touch-manipulation"></p-inputNumber>
+                                    <label for="age" class="theme-text-primary text-sm">Âge</label>
                                 </p-iftalabel>
                                 <p-iftalabel>
                                     <p-inputNumber id="startingMoney" [(ngModel)]="startingMoney" mode="currency" 
-                                                  currency="EUR" locale="fr-FR" class="w-full"></p-inputNumber>
-                                    <label for="startingMoney" class="theme-text-primary">Capital de départ</label>
+                                                  currency="EUR" locale="fr-FR" class="w-full touch-manipulation"></p-inputNumber>
+                                    <label for="startingMoney" class="theme-text-primary text-sm">Capital de départ</label>
                                 </p-iftalabel>
                             </div>
                             
                             <p-iftalabel>
                                 <div class="flex gap-2">
                                     <input id="name" type="text" pInputText [(ngModel)]="name" 
-                                           placeholder="Nom du joueur" class="flex-1"/>
+                                           class="flex-1 touch-manipulation" 
+                                           style="min-height: 44px; font-size: 16px; padding-top: 20px;"/>
                                     <p-button icon="pi pi-refresh" (click)="generateRandomName()" 
                                              type="button" 
-                                             class="p-button-outlined hover:scale-105 active:scale-95 transition-transform duration-200"
+                                             class="p-button-outlined hover:scale-105 active:scale-95 transition-transform duration-200 touch-target"
                                              pTooltip="Générer un nom aléatoire"></p-button>
                                 </div>
-                                <label for="name" class="theme-text-primary">Nom du joueur</label>
+                                <label for="name" class="theme-text-primary text-sm">Nom du joueur</label>
                             </p-iftalabel>
 
-                            <div class="flex justify-between gap-4 pt-4">
+                            <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 pt-3 sm:pt-4">
                                 <p-button icon="pi pi-question-circle" label="Aide" (click)="showHelp = true" 
-                                         class="p-button-outlined flex-1 hover:scale-105 active:scale-95 transition-transform duration-200"></p-button>
+                                         class="p-button-outlined flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 touch-target min-h-[48px]"></p-button>
                                 <p-button label="Démarrer le jeu"
                                           (click)="gameService.startGame(selectedJob, age, startingMoney, name)"
                                           [disabled]="!selectedJob || !age || !startingMoney || !name"
-                                          class="flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 theme-shadow-md"></p-button>
+                                          class="flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 theme-shadow-md touch-target min-h-[48px]"></p-button>
                             </div>
                         </div>
                     </p-card>

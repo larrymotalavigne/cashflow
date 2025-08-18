@@ -13,7 +13,7 @@ import { ThemeService } from './theme.service';
       (click)="themeService.toggleTheme()"
       [pTooltip]="themeService.getThemeLabel()"
       tooltipPosition="bottom"
-      styleClass="p-button-text p-button-rounded p-button-sm theme-toggle"
+      styleClass="p-button-text p-button-rounded theme-toggle"
       [attr.aria-label]="'Basculer vers ' + getNextThemeLabel()">
     </p-button>
   `,
@@ -23,15 +23,28 @@ import { ThemeService } from './theme.service';
     }
     
     .theme-toggle {
+      min-height: 44px !important;
+      min-width: 44px !important;
+      touch-action: manipulation;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
     }
     
-    .theme-toggle:hover {
-      transform: scale(1.1);
+    @media (hover: hover) {
+      .theme-toggle:hover {
+        transform: scale(1.1);
+      }
     }
     
     .theme-toggle:active {
       transform: scale(0.95);
+    }
+    
+    @media (max-width: 640px) {
+      .theme-toggle {
+        min-height: 48px !important;
+        min-width: 48px !important;
+      }
     }
   `]
 })

@@ -47,26 +47,31 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     template: `
         <p-toolbar class="theme-bg-card theme-shadow-sm border-b theme-border">
             <div class="flex align-items-center justify-between w-full">
-                <div class="flex align-items-center gap-3">
+                <div class="flex align-items-center gap-2 sm:gap-3">
                     <button (click)="this.game.goToStartup()"
-                            class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-2">
-                        <i class="pi pi-arrow-left text-xl theme-text-primary"></i>
+                            class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-3 min-h-[44px] min-w-[44px] touch-manipulation">
+                        <i class="pi pi-arrow-left text-lg sm:text-xl theme-text-primary"></i>
                     </button>
-                    <span class="text-xl font-semibold theme-text-primary">Tableau de Bord</span>
+                    <span class="text-lg sm:text-xl font-semibold theme-text-primary">Tableau de Bord</span>
                 </div>
                 <app-theme-toggle></app-theme-toggle>
             </div>
         </p-toolbar>
-        <div class="w-full max-w-6xl mx-auto p-4 min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30">
-            <div class="space-y-6 animate-fade-in">
+        <div class="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30 
+                    touch-pan-y overscroll-contain" 
+             (touchstart)="onTouchStart($event)" 
+             (touchmove)="onTouchMove($event)" 
+             (touchend)="onTouchEnd($event)">
+            <div class="space-y-4 sm:space-y-6 animate-fade-in">
                 <app-player-info/>
                 <app-progress-chart/>
                 <app-investment-comparison-chart/>
                 <app-drag-drop-portfolio/>
-                <div class="text-center">
+                <div class="text-center pb-4">
                     <p-button label="Voir les opportunités"
                               (click)="this.game.showOpportunities()"
-                              class="p-button-lg theme-shadow-lg hover:theme-shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95"
+                              class="p-button-lg theme-shadow-lg hover:theme-shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 
+                                     min-h-[48px] px-6 sm:px-8 touch-manipulation"
                               icon="pi pi-search"></p-button>
                 </div>
             </div>
@@ -79,4 +84,102 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 })
 export class GameComponent {
     game = inject(GameService);
+    
+    private startX: number = 0;
+    private startY: number = 0;
+    private isScrolling: boolean = false;
+    private isRefreshing: boolean = false;
+    private pullDistance: number = 0;
+    private readonly maxPullDistance: number = 120;
+
+    onTouchStart(event: TouchEvent) {
+        this.startX = event.touches[0].clientX;
+        this.startY = event.touches[0].clientY;
+        this.isScrolling = false;
+    }
+
+    onTouchMove(event: TouchEvent) {
+        if (!this.startX || !this.startY) return;
+
+        const currentX = event.touches[0].clientX;
+        const currentY = event.touches[0].clientY;
+        
+        const diffX = this.startX - currentX;
+        const diffY = this.startY - currentY;
+
+        // Check if at top of page for pull-to-refresh
+        const isAtTop = window.scrollY === 0;
+        
+        if (isAtTop && diffY < 0 && Math.abs(diffY) > Math.abs(diffX)) {
+            // Pull down gesture at top of page
+            event.preventDefault();
+            this.pullDistance = Math.min(Math.abs(diffY), this.maxPullDistance);
+            
+            // Visual feedback could be added here
+            if (this.pullDistance > 60) {
+                // Indicate ready to refresh
+                document.body.style.setProperty('--pull-distance', `${this.pullDistance}px`);
+            }
+        } else if (Math.abs(diffY) > Math.abs(diffX)) {
+            // Regular vertical scrolling
+            this.isScrolling = true;
+        }
+    }
+
+    onTouchEnd(event: TouchEvent) {
+        // Handle pull-to-refresh
+        if (this.pullDistance > 60 && !this.isRefreshing) {
+            this.triggerRefresh();
+        }
+
+        // Reset pull distance
+        this.pullDistance = 0;
+        document.body.style.removeProperty('--pull-distance');
+
+        if (!this.startX || !this.startY || this.isScrolling) {
+            this.resetTouchState();
+            return;
+        }
+
+        const endX = event.changedTouches[0].clientX;
+        const endY = event.changedTouches[0].clientY;
+        
+        const diffX = this.startX - endX;
+        const diffY = this.startY - endY;
+
+        // Minimum swipe distance (50px)
+        const minSwipeDistance = 50;
+
+        // Horizontal swipe detection
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+            if (diffX > 0) {
+                // Swipe left - could navigate to next section
+                this.game.showOpportunities();
+            } else {
+                // Swipe right - could go back
+                this.game.goToStartup();
+            }
+        }
+
+        this.resetTouchState();
+    }
+
+    private triggerRefresh() {
+        if (this.isRefreshing) return;
+        
+        this.isRefreshing = true;
+        
+        // Simulate refresh with game state update
+        setTimeout(() => {
+            // Refresh game data - could call specific refresh methods
+            this.game.showOpportunities();
+            this.isRefreshing = false;
+        }, 1500);
+    }
+
+    private resetTouchState() {
+        this.startX = 0;
+        this.startY = 0;
+        this.isScrolling = false;
+    }
 }
