@@ -15,6 +15,7 @@ import { Select } from 'primeng/select';
 import { IftaLabel } from 'primeng/iftalabel';
 import { ThemeToggleComponent } from './theme-toggle.component';
 import { LanguageToggleComponent } from './language-toggle.component';
+import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'app-startup-screen',
@@ -31,7 +32,8 @@ import { LanguageToggleComponent } from './language-toggle.component';
         Select,
         IftaLabel,
         ThemeToggleComponent,
-        LanguageToggleComponent
+        LanguageToggleComponent,
+        NgIf
     ],
     template: `
         <div class="min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30 px-3 sm:px-4 py-4 sm:py-6 animate-fade-in">
@@ -49,11 +51,22 @@ import { LanguageToggleComponent } from './language-toggle.component';
                         <p class="theme-text-muted mt-2 sm:mt-4 text-sm sm:text-base">{{ tagline() }}</p>
                     </div>
                     
+                    <!-- Resume Game Card -->
+                    <p-card *ngIf="savedGameExists" [header]="translationService.translate('startup.resumeGame')" class="theme-shadow-xl animate-slide-up mb-4">
+                        <div class="text-center space-y-4">
+                            <p class="theme-text-muted">{{ translationService.translate('startup.continueWith') }} <strong class="theme-text-primary">{{ savedPlayerName }}</strong></p>
+                            <p-button [label]="translationService.translate('startup.resumeGameButton')"
+                                      (click)="resumeGame()"
+                                      icon="pi pi-play"
+                                      class="w-full hover:scale-105 active:scale-95 transition-transform duration-200 theme-shadow-md touch-target min-h-[48px]"></p-button>
+                        </div>
+                    </p-card>
+                    
                     <p-card [header]="translationService.translate('startup.gameStart')" class="theme-shadow-xl animate-slide-up">
                         <div class="space-y-3 sm:space-y-4">
                             <div>
                                 <label class="block text-sm font-medium theme-text-primary mb-2">{{ translationService.translate('startup.job') }}</label>
-                                <p-select id="job" [options]="jobs" [(ngModel)]="selectedJob" 
+                                <p-select id="job" [options]="jobs()" [(ngModel)]="selectedJob" 
                                          [placeholder]="translationService.translate('startup.selectJob')" class="w-full touch-manipulation">
                                     <ng-template let-job pTemplate="item">
                                         <div class="p-3 text-sm">{{ job.label }} ({{ job.value.minSalary }}€ - {{ job.value.maxSalary }}€)</div>
@@ -148,12 +161,13 @@ import { LanguageToggleComponent } from './language-toggle.component';
     `
 })
 export class StartupScreenComponent {
-    jobs: any[] = []; // Expect to receive this via @Input() from the parent or via routing initialization.
     selectedJob: any = null;
     age: number = 25;
     startingMoney: number = 5000;
     name: string = '';
     showHelp: boolean = false;
+    savedGameExists: boolean = false;
+    savedPlayerName: string = '';
     private readonly randomNames;
 
     // Computed signals for reactive translations
@@ -168,10 +182,29 @@ export class StartupScreenComponent {
     generateName = computed(() => this.translationService.translate('startup.generateName'));
     help = computed(() => this.translationService.translate('startup.help'));
     startGame = computed(() => this.translationService.translate('startup.startGame'));
+    jobs = computed(() => this.configService.getTranslatedJobs());
 
     constructor(private router: Router, private configService: GameConfigService, public gameService: GameService, public translationService: TranslationService) {
-        this.jobs = this.configService.jobs;
         this.randomNames = this.configService.randomNames;
+        this.checkForSavedGame();
+    }
+
+    checkForSavedGame(): void {
+        const savedState = localStorage.getItem('gameState');
+        if (savedState) {
+            try {
+                const gameState = JSON.parse(savedState);
+                this.savedGameExists = true;
+                this.savedPlayerName = gameState.name || 'Joueur';
+            } catch (error) {
+                console.error('Error checking saved game:', error);
+                this.savedGameExists = false;
+            }
+        }
+    }
+
+    resumeGame(): void {
+        this.router.navigate(['/game']);
     }
 
     generateRandomName() {

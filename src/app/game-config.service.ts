@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {GameEvent, Investment, Job} from './data';
+import {TranslationService} from './translation.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GameConfigService {
+    constructor(private translationService: TranslationService) {}
     jobs: Job[] = [
         { label: 'Agriculteur', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
         { label: 'Aide-soignant', value: { minSalary: 19000, maxSalary: 23000, expenses: 17000 } },
@@ -121,5 +123,13 @@ export class GameConfigService {
         'Dimitri', 'Elise', 'Flavien', 'Géraldine', 'Hervé', 'Iris', 'Josselin', 'Khalil', 'Léna', 'Maxime',
         'Nathalie', 'Oumar', 'Perrine', 'Raphaël', 'Solène', 'Tristan', 'Ulrich', 'Vianney', 'Yvan', 'Zélie'
     ];
+
+    getTranslatedJobs(): Job[] {
+        return this.jobs.map(job => ({
+            ...job,
+            label: this.translationService.translate(`jobs.${job.label}`)
+        }));
+    }
+
     loanRate: number = 0.1; // 10% interest
 }
