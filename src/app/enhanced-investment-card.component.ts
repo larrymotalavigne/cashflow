@@ -99,7 +99,7 @@ import { FinancialCounterComponent } from './loading.component';
             <span class="text-xs theme-text-muted">Performance</span>
             <span class="text-xs font-medium" [ngClass]="getROITextClass()">{{ getPerformanceRating() }}</span>
           </div>
-          <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-1.5">
+          <div class="w-full theme-bg-muted rounded-full h-1.5">
             <div 
               class="h-1.5 rounded-full transition-all duration-500"
               [ngClass]="getROIBarClass()"
