@@ -72,11 +72,11 @@ This document outlines the tasks for implementing the CashflowGame project, orga
 - [x] Add confirmation dialogs for critical actions
 
 ### Dashboard and Data Visualization
-- [ ] Enhance progress chart with multiple data series and time ranges
-- [ ] Create financial goal tracking with milestone indicators
-- [ ] Implement interactive tooltips for financial data points
-- [ ] Design comparison charts for investment performance
-- [ ] Add export functionality for financial reports
+- [x] Enhance progress chart with multiple data series and time ranges
+- [x] Create financial goal tracking with milestone indicators
+- [x] Implement interactive tooltips for financial data points
+- [x] Design comparison charts for investment performance
+- [x] Add export functionality for financial reports
 
 ### Component Enhancement and Interactions
 - [ ] Redesign investment cards with better visual hierarchy

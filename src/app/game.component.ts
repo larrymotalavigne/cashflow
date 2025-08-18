@@ -6,6 +6,9 @@ import {CardModule} from 'primeng/card';
 import {PlayerInfoComponent} from './player-info.component';
 import {GameService} from './game.service';
 import { ProgressChartComponent } from './progress-chart.component';
+import { InvestmentComparisonChartComponent } from './investment-comparison-chart.component';
+import { DragDropPortfolioComponent } from './drag-drop-portfolio.component';
+import { FinancialCalculatorComponent } from './financial-calculator.component';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ThemeToggleComponent } from './theme-toggle.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -13,7 +16,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, ToolbarModule, ThemeToggleComponent],
+    imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, FinancialCalculatorComponent, ToolbarModule, ThemeToggleComponent],
     animations: [
         trigger('financialChange', [
             state('increase', style({
@@ -59,6 +62,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
             <div class="space-y-6 animate-fade-in">
                 <app-player-info/>
                 <app-progress-chart/>
+                <app-investment-comparison-chart/>
+                <app-drag-drop-portfolio/>
                 <div class="text-center">
                     <p-button label="Voir les opportunités" 
                               (click)="this.game.showOpportunities()" 

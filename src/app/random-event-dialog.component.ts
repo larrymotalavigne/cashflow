@@ -9,11 +9,13 @@ import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {DividerModule} from 'primeng/divider';
+import {EnhancedInvestmentCardComponent} from './enhanced-investment-card.component';
+import {AdvancedInvestmentFilterComponent} from './advanced-investment-filter.component';
 
 @Component({
     selector: 'app-random-event-dialog',
     standalone: true,
-    imports: [DialogModule, ButtonModule, NgForOf, NgIf, DropdownModule, FormsModule, InputTextModule, DividerModule],
+    imports: [DialogModule, ButtonModule, NgForOf, NgIf, DropdownModule, FormsModule, InputTextModule, DividerModule, EnhancedInvestmentCardComponent, AdvancedInvestmentFilterComponent],
     template: `
         <p-dialog #dialog [(visible)]="visible" [closable]="false" header="Événements aléatoires" [modal]="true" styleClass="w-75 theme-bg-card">
             <div *ngIf="randomEvents.length" class="mb-4">
@@ -30,27 +32,12 @@ import {DividerModule} from 'primeng/divider';
                 <h3 class="theme-text-card mb-3">Opportunités d'investissement</h3>
 
                 <div *ngIf="investmentOpportunities.length; else noInvestments">
-                    <!-- Filtering and Sorting Controls -->
-                    <div class="flex flex-wrap gap-3 mb-3">
-                        <div class="flex-grow-1">
-                            <span class="p-input-icon-left w-full">
-                                <i class="pi pi-search"></i>
-                                <input type="text" pInputText [(ngModel)]="filterText" 
-                                       placeholder="Rechercher par nom" class="w-full"
-                                       (input)="applyFilters()"/>
-                            </span>
-                        </div>
-                        <div>
-                            <p-dropdown [options]="sortOptions" [(ngModel)]="selectedSortOption" 
-                                        placeholder="Trier par" (onChange)="applyFilters()"
-                                        [style]="{'min-width': '150px'}"></p-dropdown>
-                        </div>
-                        <div>
-                            <p-dropdown [options]="typeOptions" [(ngModel)]="selectedType" 
-                                        placeholder="Type d'investissement" (onChange)="applyFilters()"
-                                        [style]="{'min-width': '180px'}"></p-dropdown>
-                        </div>
-                    </div>
+                    <!-- Advanced Filtering Component -->
+                    <app-advanced-investment-filter
+                        [investments]="investmentOpportunities"
+                        [userCash]="gameService.cash"
+                        (filterChange)="onAdvancedFilterChange($event)">
+                    </app-advanced-investment-filter>
 
                     <!-- Comparison Tool -->
                     <div *ngIf="comparisonMode" class="mb-3 p-3 theme-border border rounded-lg theme-bg-muted">
@@ -97,37 +84,18 @@ import {DividerModule} from 'primeng/divider';
 
                     <p-divider></p-divider>
 
-                    <div *ngFor="let investment of filteredInvestments"
-                         class="mb-3 theme-border border p-3 rounded-lg theme-bg-card theme-shadow-sm grid grid-cols-1 md:grid-cols-[auto,1fr] gap-4 items-start">
-                        <div>
-                            <div class="mb-2">
-                                <div class="flex align-items-center">
-                                    <div *ngIf="comparisonMode" class="mr-2">
-                                        <input type="checkbox" [checked]="isInvestmentSelected(investment)" 
-                                               (change)="toggleInvestmentSelection(investment)" />
-                                    </div>
-                                    <strong class="theme-text-card">{{ investment.name }}</strong>
-                                </div>
-                            </div>
-                            <div class="flex align-items-center mb-1 theme-text-card">
-                                💰Prix: {{ investment.amount }} €
-                            </div>
-                            <div class="flex align-items-center mb-1 theme-text-card">
-                                📈Revenu mensuel: {{ investment.income }} €
-                            </div>
-                            <div class="flex align-items-center text-sm text-primary-600 dark:text-primary-400">
-                                ROI: {{ (investment.income / investment.amount * 100).toFixed(2) }}%
-                            </div>
-                        </div>
-                        <div class="flex flex-column gap-2">
-                            <p-button label="✅ Acheter" (click)="buyInvestment(investment)" severity="success"  size="small"
-                                      [disabled]="!gameService.canBuy(investment)"></p-button>
-                            <p-button label="❌ Refuser" (click)="deleteInvestment(investment)" severity="danger"  size="small"></p-button>
-                            <p-button label="💸 Emprunt {{ configService.loanRate * 100 }}%" (click)="buyInvestmentWithLoan(investment)"
-                                      severity="info"  size="small"></p-button>
-                            <p-button *ngIf="!comparisonMode" label="🔍 Comparer" (click)="addToComparison(investment)" 
-                                      severity="secondary" size="small"></p-button>
-                        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <app-enhanced-investment-card 
+                            *ngFor="let investment of filteredInvestments"
+                            [investment]="investment"
+                            [comparisonMode]="comparisonMode"
+                            [isSelected]="isInvestmentSelected(investment)"
+                            (buy)="buyInvestment($event)"
+                            (buyWithLoan)="buyInvestmentWithLoan($event)"
+                            (reject)="deleteInvestment($event)"
+                            (compare)="addToComparison($event)"
+                            (selectionChange)="onInvestmentSelectionChange($event)">
+                        </app-enhanced-investment-card>
                     </div>
                 </div>
                 <ng-template #noInvestments>
@@ -147,10 +115,7 @@ export class RandomEventDialogComponent {
     @Output() visibleChange = new EventEmitter<boolean>();
     @Output() investmentAction = new EventEmitter<{ investment: any, action: 'buy' | 'reject' | 'loan' }>();
 
-    // Filtering and sorting properties
-    filterText: string = '';
-    selectedSortOption: any = null;
-    selectedType: any = null;
+    // Filtered investments from advanced filter
     filteredInvestments: Investment[] = [];
 
     // Comparison tool properties
@@ -185,7 +150,7 @@ export class RandomEventDialogComponent {
         this._visible = val;
         if (val) {
             // When dialog becomes visible, initialize filtered investments
-            this.applyFilters();
+            this.filteredInvestments = [...this.investmentOpportunities];
         } else {
             this.visibleChange.emit(false);
         }
@@ -196,112 +161,66 @@ export class RandomEventDialogComponent {
         this.visibleChange.emit(false);
     }
 
+    onAdvancedFilterChange(filtered: Investment[]) {
+        this.filteredInvestments = filtered;
+    }
+
     deleteInvestment(investment: Investment) {
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
-        this.applyFilters(); // Update filtered investments
+        // The advanced filter will automatically update when investmentOpportunities changes
         if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
     }
 
     buyInvestmentWithLoan(investment: any) {
         this.gameService.buyInvestmentWithLoan(investment);
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
-        this.applyFilters(); // Update filtered investments
         if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
     }
 
     buyInvestment(investment: any) {
         this.gameService.buyInvestment(investment);
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
-        this.applyFilters(); // Update filtered investments
         if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
     }
 
-    // Update type options based on available investment types
-    updateTypeOptions() {
-        // Get unique investment types
-        const types = new Set<string>();
-        this.configService.investments.forEach(investment => {
-            if (investment.type) {
-                types.add(investment.type);
-            }
-        });
-
-        // Convert to dropdown options
-        this.typeOptions = [
-            { label: 'Tous les types', value: null },
-            ...Array.from(types).map(type => ({ label: type, value: type }))
-        ];
-    }
-
-    // Apply filters and sorting to investments
-    applyFilters() {
-        // Start with all investment opportunities
-        let filtered = [...this.investmentOpportunities];
-
-        // Apply text filter
-        if (this.filterText) {
-            const searchText = this.filterText.toLowerCase();
-            filtered = filtered.filter(investment => 
-                investment.name.toLowerCase().includes(searchText)
-            );
-        }
-
-        // Apply type filter
-        if (this.selectedType) {
-            filtered = filtered.filter(investment => 
-                investment.type === this.selectedType
-            );
-        }
-
-        // Apply sorting
-        if (this.selectedSortOption) {
-            switch (this.selectedSortOption) {
-                case 'price-asc':
-                    filtered.sort((a, b) => a.amount - b.amount);
-                    break;
-                case 'price-desc':
-                    filtered.sort((a, b) => b.amount - a.amount);
-                    break;
-                case 'income-asc':
-                    filtered.sort((a, b) => a.income - b.income);
-                    break;
-                case 'income-desc':
-                    filtered.sort((a, b) => b.income - a.income);
-                    break;
-                case 'roi-asc':
-                    filtered.sort((a, b) => (a.income / a.amount) - (b.income / b.amount));
-                    break;
-                case 'roi-desc':
-                    filtered.sort((a, b) => (b.income / b.amount) - (a.income / a.amount));
-                    break;
-            }
-        }
-
-        this.filteredInvestments = filtered;
-    }
-
     addToComparison(investment: Investment) {
+        if (!this.selectedInvestments.find(inv => inv.name === investment.name)) {
+            this.selectedInvestments.push(investment);
+        }
+    }
 
+    onInvestmentSelectionChange(event: {investment: Investment, selected: boolean}) {
+        if (event.selected) {
+            this.addToComparison(event.investment);
+        } else {
+            this.removeFromComparison(event.investment);
+        }
     }
 
     toggleInvestmentSelection(investment: Investment) {
-
+        const index = this.selectedInvestments.findIndex(inv => inv.name === investment.name);
+        if (index > -1) {
+            this.selectedInvestments.splice(index, 1);
+        } else {
+            this.selectedInvestments.push(investment);
+        }
     }
 
     isInvestmentSelected(investment: Investment) {
-        return true
+        return this.selectedInvestments.some(inv => inv.name === investment.name);
     }
 
     removeFromComparison(investment: Investment) {
-
-
+        this.selectedInvestments = this.selectedInvestments.filter(inv => inv.name !== investment.name);
     }
 
     enterComparisonMode() {
-
+        this.comparisonMode = true;
+        this.selectedInvestments = [];
     }
 
     exitComparisonMode() {
-
+        this.comparisonMode = false;
+        this.selectedInvestments = [];
     }
 }

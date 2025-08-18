@@ -144,9 +144,16 @@ export class LoadingOverlayComponent {
   standalone: true,
   imports: [NgClass],
   template: `
-    <div class="font-mono text-right" [ngClass]="getValueClasses()">
-      <span class="text-sm opacity-75">{{ currency }}</span>
-      <span class="text-xl font-bold ml-1 tabular-nums">{{ displayValue }}</span>
+    <div class="financial-counter font-mono text-right" [ngClass]="getValueClasses()">
+      <span class="currency text-sm opacity-75">{{ currency }}</span>
+      <span class="value text-xl font-bold ml-1 tabular-nums" [attr.data-value]="animatedValue">
+        {{ displayValue }}
+      </span>
+      <div *ngIf="showDifference && difference !== 0" 
+           class="difference text-xs mt-1 transition-opacity duration-300"
+           [ngClass]="getDifferenceClasses()">
+        {{ difference > 0 ? '+' : '' }}{{ formatNumber(difference) }}{{ currency }}
+      </div>
     </div>
   `,
   styles: [`
@@ -154,59 +161,182 @@ export class LoadingOverlayComponent {
       display: inline-block;
     }
     
-    @keyframes valueChange {
-      0% {
+    .financial-counter {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    @keyframes countUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes countDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
         transform: scale(1);
       }
       50% {
         transform: scale(1.05);
       }
-      100% {
-        transform: scale(1);
+    }
+    
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 5px currentColor;
+      }
+      50% {
+        box-shadow: 0 0 15px currentColor;
       }
     }
     
-    .value-changed {
-      animation: valueChange 0.3s ease-out;
+    .value-increased {
+      animation: countUp 0.6s ease-out, pulse 0.3s ease-out 0.1s;
+    }
+    
+    .value-decreased {
+      animation: countDown 0.6s ease-out, pulse 0.3s ease-out 0.1s;
+    }
+    
+    .value-glow {
+      animation: glow 1s ease-in-out;
+    }
+    
+    .difference {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    /* Digital display effect */
+    .digital-style .value {
+      font-family: 'Courier New', monospace;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+    
+    /* Smooth number transitions */
+    .value {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   `]
 })
-export class FinancialCounterComponent {
+export class FinancialCounterComponent implements OnChanges, OnInit {
   @Input() value: number = 0;
   @Input() currency: string = '€';
   @Input() animate: boolean = true;
+  @Input() showDifference: boolean = false;
+  @Input() animationDuration: number = 1000;
+  @Input() digitalStyle: boolean = false;
+  @Input() prefix: string = '';
+  @Input() suffix: string = '';
+  @Input() decimals: number = 0;
+  @Input() glowOnChange: boolean = false;
   
+  animatedValue: number = 0;
   private _previousValue: number = 0;
-  private _isAnimating: boolean = false;
+  private _animationState: 'idle' | 'increasing' | 'decreasing' = 'idle';
+  private _animationFrame?: number;
   
   get displayValue(): string {
-    return this.formatNumber(this.value);
+    return this.prefix + this.formatNumber(this.animatedValue) + this.suffix;
+  }
+  
+  get difference(): number {
+    return this.value - this._previousValue;
   }
   
   get isPositive(): boolean {
-    return this.value > 0;
+    return this.animatedValue > 0;
   }
   
   get isNegative(): boolean {
-    return this.value < 0;
+    return this.animatedValue < 0;
   }
   
   get hasChanged(): boolean {
     return this.value !== this._previousValue;
   }
   
-  ngOnChanges(): void {
-    if (this.animate && this.hasChanged && this._previousValue !== 0) {
-      this._isAnimating = true;
-      setTimeout(() => {
-        this._isAnimating = false;
-      }, 300);
-    }
+  ngOnInit(): void {
+    this.animatedValue = this.value;
     this._previousValue = this.value;
+  }
+  
+  ngOnChanges(changes: any): void {
+    if (changes.value && !changes.value.firstChange) {
+      if (this.animate) {
+        this.animateToValue(this.value);
+      } else {
+        this.animatedValue = this.value;
+      }
+    }
+  }
+  
+  private animateToValue(targetValue: number): void {
+    const startValue = this.animatedValue;
+    const difference = targetValue - startValue;
+    
+    if (Math.abs(difference) < 0.01) {
+      this.animatedValue = targetValue;
+      return;
+    }
+    
+    // Set animation state
+    this._animationState = difference > 0 ? 'increasing' : 'decreasing';
+    
+    const startTime = performance.now();
+    const duration = Math.min(this.animationDuration, Math.abs(difference) * 10); // Adaptive duration
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+      
+      this.animatedValue = startValue + (difference * easeOutCubic);
+      
+      if (progress < 1) {
+        this._animationFrame = requestAnimationFrame(animate);
+      } else {
+        this.animatedValue = targetValue;
+        this._previousValue = targetValue;
+        this._animationState = 'idle';
+        
+        // Cancel any ongoing animation
+        if (this._animationFrame) {
+          cancelAnimationFrame(this._animationFrame);
+        }
+      }
+    };
+    
+    this._animationFrame = requestAnimationFrame(animate);
   }
   
   getValueClasses(): string {
     let classes = '';
+    
+    if (this.digitalStyle) {
+      classes += 'digital-style ';
+    }
     
     if (this.isPositive) {
       classes += 'financial-positive ';
@@ -216,17 +346,38 @@ export class FinancialCounterComponent {
       classes += 'financial-neutral ';
     }
     
-    if (this._isAnimating) {
-      classes += 'value-changed ';
+    if (this._animationState === 'increasing') {
+      classes += 'value-increased ';
+    } else if (this._animationState === 'decreasing') {
+      classes += 'value-decreased ';
+    }
+    
+    if (this.glowOnChange && this._animationState !== 'idle') {
+      classes += 'value-glow ';
     }
     
     return classes.trim();
   }
   
+  getDifferenceClasses(): string {
+    if (this.difference > 0) {
+      return 'text-success-600 dark:text-success-400';
+    } else if (this.difference < 0) {
+      return 'text-error-600 dark:text-error-400';
+    }
+    return 'theme-text-muted';
+  }
+  
   private formatNumber(value: number): string {
     return new Intl.NumberFormat('fr-FR', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      minimumFractionDigits: this.decimals,
+      maximumFractionDigits: this.decimals
     }).format(Math.abs(value));
+  }
+  
+  ngOnDestroy(): void {
+    if (this._animationFrame) {
+      cancelAnimationFrame(this._animationFrame);
+    }
   }
 }
