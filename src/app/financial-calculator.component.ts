@@ -730,4 +730,6 @@ export class FinancialCalculatorComponent implements OnInit {
       maximumFractionDigits: 0
     }).format(value);
   }
+
+    protected readonly Math = Math;
 }

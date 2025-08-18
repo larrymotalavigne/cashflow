@@ -164,9 +164,9 @@ export class ProgressChartComponent implements OnInit, OnDestroy {
   chartTypeOptions = [
     { label: 'Ligne', value: 'line' },
     { label: 'Barres', value: 'bar' },
-    { label: 'Aires', value: 'area' }
+    { label: 'Aires', value: 'polarArea' }
   ];
-  selectedChartType = 'line';
+  selectedChartType: 'line' | 'bar' | 'scatter' | 'bubble' | 'pie' | 'doughnut' | 'polarArea' | 'radar' = 'line';
 
   // Data series options
   dataSeriesOptions = [
@@ -361,7 +361,7 @@ export class ProgressChartComponent implements OnInit, OnDestroy {
         borderColor: series.color,
         backgroundColor: series.color + '20',
         tension: 0.4,
-        fill: this.selectedChartType === 'area'
+        fill: this.selectedChartType === 'polarArea'
       };
 
       if (this.selectedChartType === 'bar') {

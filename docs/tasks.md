@@ -79,11 +79,11 @@ This document outlines the tasks for implementing the CashflowGame project, orga
 - [x] Add export functionality for financial reports
 
 ### Component Enhancement and Interactions
-- [ ] Redesign investment cards with better visual hierarchy
-- [ ] Add drag-and-drop functionality for portfolio management
-- [ ] Implement advanced filtering and search for investments
-- [ ] Create animated counters for financial metrics
-- [ ] Design interactive financial calculator tools
+- [x] Redesign investment cards with better visual hierarchy
+- [x] Add drag-and-drop functionality for portfolio management
+- [x] Implement advanced filtering and search for investments
+- [x] Create animated counters for financial metrics
+- [x] Design interactive financial calculator tools
 
 ### Mobile and Touch Experience
 - [ ] Optimize touch targets for mobile devices

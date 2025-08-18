@@ -288,17 +288,17 @@ export class DragDropPortfolioComponent implements OnInit {
     return typeMap[type] || 'autres';
   }
 
-  private getTypeFromGroupId(groupId: string): string {
-    const groupMap: { [key: string]: string } = {
-      'immobilier': 'Immobilier',
-      'actions': 'Actions',
-      'obligations': 'Obligations',
-      'crypto': 'Crypto',
-      'matieres': 'Matières premières',
-      'business': 'Business',
-      'autres': 'Autres'
+  private getTypeFromGroupId(groupId: string): 'capital' | 'real_estate' | 'business' | 'crypto' | 'fund' {
+    const groupMap: { [key: string]: 'capital' | 'real_estate' | 'business' | 'crypto' | 'fund' } = {
+      'immobilier': 'real_estate',
+      'actions': 'capital',
+      'obligations': 'fund',
+      'crypto': 'crypto',
+      'matieres': 'fund',
+      'business': 'business',
+      'autres': 'fund'
     };
-    return groupMap[groupId] || 'Autres';
+    return groupMap[groupId] || 'fund';
   }
 
   onDragStart(event: DragEvent, investment: Investment, groupId: string) {

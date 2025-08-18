@@ -139,6 +139,12 @@ export class RandomEventDialogComponent {
         this.updateTypeOptions();
     }
 
+    updateTypeOptions() {
+        // Get unique investment types from config service
+        const uniqueTypes = [...new Set(this.configService.investments.map(inv => inv.type))];
+        this.typeOptions = uniqueTypes.map(type => ({ label: type, value: type }));
+    }
+
     private _visible: boolean = false;
 
     @Input()

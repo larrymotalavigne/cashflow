@@ -225,11 +225,11 @@ export class InvestmentComparisonChartComponent implements OnInit, OnDestroy {
 
   chartTypes = [
     { label: 'Barres', value: 'bar' },
-    { label: 'Barres horizontales', value: 'horizontalBar' },
     { label: 'Radar', value: 'radar' },
-    { label: 'Doughnut', value: 'doughnut' }
+    { label: 'Doughnut', value: 'doughnut' },
+    { label: 'Secteurs', value: 'pie' }
   ];
-  selectedChartType = 'bar';
+  selectedChartType: 'line' | 'bar' | 'scatter' | 'bubble' | 'pie' | 'doughnut' | 'polarArea' | 'radar' = 'bar';
 
   chartData: any = {};
   chartOptions: any = {};

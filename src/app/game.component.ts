@@ -5,18 +5,17 @@ import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {PlayerInfoComponent} from './player-info.component';
 import {GameService} from './game.service';
-import { ProgressChartComponent } from './progress-chart.component';
-import { InvestmentComparisonChartComponent } from './investment-comparison-chart.component';
-import { DragDropPortfolioComponent } from './drag-drop-portfolio.component';
-import { FinancialCalculatorComponent } from './financial-calculator.component';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ThemeToggleComponent } from './theme-toggle.component';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import {ProgressChartComponent} from './progress-chart.component';
+import {InvestmentComparisonChartComponent} from './investment-comparison-chart.component';
+import {DragDropPortfolioComponent} from './drag-drop-portfolio.component';
+import {ToolbarModule} from 'primeng/toolbar';
+import {ThemeToggleComponent} from './theme-toggle.component';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, FinancialCalculatorComponent, ToolbarModule, ThemeToggleComponent],
+    imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent],
     animations: [
         trigger('financialChange', [
             state('increase', style({
@@ -49,7 +48,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
         <p-toolbar class="theme-bg-card theme-shadow-sm border-b theme-border">
             <div class="flex align-items-center justify-between w-full">
                 <div class="flex align-items-center gap-3">
-                    <button (click)="this.game.goToStartup()" 
+                    <button (click)="this.game.goToStartup()"
                             class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-2">
                         <i class="pi pi-arrow-left text-xl theme-text-primary"></i>
                     </button>
@@ -65,8 +64,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
                 <app-investment-comparison-chart/>
                 <app-drag-drop-portfolio/>
                 <div class="text-center">
-                    <p-button label="Voir les opportunités" 
-                              (click)="this.game.showOpportunities()" 
+                    <p-button label="Voir les opportunités"
+                              (click)="this.game.showOpportunities()"
                               class="p-button-lg theme-shadow-lg hover:theme-shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95"
                               icon="pi pi-search"></p-button>
                 </div>

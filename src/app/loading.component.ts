@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import {NgClass, NgIf} from '@angular/common';
 
 export type LoadingSize = 'sm' | 'md' | 'lg' | 'xl';
 export type LoadingVariant = 'spinner' | 'dots' | 'pulse' | 'shimmer' | 'skeleton';
@@ -7,7 +7,7 @@ export type LoadingVariant = 'spinner' | 'dots' | 'pulse' | 'shimmer' | 'skeleto
 @Component({
   selector: 'app-loading',
   standalone: true,
-  imports: [NgClass],
+    imports: [NgClass, NgIf],
   template: `
     <!-- Spinner variant -->
     <div *ngIf="variant === 'spinner'" 
@@ -118,7 +118,7 @@ export class LoadingComponent {
 @Component({
   selector: 'app-loading-overlay',
   standalone: true,
-  imports: [LoadingComponent],
+    imports: [LoadingComponent, NgIf],
   template: `
     <div class="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
       <div class="theme-bg-card theme-shadow-xl rounded-2xl p-8 max-w-sm mx-4 text-center animate-slide-up">
@@ -368,7 +368,7 @@ export class FinancialCounterComponent implements OnChanges, OnInit {
     return 'theme-text-muted';
   }
   
-  private formatNumber(value: number): string {
+  formatNumber(value: number): string {
     return new Intl.NumberFormat('fr-FR', {
       minimumFractionDigits: this.decimals,
       maximumFractionDigits: this.decimals
