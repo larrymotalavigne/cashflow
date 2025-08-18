@@ -1,5 +1,6 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, provideZoneChangeDetection, isDevMode} from '@angular/core';
 import {provideRouter} from '@angular/router';
+import {provideServiceWorker} from '@angular/service-worker';
 
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
@@ -15,5 +16,9 @@ export const appConfig: ApplicationConfig = {
                 preset: Aura
             }
         }),
-        provideRouter(routes)]
+        provideRouter(routes),
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        })]
 };
