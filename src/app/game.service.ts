@@ -27,6 +27,7 @@ interface GameState {
   investments: Investment[];
   loanTotal: number;
   turnHistory: TurnHistoryEntry[];
+  selectedOpportunitiesPerYear: { [year: number]: string[] };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -46,6 +47,7 @@ export class GameService {
   turnHistory: TurnHistoryEntry[] = [];
   currentTurn: number = 0;
   investmentsPurchasedThisTurn: Investment[] = [];
+  selectedOpportunitiesPerYear: { [year: number]: string[] } = {};
 
   private readonly minRandomEvents = 1;
   private readonly maxRandomEvents = 3;
@@ -91,7 +93,8 @@ export class GameService {
       name: this.name,
       investments: this.investments,
       loanTotal: this.loanTotal,
-      turnHistory: this.turnHistory
+      turnHistory: this.turnHistory,
+      selectedOpportunitiesPerYear: this.selectedOpportunitiesPerYear
     };
 
     localStorage.setItem('gameState', JSON.stringify(gameState));
@@ -112,6 +115,7 @@ export class GameService {
         this.investments = gameState.investments;
         this.loanTotal = gameState.loanTotal;
         this.turnHistory = gameState.turnHistory || [];
+        this.selectedOpportunitiesPerYear = gameState.selectedOpportunitiesPerYear || {};
         this.currentTurn = this.turnHistory.length;
         return true;
       } catch (error) {
@@ -170,13 +174,21 @@ export class GameService {
   }
 
   showOpportunities() {
-    // Get weighted random events
-    this.randomEvents = this.getWeightedRandomEvents();
+    // Get selected opportunities for current year
+    const currentYearSelected = this.selectedOpportunitiesPerYear[this.age] || [];
 
-    // Get random investments (no weighting for now)
-    const shuffledInvestments = [...this.configService.investments].sort(() => 0.5 - Math.random());
+    // Get weighted random events, filtering out already selected ones
+    this.randomEvents = this.getWeightedRandomEvents().filter(event => 
+      !currentYearSelected.includes(event.message)
+    );
+
+    // Get random investments, filtering out already selected ones
+    const availableInvestments = this.configService.investments.filter(investment => 
+      !currentYearSelected.includes(investment.name)
+    );
+    const shuffledInvestments = [...availableInvestments].sort(() => 0.5 - Math.random());
     const numInvestments = Math.floor(Math.random() * (this.maxInvestmentOpportunities - this.minInvestmentOpportunities + 1)) + this.minInvestmentOpportunities;
-    this.investmentOpportunities = shuffledInvestments.slice(0, numInvestments);
+    this.investmentOpportunities = shuffledInvestments.slice(0, Math.min(numInvestments, availableInvestments.length));
 
     this.eventVisible = true;
   }
@@ -288,6 +300,12 @@ export class GameService {
 
     // Track investment for turn history
     this.investmentsPurchasedThisTurn.push(newInvestment);
+
+    // Track selected opportunity for current year
+    if (!this.selectedOpportunitiesPerYear[this.age]) {
+      this.selectedOpportunitiesPerYear[this.age] = [];
+    }
+    this.selectedOpportunitiesPerYear[this.age].push(investment.name);
 
     // Show success toast notification
     this.toastService.success(
