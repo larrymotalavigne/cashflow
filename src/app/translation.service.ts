@@ -34,6 +34,7 @@ export class TranslationService {
         warning: 'Attention'
       },
       startup: {
+        welcome: 'Bienvenue',
         tagline: 'Simulez votre parcours vers l\'indépendance financière',
         gameStart: 'Démarrage du jeu',
         job: 'Métier',
@@ -42,17 +43,31 @@ export class TranslationService {
         startingMoney: 'Capital de départ',
         playerName: 'Nom du joueur',
         generateRandomName: 'Générer un nom aléatoire',
+        generateName: 'Générer un nom aléatoire',
+        help: 'Aide',
+        startGame: 'Démarrer le jeu',
+        helpTitle: 'Aide et tutoriel',
         helpTutorial: 'Aide et tutoriel',
         welcomeTitle: 'Bienvenue dans Cashflow Game!',
+        welcomeGame: 'Bienvenue dans Cashflow Game!',
         welcomeDesc: 'Ce jeu vous permet de simuler votre parcours financier, de l\'emploi à l\'indépendance financière.',
+        gameDescription: 'Ce jeu vous permet de simuler votre parcours financier, de l\'emploi à l\'indépendance financière.',
         howToPlay: 'Comment jouer:',
+        step1: 'Choisissez un métier - Chaque métier a un salaire différent qui détermine votre revenu mensuel.',
+        step2: 'Définissez votre âge - Votre âge influence le nombre de tours que vous aurez pour atteindre l\'indépendance financière.',
+        step3: 'Capital de départ - C\'est l\'argent avec lequel vous commencez le jeu.',
+        step4: 'Nom - Entrez votre nom ou générez-en un aléatoirement.',
         objective: 'Objectif du jeu:',
         objectiveDesc: 'L\'objectif est d\'atteindre l\'indépendance financière, c\'est-à-dire lorsque vos revenus passifs dépassent vos dépenses.',
         duringGame: 'Pendant le jeu:',
+        gameStep1: 'À chaque tour, vous recevez votre salaire et payez vos dépenses',
+        gameStep2: 'Vous pouvez acheter des investissements pour générer des revenus passifs',
+        gameStep3: 'Des événements aléatoires peuvent affecter vos finances',
+        gameStep4: 'Suivez votre progression vers l\'indépendance financière',
         goodLuck: 'Bonne chance dans votre parcours vers la liberté financière! 🚀'
       },
       game: {
-        dashboard: 'Tableau de Bord',
+        dashboard: 'Cashflow',
         seeOpportunities: 'Voir les opportunités',
         playerInfo: 'Informations du joueur',
         cash: 'Liquidités',
@@ -112,6 +127,7 @@ export class TranslationService {
         warning: 'Warning'
       },
       startup: {
+        welcome: 'Welcome',
         tagline: 'Simulate your journey to financial independence',
         gameStart: 'Game Setup',
         job: 'Job',
@@ -120,17 +136,31 @@ export class TranslationService {
         startingMoney: 'Starting Capital',
         playerName: 'Player Name',
         generateRandomName: 'Generate random name',
+        generateName: 'Generate random name',
+        help: 'Help',
+        startGame: 'Start game',
+        helpTitle: 'Help and tutorial',
         helpTutorial: 'Help and tutorial',
         welcomeTitle: 'Welcome to Cashflow Game!',
+        welcomeGame: 'Welcome to Cashflow Game!',
         welcomeDesc: 'This game allows you to simulate your financial journey from employment to financial independence.',
+        gameDescription: 'This game allows you to simulate your financial journey from employment to financial independence.',
         howToPlay: 'How to play:',
+        step1: 'Choose a job - Each job has a different salary that determines your monthly income.',
+        step2: 'Set your age - Your age influences the number of turns you will have to reach financial independence.',
+        step3: 'Starting capital - This is the money you start the game with.',
+        step4: 'Name - Enter your name or generate one randomly.',
         objective: 'Game objective:',
         objectiveDesc: 'The goal is to achieve financial independence, which means your passive income exceeds your expenses.',
         duringGame: 'During the game:',
+        gameStep1: 'Each turn, you receive your salary and pay your expenses',
+        gameStep2: 'You can buy investments to generate passive income',
+        gameStep3: 'Random events can affect your finances',
+        gameStep4: 'Track your progress towards financial independence',
         goodLuck: 'Good luck on your journey to financial freedom! 🚀'
       },
       game: {
-        dashboard: 'Dashboard',
+        dashboard: 'Cashflow',
         seeOpportunities: 'See opportunities',
         playerInfo: 'Player information',
         cash: 'Cash',
@@ -222,15 +252,16 @@ export class TranslationService {
 
   // Get current language flag/icon
   getLanguageIcon(): string {
-    return this.language() === 'fr' ? '🇫🇷' : '🇬🇧';
+    return 'pi pi-flag';
   }
 
   // Add or update translations dynamically
   addTranslations(language: Language, translations: Partial<Translations>): void {
+    const currentTranslations = this.translations[language] as Translations;
     this.translations[language] = {
-      ...this.translations[language],
+      ...currentTranslations,
       ...translations
-    };
+    } as Translations;
   }
 
   // Get all available languages

@@ -9,15 +9,15 @@ import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule} from '@angular/forms';
 import {InputTextModule} from 'primeng/inputtext';
 import {DividerModule} from 'primeng/divider';
-import {EnhancedInvestmentCardComponent} from './enhanced-investment-card.component';
 import {AdvancedInvestmentFilterComponent} from './advanced-investment-filter.component';
+import {InvestmentCarouselComponent} from './investment-carousel.component';
 
 @Component({
     selector: 'app-random-event-dialog',
     standalone: true,
-    imports: [DialogModule, ButtonModule, NgForOf, NgIf, DropdownModule, FormsModule, InputTextModule, DividerModule, EnhancedInvestmentCardComponent, AdvancedInvestmentFilterComponent],
+    imports: [DialogModule, ButtonModule, NgForOf, NgIf, DropdownModule, FormsModule, InputTextModule, DividerModule, AdvancedInvestmentFilterComponent, InvestmentCarouselComponent],
     template: `
-        <p-dialog #dialog [(visible)]="visible" [closable]="false" header="Événements aléatoires" [modal]="true" styleClass="w-75 theme-bg-card">
+        <p-dialog #dialog [(visible)]="visible" [closable]="false" [header]="getYearTitle()" [modal]="true" styleClass="w-75 theme-bg-card">
             <div *ngIf="randomEvents.length" class="mb-4">
                 <h3 class="theme-text-card mb-3">Événements</h3>
                 <div *ngFor="let event of randomEvents" class="mb-2 theme-bg-muted p-3 rounded-lg theme-border border">
@@ -32,12 +32,23 @@ import {AdvancedInvestmentFilterComponent} from './advanced-investment-filter.co
                 <h3 class="theme-text-card mb-3">Opportunités d'investissement</h3>
 
                 <div *ngIf="investmentOpportunities.length; else noInvestments">
+                    <!-- Toggle button for advanced filters -->
+                    <div class="mb-3">
+                        <p-button 
+                            [label]="showAdvancedFilters ? 'Masquer les filtres avancés' : 'Afficher les filtres avancés'"
+                            icon="pi pi-filter"
+                            (click)="showAdvancedFilters = !showAdvancedFilters"
+                            styleClass="p-button-outlined p-button-sm"></p-button>
+                    </div>
+                    
                     <!-- Advanced Filtering Component -->
-                    <app-advanced-investment-filter
-                        [investments]="investmentOpportunities"
-                        [userCash]="gameService.cash"
-                        (filterChange)="onAdvancedFilterChange($event)">
-                    </app-advanced-investment-filter>
+                    <div *ngIf="showAdvancedFilters">
+                        <app-advanced-investment-filter
+                            [investments]="investmentOpportunities"
+                            [userCash]="gameService.cash"
+                            (filterChange)="onAdvancedFilterChange($event)">
+                        </app-advanced-investment-filter>
+                    </div>
 
                     <!-- Comparison Tool -->
                     <div *ngIf="comparisonMode" class="mb-3 p-3 theme-border border rounded-lg theme-bg-muted">
@@ -84,26 +95,29 @@ import {AdvancedInvestmentFilterComponent} from './advanced-investment-filter.co
 
                     <p-divider></p-divider>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <app-enhanced-investment-card 
-                            *ngFor="let investment of filteredInvestments"
-                            [investment]="investment"
-                            [comparisonMode]="comparisonMode"
-                            [isSelected]="isInvestmentSelected(investment)"
-                            (buy)="buyInvestment($event)"
-                            (buyWithLoan)="buyInvestmentWithLoan($event)"
-                            (reject)="deleteInvestment($event)"
-                            (compare)="addToComparison($event)"
-                            (selectionChange)="onInvestmentSelectionChange($event)">
-                        </app-enhanced-investment-card>
-                    </div>
+                    <app-investment-carousel
+                        [investments]="filteredInvestments"
+                        [comparisonMode]="comparisonMode"
+                        [selectedInvestments]="selectedInvestments"
+                        (buy)="buyInvestment($event)"
+                        (buyWithLoan)="buyInvestmentWithLoan($event)"
+                        (reject)="deleteInvestment($event)"
+                        (compare)="addToComparison($event)"
+                        (selectionChange)="onInvestmentSelectionChange($event)">
+                    </app-investment-carousel>
                 </div>
                 <ng-template #noInvestments>
                     <p class="text-center text-sm theme-text-muted mt-2">Aucune opportunité d'investissement disponible.</p>
                 </ng-template>
             </div>
             <ng-template #footer>
-                <p-button label="Next Year" (click)="close()"></p-button>
+                <div class="flex justify-content-center w-full">
+                    <p-button 
+                        label="Next Year" 
+                        (click)="close()"
+                        styleClass="w-full md:w-auto min-h-[48px] touch-manipulation p-button-lg"
+                        icon="pi pi-arrow-right"></p-button>
+                </div>
             </ng-template>
         </p-dialog>
     `
@@ -117,6 +131,9 @@ export class RandomEventDialogComponent {
 
     // Filtered investments from advanced filter
     filteredInvestments: Investment[] = [];
+
+    // Show/hide advanced filters toggle
+    showAdvancedFilters: boolean = false;
 
     // Comparison tool properties
     comparisonMode: boolean = false;
@@ -157,6 +174,8 @@ export class RandomEventDialogComponent {
         if (val) {
             // When dialog becomes visible, initialize filtered investments
             this.filteredInvestments = [...this.investmentOpportunities];
+            // Reset advanced filters to hidden by default
+            this.showAdvancedFilters = false;
         } else {
             this.visibleChange.emit(false);
         }
@@ -165,6 +184,12 @@ export class RandomEventDialogComponent {
     close() {
         this.gameService.nextTurn();
         this.visibleChange.emit(false);
+    }
+
+    getYearTitle(): string {
+        // Calculate current year based on starting year (2024) + current turn
+        const currentYear = 2024 + this.gameService.currentTurn;
+        return `${currentYear} Events`;
     }
 
     onAdvancedFilterChange(filtered: Investment[]) {

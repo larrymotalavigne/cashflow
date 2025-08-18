@@ -11,6 +11,7 @@ import {DragDropPortfolioComponent} from './drag-drop-portfolio.component';
 import {ToolbarModule} from 'primeng/toolbar';
 import {ThemeToggleComponent} from './theme-toggle.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {TranslationService} from './translation.service';
 
 @Component({
     selector: 'app-game',
@@ -46,15 +47,25 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     ],
     template: `
         <p-toolbar class="theme-bg-card theme-shadow-sm border-b theme-border">
-            <div class="flex align-items-center justify-between w-full">
-                <div class="flex align-items-center gap-2 sm:gap-3">
+            <div class="flex align-items-center justify-between w-full relative">
+                <!-- Left side: Back button -->
+                <div class="flex align-items-center">
                     <button (click)="this.game.goToStartup()"
                             class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-3 min-h-[44px] min-w-[44px] touch-manipulation">
                         <i class="pi pi-arrow-left text-lg sm:text-xl theme-text-primary"></i>
                     </button>
-                    <span class="text-lg sm:text-xl font-semibold theme-text-primary">Tableau de Bord</span>
                 </div>
-                <app-theme-toggle></app-theme-toggle>
+                
+                <!-- Center: Logo and Title -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 flex align-items-center gap-2">
+                    <img src="logo.svg" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10">
+                    <span class="text-lg sm:text-xl font-semibold theme-text-primary">{{ translationService.translate('game.dashboard') }}</span>
+                </div>
+                
+                <!-- Right side: Theme toggle -->
+                <div class="flex align-items-center">
+                    <app-theme-toggle></app-theme-toggle>
+                </div>
             </div>
         </p-toolbar>
         <div class="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 min-h-screen theme-bg-primary bg-gradient-to-br from-primary-50/50 to-secondary-50/30 dark:from-neutral-900/50 dark:to-primary-900/30 
@@ -84,6 +95,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 })
 export class GameComponent {
     game = inject(GameService);
+    translationService = inject(TranslationService);
     
     private startX: number = 0;
     private startY: number = 0;

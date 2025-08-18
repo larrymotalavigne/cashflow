@@ -12,6 +12,7 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {ThemeToggleComponent} from './theme-toggle.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CommonModule} from '@angular/common';
+import {TranslationService} from './translation.service';
 
 @Component({
     selector: 'app-game-panels',
@@ -74,15 +75,25 @@ import {CommonModule} from '@angular/common';
     ],
     template: `
         <p-toolbar class="theme-bg-card theme-shadow-sm border-b theme-border">
-            <div class="flex align-items-center justify-between w-full">
-                <div class="flex align-items-center gap-2 sm:gap-3">
+            <div class="flex align-items-center justify-between w-full relative">
+                <!-- Left side: Back button -->
+                <div class="flex align-items-center">
                     <button (click)="this.game.goToStartup()"
                             class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-3 min-h-[44px] min-w-[44px] touch-manipulation">
                         <i class="pi pi-arrow-left text-lg sm:text-xl theme-text-primary"></i>
                     </button>
-                    <span class="text-lg sm:text-xl font-semibold theme-text-primary">Tableau de Bord</span>
                 </div>
-                <app-theme-toggle></app-theme-toggle>
+                
+                <!-- Center: Logo and Title -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 flex align-items-center gap-2">
+                    <img src="logo.svg" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10">
+                    <span class="text-lg sm:text-xl font-semibold theme-text-primary">{{ translationService.translate('game.dashboard') }}</span>
+                </div>
+                
+                <!-- Right side: Theme toggle -->
+                <div class="flex align-items-center">
+                    <app-theme-toggle></app-theme-toggle>
+                </div>
             </div>
         </p-toolbar>
         
@@ -125,7 +136,7 @@ import {CommonModule} from '@angular/common';
                                         <i class="pi pi-cog mr-2 text-secondary-600 dark:text-secondary-400"></i>
                                         Actions Rapides
                                     </h3>
-                                    <div class="space-y-3 space-x-1">
+                                    <div class="flex flex-col gap-4">
                                         <p-button label="Voir les opportunités"
                                                   (click)="this.game.showOpportunities()"
                                                   class="w-full p-button-outlined"
@@ -193,6 +204,7 @@ import {CommonModule} from '@angular/common';
 })
 export class GamePanelsComponent {
     game = inject(GameService);
+    translationService = inject(TranslationService);
     
     // Panel visibility states
     showFinancialDetails = false;
