@@ -1,7 +1,8 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameConfigService } from './game-config.service';
 import { GameEvent, Investment } from './data';
+import { ToastService } from './toast.service';
 
 interface TurnHistoryEntry {
   turnNumber: number;
@@ -52,6 +53,8 @@ export class GameService {
   private readonly maxInvestmentOpportunities = 3;
   turnEnded = new EventEmitter<void>();
   stateChanged = new EventEmitter<void>();
+
+  private toastService = inject(ToastService);
 
   constructor(private router: Router, private configService: GameConfigService) {
     // Try to load saved game state first
@@ -260,6 +263,13 @@ export class GameService {
     if (this.passiveIncome >= this.expenses) {
       this.eventMessage = 'Félicitations ! Vous avez atteint la liberté financière !';
       this.eventVisible = true;
+      
+      // Show victory toast notification
+      this.toastService.success(
+        '🎉 Victoire !',
+        'Vous avez atteint l\'indépendance financière !',
+        { persistent: true }
+      );
     }
   }
 
@@ -278,6 +288,12 @@ export class GameService {
 
     // Track investment for turn history
     this.investmentsPurchasedThisTurn.push(newInvestment);
+
+    // Show success toast notification
+    this.toastService.success(
+      'Investissement acheté !',
+      `${investment.name} - ${investment.amount}€ (Revenu mensuel: ${investment.income}€)`
+    );
 
     // Save game state after buying investment
     this.saveGameState();
@@ -307,6 +323,12 @@ export class GameService {
 
     // Track investment for turn history
     this.investmentsPurchasedThisTurn.push(newInvestment);
+
+    // Show success toast notification for loan purchase
+    this.toastService.info(
+      'Investissement acheté avec emprunt !',
+      `${investment.name} - Emprunt: ${loanAmount}€ (Frais: ${loanFee.toFixed(0)}€)`
+    );
 
     // Save game state after buying investment with loan
     this.saveGameState();
