@@ -92,7 +92,7 @@ interface InvestmentGroup {
                   </div>
                   <div class="text-right">
                     <div class="text-sm font-bold theme-text-primary">{{ group.totalValue | currency:'EUR':'symbol':'1.0-0' }}</div>
-                    <div class="text-xs theme-text-muted">+{{ group.totalIncome | currency:'EUR':'symbol':'1.0-0' }}/mois</div>
+                    <div class="text-xs theme-text-muted">+{{ (group.totalIncome / 12) | currency:'EUR':'symbol':'1.0-0' }}/mois</div>
                   </div>
                 </div>
               </div>
@@ -118,7 +118,7 @@ interface InvestmentGroup {
                       <h5 class="theme-text-primary font-semibold text-sm truncate mb-1">{{ investment.name }}</h5>
                       <div class="flex items-center justify-between text-xs">
                         <span class="theme-text-muted">{{ investment.amount | currency:'EUR':'symbol':'1.0-0' }}</span>
-                        <span class="text-success-600 dark:text-success-400 font-medium">+{{ investment.income | currency:'EUR':'symbol':'1.0-0' }}/mois</span>
+                        <span class="text-success-600 dark:text-success-400 font-medium">+{{ (investment.income / 12) | currency:'EUR':'symbol':'1.0-0' }}/mois</span>
                       </div>
                       <div class="mt-1">
                         <span class="text-xs font-medium" [ngClass]="getROIClass(investment)">
@@ -432,12 +432,14 @@ export class DragDropPortfolioComponent implements OnInit {
   }
 
   getTotalMonthlyIncome(): number {
-    return this.investmentGroups.reduce((sum, group) => sum + group.totalIncome, 0);
+    // Investment income is stored as yearly amounts, so divide by 12 for monthly
+    return this.investmentGroups.reduce((sum, group) => sum + group.totalIncome, 0) / 12;
   }
 
   getPortfolioROI(): number {
     const totalValue = this.getTotalPortfolioValue();
     const totalIncome = this.getTotalMonthlyIncome();
+    // getTotalMonthlyIncome() now returns monthly amounts, so multiply by 12 for yearly ROI
     return totalValue > 0 ? (totalIncome * 12 / totalValue) * 100 : 0;
   }
 
