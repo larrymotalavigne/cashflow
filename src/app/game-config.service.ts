@@ -10,7 +10,7 @@ export class GameConfigService {
     jobs: Job[] = [
         { label: 'Agriculteur', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
         { label: 'Aide-soignant', value: { minSalary: 19000, maxSalary: 23000, expenses: 17000 } },
-        { label: 'Agent d’entretien', value: { minSalary: 18000, maxSalary: 22000, expenses: 16000 } },
+        { label: 'Agent d\'entretien', value: { minSalary: 18000, maxSalary: 22000, expenses: 16000 } },
         { label: 'Architecte', value: { minSalary: 35000, maxSalary: 50000, expenses: 30000 } },
         { label: 'Avocat', value: { minSalary: 45000, maxSalary: 80000, expenses: 40000 } },
         { label: 'Boulanger', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
