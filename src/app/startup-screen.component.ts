@@ -16,6 +16,7 @@ import { IftaLabel } from 'primeng/iftalabel';
 import { ThemeToggleComponent } from './theme-toggle.component';
 import { LanguageToggleComponent } from './language-toggle.component';
 import {NgIf} from '@angular/common';
+import {DifficultyLevel} from './data';
 
 @Component({
     selector: 'app-startup-screen',
@@ -79,6 +80,26 @@ import {NgIf} from '@angular/common';
                                     </ng-template>
                                 </p-select>
                             </div>
+
+                            <div>
+                                <label class="block text-sm font-medium theme-text-primary mb-2">Niveau de difficulté</label>
+                                <p-select id="difficulty" [options]="difficultyLevels()" [(ngModel)]="selectedDifficulty" 
+                                         optionLabel="label" optionValue="level"
+                                         placeholder="Choisir la difficulté" class="w-full touch-manipulation">
+                                    <ng-template let-difficulty pTemplate="item">
+                                        <div class="p-3">
+                                            <div class="text-sm font-medium">{{ difficulty.label }}</div>
+                                            <div class="text-xs theme-text-muted mt-1">{{ difficulty.description }}</div>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-difficulty pTemplate="selectedItem">
+                                        <div class="text-sm">{{ difficulty.label }}</div>
+                                    </ng-template>
+                                    <ng-template #dropdownicon>
+                                        <i class="pi pi-cog text-primary-500"></i>
+                                    </ng-template>
+                                </p-select>
+                            </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <p-iftalabel>
@@ -110,7 +131,7 @@ import {NgIf} from '@angular/common';
                                 <p-button icon="pi pi-question-circle" [label]="translationService.translate('startup.help')" (click)="showHelp = true" 
                                          class="p-button-outlined flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 touch-target min-h-[48px]"></p-button>
                                 <p-button [label]="translationService.translate('startup.startGame')"
-                                          (click)="gameService.startGame(selectedJob, age, startingMoney, name)"
+                                          (click)="startNewGame()"
                                           [disabled]="!selectedJob || !age || !startingMoney || !name"
                                           class="flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 theme-shadow-md touch-target min-h-[48px]"></p-button>
                             </div>
@@ -162,6 +183,7 @@ import {NgIf} from '@angular/common';
 })
 export class StartupScreenComponent {
     selectedJob: any = null;
+    selectedDifficulty: DifficultyLevel = 'normal';
     age: number = 25;
     startingMoney: number = 5000;
     name: string = '';
@@ -183,6 +205,7 @@ export class StartupScreenComponent {
     help = computed(() => this.translationService.translate('startup.help'));
     startGame = computed(() => this.translationService.translate('startup.startGame'));
     jobs = computed(() => this.configService.getTranslatedJobs());
+    difficultyLevels = computed(() => this.configService.difficultyConfigs);
 
     constructor(private router: Router, private configService: GameConfigService, public gameService: GameService, public translationService: TranslationService) {
         this.randomNames = this.configService.randomNames;
@@ -210,5 +233,12 @@ export class StartupScreenComponent {
     generateRandomName() {
         const randomIndex = Math.floor(Math.random() * this.randomNames.length);
         this.name = this.randomNames[randomIndex];
+    }
+
+    startNewGame() {
+        // Set the selected difficulty before starting the game
+        this.configService.setDifficulty(this.selectedDifficulty);
+        // Start the game with the selected parameters
+        this.gameService.startGame(this.selectedJob, this.age, this.startingMoney, this.name);
     }
 }

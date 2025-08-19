@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {GameEvent, Investment, Job} from './data';
+import {GameEvent, Investment, Job, DifficultyConfig, EconomicCycleConfig, DifficultyLevel, EconomicCycle} from './data';
 import {TranslationService} from './translation.service';
 
 @Injectable({
@@ -132,4 +132,169 @@ export class GameConfigService {
     }
 
     loanRate: number = 0.1; // 10% interest
+
+    difficultyConfigs: DifficultyConfig[] = [
+        {
+            level: 'easy',
+            label: 'Facile',
+            description: 'Pour les débutants - salaires plus élevés, dépenses réduites, événements moins fréquents',
+            modifiers: {
+                salaryMultiplier: 1.3,
+                expenseMultiplier: 0.8,
+                investmentReturnMultiplier: 1.2,
+                eventFrequency: 0.7,
+                startingCashMultiplier: 1.5,
+                loanInterestMultiplier: 0.8
+            }
+        },
+        {
+            level: 'normal',
+            label: 'Normal',
+            description: 'Équilibré - expérience de jeu standard',
+            modifiers: {
+                salaryMultiplier: 1.0,
+                expenseMultiplier: 1.0,
+                investmentReturnMultiplier: 1.0,
+                eventFrequency: 1.0,
+                startingCashMultiplier: 1.0,
+                loanInterestMultiplier: 1.0
+            }
+        },
+        {
+            level: 'hard',
+            label: 'Difficile',
+            description: 'Pour les joueurs expérimentés - dépenses plus élevées, revenus réduits',
+            modifiers: {
+                salaryMultiplier: 0.8,
+                expenseMultiplier: 1.2,
+                investmentReturnMultiplier: 0.9,
+                eventFrequency: 1.3,
+                startingCashMultiplier: 0.7,
+                loanInterestMultiplier: 1.2
+            }
+        },
+        {
+            level: 'expert',
+            label: 'Expert',
+            description: 'Défi ultime - conditions très difficiles, événements fréquents',
+            modifiers: {
+                salaryMultiplier: 0.7,
+                expenseMultiplier: 1.4,
+                investmentReturnMultiplier: 0.8,
+                eventFrequency: 1.5,
+                startingCashMultiplier: 0.5,
+                loanInterestMultiplier: 1.4
+            }
+        }
+    ];
+
+    economicCycles: EconomicCycleConfig[] = [
+        {
+            cycle: 'recession',
+            label: 'Récession',
+            description: 'Période économique difficile avec baisse des investissements',
+            duration: 8,
+            effects: {
+                investmentReturnMultiplier: 0.6,
+                jobSecurityFactor: 0.7,
+                eventSeverityMultiplier: 1.4,
+                inflationRate: 0.02
+            }
+        },
+        {
+            cycle: 'recovery',
+            label: 'Reprise',
+            description: 'Sortie de récession avec amélioration progressive',
+            duration: 6,
+            effects: {
+                investmentReturnMultiplier: 0.8,
+                jobSecurityFactor: 0.9,
+                eventSeverityMultiplier: 1.1,
+                inflationRate: 0.015
+            }
+        },
+        {
+            cycle: 'expansion',
+            label: 'Expansion',
+            description: 'Croissance économique favorable aux investissements',
+            duration: 10,
+            effects: {
+                investmentReturnMultiplier: 1.3,
+                jobSecurityFactor: 1.2,
+                eventSeverityMultiplier: 0.8,
+                inflationRate: 0.025
+            }
+        },
+        {
+            cycle: 'peak',
+            label: 'Pic',
+            description: 'Apogée économique mais instabilité croissante',
+            duration: 4,
+            effects: {
+                investmentReturnMultiplier: 1.5,
+                jobSecurityFactor: 1.0,
+                eventSeverityMultiplier: 1.2,
+                inflationRate: 0.035
+            }
+        }
+    ];
+
+    currentDifficulty: DifficultyLevel = 'normal';
+    currentEconomicCycle: EconomicCycle = 'expansion';
+    economicCycleTurnsRemaining: number = 10;
+
+    setDifficulty(difficulty: DifficultyLevel): void {
+        this.currentDifficulty = difficulty;
+    }
+
+    getCurrentDifficultyConfig(): DifficultyConfig {
+        return this.difficultyConfigs.find(config => config.level === this.currentDifficulty) || this.difficultyConfigs[1];
+    }
+
+    getCurrentEconomicCycleConfig(): EconomicCycleConfig {
+        return this.economicCycles.find(cycle => cycle.cycle === this.currentEconomicCycle) || this.economicCycles[2];
+    }
+
+    applyDifficultyToSalary(baseSalary: number): number {
+        const difficultyConfig = this.getCurrentDifficultyConfig();
+        return Math.round(baseSalary * difficultyConfig.modifiers.salaryMultiplier);
+    }
+
+    applyDifficultyToExpenses(baseExpenses: number): number {
+        const difficultyConfig = this.getCurrentDifficultyConfig();
+        return Math.round(baseExpenses * difficultyConfig.modifiers.expenseMultiplier);
+    }
+
+    applyDifficultyToInvestmentReturn(baseReturn: number): number {
+        const difficultyConfig = this.getCurrentDifficultyConfig();
+        const economicConfig = this.getCurrentEconomicCycleConfig();
+        return Math.round(baseReturn * difficultyConfig.modifiers.investmentReturnMultiplier * economicConfig.effects.investmentReturnMultiplier);
+    }
+
+    applyDifficultyToStartingCash(baseCash: number): number {
+        const difficultyConfig = this.getCurrentDifficultyConfig();
+        return Math.round(baseCash * difficultyConfig.modifiers.startingCashMultiplier);
+    }
+
+    shouldTriggerEvent(): boolean {
+        const difficultyConfig = this.getCurrentDifficultyConfig();
+        const baseChance = 0.3; // 30% base chance per turn
+        return Math.random() < (baseChance * difficultyConfig.modifiers.eventFrequency);
+    }
+
+    applyEconomicCycleToEvent(eventAmount: number): number {
+        const economicConfig = this.getCurrentEconomicCycleConfig();
+        return Math.round(eventAmount * economicConfig.effects.eventSeverityMultiplier);
+    }
+
+    advanceEconomicCycle(): void {
+        this.economicCycleTurnsRemaining--;
+        if (this.economicCycleTurnsRemaining <= 0) {
+            // Cycle through economic phases
+            const currentIndex = this.economicCycles.findIndex(cycle => cycle.cycle === this.currentEconomicCycle);
+            const nextIndex = (currentIndex + 1) % this.economicCycles.length;
+            this.currentEconomicCycle = this.economicCycles[nextIndex].cycle;
+            this.economicCycleTurnsRemaining = this.economicCycles[nextIndex].duration;
+        }
+    }
 }

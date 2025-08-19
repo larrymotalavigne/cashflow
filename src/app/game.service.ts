@@ -147,16 +147,39 @@ export class GameService {
 
   nextTurn() {
     const cashBefore = this.cash;
+    
+    // Advance economic cycle
+    this.configService.advanceEconomicCycle();
+    
+    // Calculate passive income with economic cycle modifiers
+    this.passiveIncome = 0;
+    this.investments.forEach(investment => {
+      this.passiveIncome += this.configService.applyDifficultyToInvestmentReturn(investment.income);
+    });
+    
     const liabilityPayments = this.calculateLiabilityPayments(); // Calculate liability payments
     this.cash += this.income + this.passiveIncome - this.expenses - liabilityPayments; // Subtract liability payments
     console.log(`Next turn - ${this.cash} - ${this.income + this.passiveIncome - this.expenses - liabilityPayments}`)
-    this.showOpportunities();
+    
+    // Only trigger events based on difficulty settings
+    if (this.configService.shouldTriggerEvent()) {
+      this.showOpportunities();
+    } else {
+      // Still show investment opportunities even if no events
+      this.randomEvents = [];
+      this.showOpportunities();
+    }
 
+    // Apply economic cycle effects to events
     this.randomEvents.forEach(event => {
       if (event.effect?.type === 'cash') {
-        this.cash += event.effect.amount;
+        const modifiedAmount = this.configService.applyEconomicCycleToEvent(event.effect.amount);
+        this.cash += modifiedAmount;
+        event.effect.amount = modifiedAmount; // Update for display
       } else if (event.effect?.type === 'expenses') {
-        this.expenses += event.effect.amount;
+        const modifiedAmount = this.configService.applyEconomicCycleToEvent(event.effect.amount);
+        this.expenses += modifiedAmount;
+        event.effect.amount = modifiedAmount; // Update for display
       }
     });
 
@@ -460,12 +483,17 @@ export class GameService {
     const minSalary = selectedJob.minSalary;
     const maxSalary = selectedJob.maxSalary;
 
-    const income = Math.floor(Math.random() * (maxSalary - minSalary + 1)) + minSalary;
+    const baseIncome = Math.floor(Math.random() * (maxSalary - minSalary + 1)) + minSalary;
+    
+    // Apply difficulty modifiers
+    const income = this.configService.applyDifficultyToSalary(baseIncome);
+    const expenses = this.configService.applyDifficultyToExpenses(selectedJob.expenses);
+    const cash = this.configService.applyDifficultyToStartingCash(startingMoney);
 
     // Reset all game state properties
-    this.cash = startingMoney;
+    this.cash = cash;
     this.income = income;
-    this.expenses = selectedJob.expenses;
+    this.expenses = expenses;
     this.age = age;
     this.name = name;
     this.passiveIncome = 0;

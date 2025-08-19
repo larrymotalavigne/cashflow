@@ -4,6 +4,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { inject } from '@angular/core';
 import { GameService } from './game.service';
+import { GameConfigService } from './game-config.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Subscription } from 'rxjs';
 
@@ -91,6 +92,49 @@ import { Subscription } from 'rxjs';
                         </div>
                     </div>
                     
+                    <!-- Economic Cycle Section -->
+                    <div class="mt-6 theme-bg-muted rounded-lg p-4 theme-border border">
+                        <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center">
+                            <i class="pi pi-chart-bar mr-2 text-secondary-600 dark:text-secondary-400"></i>
+                            Cycle Économique
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="theme-bg-card rounded-md p-3 theme-border border theme-shadow-sm">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-semibold theme-text-card">Phase Actuelle</span>
+                                    <span class="px-2 py-1 rounded text-xs font-medium" 
+                                          [class]="configService.currentEconomicCycle === 'recession' ? 'bg-error-100 text-error-800 dark:bg-error-900/20 dark:text-error-200' :
+                                                   configService.currentEconomicCycle === 'recovery' ? 'bg-warning-100 text-warning-800 dark:bg-warning-900/20 dark:text-warning-200' :
+                                                   configService.currentEconomicCycle === 'expansion' ? 'bg-success-100 text-success-800 dark:bg-success-900/20 dark:text-success-200' :
+                                                   'bg-primary-100 text-primary-800 dark:bg-primary-900/20 dark:text-primary-200'">
+                                        {{ configService.getCurrentEconomicCycleConfig().label }}
+                                    </span>
+                                </div>
+                                <p class="text-sm theme-text-muted mb-2">{{ configService.getCurrentEconomicCycleConfig().description }}</p>
+                                <p class="text-sm font-medium theme-text-card">
+                                    📅 Tours restants: {{ configService.economicCycleTurnsRemaining }}
+                                </p>
+                            </div>
+                            <div class="theme-bg-card rounded-md p-3 theme-border border theme-shadow-sm">
+                                <span class="font-semibold theme-text-card block mb-2">Effets Actuels</span>
+                                <div class="space-y-1 text-sm">
+                                    <p class="theme-text-muted">
+                                        📈 Rendements: {{ (configService.getCurrentEconomicCycleConfig().effects.investmentReturnMultiplier * 100 - 100).toFixed(0) }}%
+                                    </p>
+                                    <p class="theme-text-muted">
+                                        🏢 Sécurité emploi: {{ (configService.getCurrentEconomicCycleConfig().effects.jobSecurityFactor * 100 - 100).toFixed(0) }}%
+                                    </p>
+                                    <p class="theme-text-muted">
+                                        ⚡ Événements: {{ (configService.getCurrentEconomicCycleConfig().effects.eventSeverityMultiplier * 100 - 100).toFixed(0) }}%
+                                    </p>
+                                    <p class="theme-text-muted">
+                                        💰 Inflation: {{ (configService.getCurrentEconomicCycleConfig().effects.inflationRate * 100).toFixed(1) }}%
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Investments Section -->
                     <div *ngIf="game.investments.length > 0" class="mt-6 theme-bg-muted rounded-lg p-4 theme-border border">
                         <h3 class="text-lg font-semibold theme-text-primary mb-3 flex items-center">
@@ -113,6 +157,7 @@ import { Subscription } from 'rxjs';
 })
 export class PlayerInfoComponent implements OnInit, OnDestroy {
     game = inject(GameService);
+    configService = inject(GameConfigService);
 
     // Toggle state for monthly/yearly view
     isYearlyView = false;
