@@ -133,60 +133,62 @@ export class GameConfigService {
 
     loanRate: number = 0.1; // 10% interest
 
-    difficultyConfigs: DifficultyConfig[] = [
-        {
-            level: 'easy',
-            label: 'Facile',
-            description: 'Pour les débutants - salaires plus élevés, dépenses réduites, événements moins fréquents',
-            modifiers: {
-                salaryMultiplier: 1.3,
-                expenseMultiplier: 0.8,
-                investmentReturnMultiplier: 1.2,
-                eventFrequency: 0.7,
-                startingCashMultiplier: 1.5,
-                loanInterestMultiplier: 0.8
+    get difficultyConfigs(): DifficultyConfig[] {
+        return [
+            {
+                level: 'easy',
+                label: this.translationService.translate('startup.difficulties.easy.label'),
+                description: this.translationService.translate('startup.difficulties.easy.description'),
+                modifiers: {
+                    salaryMultiplier: 1.3,
+                    expenseMultiplier: 0.8,
+                    investmentReturnMultiplier: 1.2,
+                    eventFrequency: 0.7,
+                    startingCashMultiplier: 1.5,
+                    loanInterestMultiplier: 0.8
+                }
+            },
+            {
+                level: 'normal',
+                label: this.translationService.translate('startup.difficulties.normal.label'),
+                description: this.translationService.translate('startup.difficulties.normal.description'),
+                modifiers: {
+                    salaryMultiplier: 1.0,
+                    expenseMultiplier: 1.0,
+                    investmentReturnMultiplier: 1.0,
+                    eventFrequency: 1.0,
+                    startingCashMultiplier: 1.0,
+                    loanInterestMultiplier: 1.0
+                }
+            },
+            {
+                level: 'hard',
+                label: this.translationService.translate('startup.difficulties.hard.label'),
+                description: this.translationService.translate('startup.difficulties.hard.description'),
+                modifiers: {
+                    salaryMultiplier: 0.8,
+                    expenseMultiplier: 1.2,
+                    investmentReturnMultiplier: 0.9,
+                    eventFrequency: 1.3,
+                    startingCashMultiplier: 0.7,
+                    loanInterestMultiplier: 1.2
+                }
+            },
+            {
+                level: 'expert',
+                label: this.translationService.translate('startup.difficulties.expert.label'),
+                description: this.translationService.translate('startup.difficulties.expert.description'),
+                modifiers: {
+                    salaryMultiplier: 0.7,
+                    expenseMultiplier: 1.4,
+                    investmentReturnMultiplier: 0.8,
+                    eventFrequency: 1.5,
+                    startingCashMultiplier: 0.5,
+                    loanInterestMultiplier: 1.4
+                }
             }
-        },
-        {
-            level: 'normal',
-            label: 'Normal',
-            description: 'Équilibré - expérience de jeu standard',
-            modifiers: {
-                salaryMultiplier: 1.0,
-                expenseMultiplier: 1.0,
-                investmentReturnMultiplier: 1.0,
-                eventFrequency: 1.0,
-                startingCashMultiplier: 1.0,
-                loanInterestMultiplier: 1.0
-            }
-        },
-        {
-            level: 'hard',
-            label: 'Difficile',
-            description: 'Pour les joueurs expérimentés - dépenses plus élevées, revenus réduits',
-            modifiers: {
-                salaryMultiplier: 0.8,
-                expenseMultiplier: 1.2,
-                investmentReturnMultiplier: 0.9,
-                eventFrequency: 1.3,
-                startingCashMultiplier: 0.7,
-                loanInterestMultiplier: 1.2
-            }
-        },
-        {
-            level: 'expert',
-            label: 'Expert',
-            description: 'Défi ultime - conditions très difficiles, événements fréquents',
-            modifiers: {
-                salaryMultiplier: 0.7,
-                expenseMultiplier: 1.4,
-                investmentReturnMultiplier: 0.8,
-                eventFrequency: 1.5,
-                startingCashMultiplier: 0.5,
-                loanInterestMultiplier: 1.4
-            }
-        }
-    ];
+        ];
+    }
 
     economicCycles: EconomicCycleConfig[] = [
         {

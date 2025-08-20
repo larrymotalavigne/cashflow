@@ -139,7 +139,6 @@ import {TranslationService} from './translation.service';
                                     <div class="flex flex-col gap-4">
                                         <p-button label="Voir les opportunités"
                                                   (click)="this.game.showOpportunities()"
-                                                  class="w-full p-button-outlined"
                                                   icon="pi pi-search"></p-button>
                                         <p-button label="Passer le tour"
                                                   (click)="this.game.nextTurn()"

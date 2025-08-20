@@ -82,10 +82,10 @@ import {DifficultyLevel} from './data';
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium theme-text-primary mb-2">Niveau de difficulté</label>
+                                <label class="block text-sm font-medium theme-text-primary mb-2">{{ translationService.translate('startup.difficultyLevel') }}</label>
                                 <p-select id="difficulty" [options]="difficultyLevels()" [(ngModel)]="selectedDifficulty" 
                                          optionLabel="label" optionValue="level"
-                                         placeholder="Choisir la difficulté" class="w-full touch-manipulation">
+                                         [placeholder]="translationService.translate('startup.selectDifficulty')" class="w-full touch-manipulation">
                                     <ng-template let-difficulty pTemplate="item">
                                         <div class="p-3">
                                             <div class="text-sm font-medium">{{ difficulty.label }}</div>
@@ -128,12 +128,10 @@ import {DifficultyLevel} from './data';
                             </p-iftalabel>
 
                             <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 pt-3 sm:pt-4">
-                                <p-button icon="pi pi-question-circle" [label]="translationService.translate('startup.help')" (click)="showHelp = true" 
-                                         class="p-button-outlined flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 touch-target min-h-[48px]"></p-button>
+                                <p-button icon="pi pi-question-circle" [label]="translationService.translate('startup.help')" (click)="showHelp = true" outlined/>
                                 <p-button [label]="translationService.translate('startup.startGame')"
                                           (click)="startNewGame()"
-                                          [disabled]="!selectedJob || !age || !startingMoney || !name"
-                                          class="flex-1 hover:scale-105 active:scale-95 transition-transform duration-200 theme-shadow-md touch-target min-h-[48px]"></p-button>
+                                          [disabled]="!selectedJob || !age || !startingMoney || !name"/>
                             </div>
                         </div>
                     </p-card>

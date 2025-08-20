@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
-import { Investment } from './data';
+import { Investment, InvestmentSector } from './data';
 import { GameConfigService } from './game-config.service';
 import { GameService } from './game.service';
 import { FinancialCounterComponent } from './loading.component';
@@ -34,10 +34,18 @@ import { FinancialCounterComponent } from './loading.component';
                 {{ investment.name }}
               </h3>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                     [ngClass]="getTypeBadgeClasses(investment.type)">
                 {{ getTypeIcon(investment.type) }} {{ investment.type }}
+              </span>
+              <span *ngIf="investment.sector" 
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [ngClass]="getSectorBadgeClasses()"
+                    [pTooltip]="getSectorTooltip()" 
+                    tooltipPosition="top">
+                <i class="pi text-xs mr-1" [ngClass]="getSectorIcon()"></i>
+                {{ getSectorName() }}
               </span>
               <div class="flex items-center gap-1" [pTooltip]="getRiskTooltip()" tooltipPosition="top">
                 <i class="pi text-xs" [ngClass]="getRiskIcon()"></i>
@@ -258,6 +266,18 @@ export class EnhancedInvestmentCardComponent {
   }
 
   getRiskLevel(): string {
+    // Use new risk assessment system (Task 1.3)
+    if (this.investment.riskCategory) {
+      switch (this.investment.riskCategory) {
+        case 'very_high': return 'Très élevé';
+        case 'high': return 'Élevé';
+        case 'medium': return 'Moyen';
+        case 'low': return 'Faible';
+        default: return 'Moyen';
+      }
+    }
+    
+    // Fallback to old ROI-based system
     const roi = this.getROIValue();
     if (roi > 20) return 'Élevé';
     if (roi > 12) return 'Moyen';
@@ -265,6 +285,18 @@ export class EnhancedInvestmentCardComponent {
   }
 
   getRiskIcon(): string {
+    // Use new risk assessment system (Task 1.3)
+    if (this.investment.riskCategory) {
+      switch (this.investment.riskCategory) {
+        case 'very_high': return 'pi-exclamation-triangle text-error-600';
+        case 'high': return 'pi-exclamation-triangle text-error-500';
+        case 'medium': return 'pi-info-circle text-warning-500';
+        case 'low': return 'pi-shield text-success-500';
+        default: return 'pi-info-circle text-warning-500';
+      }
+    }
+    
+    // Fallback to old ROI-based system
     const roi = this.getROIValue();
     if (roi > 20) return 'pi-exclamation-triangle text-error-500';
     if (roi > 12) return 'pi-info-circle text-warning-500';
@@ -272,6 +304,24 @@ export class EnhancedInvestmentCardComponent {
   }
 
   getRiskTooltip(): string {
+    // Use new risk assessment system (Task 1.3)
+    if (this.investment.riskScore && this.investment.volatility) {
+      const volatilityPercent = Math.round(this.investment.volatility * 100);
+      switch (this.investment.riskCategory) {
+        case 'very_high': 
+          return `Risque très élevé (${this.investment.riskScore}/10) - Volatilité: ${volatilityPercent}% - Rendements très variables`;
+        case 'high': 
+          return `Risque élevé (${this.investment.riskScore}/10) - Volatilité: ${volatilityPercent}% - Rendements volatils`;
+        case 'medium': 
+          return `Risque modéré (${this.investment.riskScore}/10) - Volatilité: ${volatilityPercent}% - Équilibre risque/rendement`;
+        case 'low': 
+          return `Risque faible (${this.investment.riskScore}/10) - Volatilité: ${volatilityPercent}% - Rendements stables`;
+        default: 
+          return `Score de risque: ${this.investment.riskScore}/10 - Volatilité: ${volatilityPercent}%`;
+      }
+    }
+    
+    // Fallback to old ROI-based system
     const roi = this.getROIValue();
     if (roi > 20) return 'Investissement à haut risque - rendements élevés mais volatils';
     if (roi > 12) return 'Investissement à risque modéré - équilibre risque/rendement';
@@ -350,5 +400,70 @@ export class EnhancedInvestmentCardComponent {
       investment: this.investment,
       selected: this.isSelected
     });
+  }
+
+  // Sector display methods for Task 1.6
+  getSectorName(): string {
+    if (!this.investment.sector) return '';
+    
+    switch (this.investment.sector) {
+      case 'technology': return 'Technologie';
+      case 'healthcare': return 'Santé';
+      case 'real_estate': return 'Immobilier';
+      case 'finance': return 'Finance';
+      case 'energy': return 'Énergie';
+      case 'consumer_goods': return 'Biens de consommation';
+      case 'utilities': return 'Services publics';
+      case 'telecommunications': return 'Télécommunications';
+      case 'industrials': return 'Industriels';
+      case 'materials': return 'Matériaux';
+      default: return '';
+    }
+  }
+
+  getSectorIcon(): string {
+    if (!this.investment.sector) return 'pi-tag';
+    
+    switch (this.investment.sector) {
+      case 'technology': return 'pi-desktop';
+      case 'healthcare': return 'pi-heart';
+      case 'real_estate': return 'pi-home';
+      case 'finance': return 'pi-dollar';
+      case 'energy': return 'pi-bolt';
+      case 'consumer_goods': return 'pi-shopping-bag';
+      case 'utilities': return 'pi-cog';
+      case 'telecommunications': return 'pi-phone';
+      case 'industrials': return 'pi-building';
+      case 'materials': return 'pi-box';
+      default: return 'pi-tag';
+    }
+  }
+
+  getSectorBadgeClasses(): string {
+    if (!this.investment.sector) return 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300';
+    
+    switch (this.investment.sector) {
+      case 'technology': return 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300';
+      case 'healthcare': return 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300';
+      case 'real_estate': return 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300';
+      case 'finance': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300';
+      case 'energy': return 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300';
+      case 'consumer_goods': return 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300';
+      case 'utilities': return 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300';
+      case 'telecommunications': return 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300';
+      case 'industrials': return 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300';
+      case 'materials': return 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300';
+      default: return 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300';
+    }
+  }
+
+  getSectorTooltip(): string {
+    if (!this.investment.sector) return '';
+    
+    const sectorName = this.getSectorName();
+    const riskMultiplier = this.investment.sectorRiskMultiplier || 1;
+    const returnMultiplier = this.investment.sectorReturnMultiplier || 1;
+    
+    return `Secteur ${sectorName} - Risque: ${(riskMultiplier * 100).toFixed(0)}%, Rendement: ${(returnMultiplier * 100).toFixed(0)}%`;
   }
 }

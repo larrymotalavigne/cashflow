@@ -67,7 +67,27 @@ export class TranslationService {
         goodLuck: 'Bonne chance dans votre parcours vers la liberté financière! 🚀',
         resumeGame: 'Reprendre la partie',
         continueWith: 'Continuer avec',
-        resumeGameButton: 'Reprendre la partie'
+        resumeGameButton: 'Reprendre la partie',
+        difficultyLevel: 'Niveau de difficulté',
+        selectDifficulty: 'Choisir la difficulté',
+        difficulties: {
+          easy: {
+            label: 'Facile',
+            description: 'Pour les débutants - salaires plus élevés, dépenses réduites, événements moins fréquents'
+          },
+          normal: {
+            label: 'Normal',
+            description: 'Équilibré - expérience de jeu standard'
+          },
+          hard: {
+            label: 'Difficile',
+            description: 'Pour les joueurs expérimentés - dépenses plus élevées, revenus réduits'
+          },
+          expert: {
+            label: 'Expert',
+            description: 'Défi ultime - conditions très difficiles, événements fréquents'
+          }
+        }
       },
       game: {
         dashboard: 'Cashflow',
@@ -202,7 +222,27 @@ export class TranslationService {
         goodLuck: 'Good luck on your journey to financial freedom! 🚀',
         resumeGame: 'Resume Game',
         continueWith: 'Continue with',
-        resumeGameButton: 'Resume Game'
+        resumeGameButton: 'Resume Game',
+        difficultyLevel: 'Difficulty Level',
+        selectDifficulty: 'Select Difficulty',
+        difficulties: {
+          easy: {
+            label: 'Easy',
+            description: 'For beginners - higher salaries, reduced expenses, less frequent events'
+          },
+          normal: {
+            label: 'Normal',
+            description: 'Balanced - standard game experience'
+          },
+          hard: {
+            label: 'Hard',
+            description: 'For experienced players - higher expenses, reduced income'
+          },
+          expert: {
+            label: 'Expert',
+            description: 'Ultimate challenge - very difficult conditions, frequent events'
+          }
+        }
       },
       game: {
         dashboard: 'Cashflow',

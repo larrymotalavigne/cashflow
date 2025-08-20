@@ -8,12 +8,12 @@ This document contains ordered tasks to enhance the business capabilities of the
 ### 1. Advanced Game Mechanics & Business Logic
 - [x] 1.1 Implement multiple difficulty levels with adjustable parameters
 - [x] 1.2 Add economic cycles that affect investment returns and market conditions
-- [ ] 1.3 Create risk assessment system for investments with volatility modeling
-- [ ] 1.4 Implement dynamic pricing for investments based on market conditions
-- [ ] 1.5 Add inflation modeling that affects salary growth and expenses
-- [ ] 1.6 Create investment categories with sector-specific risks and returns
-- [ ] 1.7 Implement tax system with different brackets and investment tax implications
-- [ ] 1.8 Add retirement planning mechanics with age-based restrictions
+- [x] 1.3 Create risk assessment system for investments with volatility modeling
+- [x] 1.4 Implement dynamic pricing for investments based on market conditions
+- [x] 1.5 Add inflation modeling that affects salary growth and expenses
+- [x] 1.6 Create investment categories with sector-specific risks and returns
+- [x] 1.7 Implement tax system with different brackets and investment tax implications
+- [x] 1.8 Add retirement planning mechanics with age-based restrictions
 
 ### 2. Enhanced Investment System
 - [ ] 2.1 Create advanced portfolio rebalancing tools and recommendations
