@@ -12,11 +12,13 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {ThemeToggleComponent} from './theme-toggle.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslationService} from './translation.service';
+import {ConfirmationDialogService} from './confirmation-dialog.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent],
+    imports: [CommonModule, FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent],
     animations: [
         trigger('financialChange', [
             state('increase', style({
@@ -46,11 +48,19 @@ import {TranslationService} from './translation.service';
         ])
     ],
     template: `
+        <!-- Loading Overlay -->
+        <div *ngIf="game.isLoading" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div class="theme-bg-card rounded-lg p-6 theme-shadow-xl flex flex-col items-center gap-4">
+                <i class="pi pi-spin pi-spinner text-4xl text-primary-500"></i>
+                <span class="theme-text-primary font-semibold">{{ translationService.translate('common.loading') }}</span>
+            </div>
+        </div>
+
         <p-toolbar class="theme-bg-card theme-shadow-sm border-b theme-border">
             <div class="flex align-items-center justify-between w-full relative">
                 <!-- Left side: Back button -->
                 <div class="flex align-items-center">
-                    <button (click)="this.game.goToStartup()"
+                    <button (click)="goBack()"
                             class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-3 min-h-[44px] min-w-[44px] touch-manipulation">
                         <i class="pi pi-arrow-left text-lg sm:text-xl theme-text-primary"></i>
                     </button>
@@ -96,13 +106,26 @@ import {TranslationService} from './translation.service';
 export class GameComponent {
     game = inject(GameService);
     translationService = inject(TranslationService);
-    
+    confirmationService = inject(ConfirmationDialogService);
+
     private startX: number = 0;
     private startY: number = 0;
     private isScrolling: boolean = false;
     private isRefreshing: boolean = false;
     private pullDistance: number = 0;
     private readonly maxPullDistance: number = 120;
+
+    async goBack() {
+        const result = await this.confirmationService.confirmWarning(
+            this.translationService.translate('dialogs.confirmBackTitle'),
+            this.translationService.translate('dialogs.confirmBackMessage'),
+            this.translationService.translate('common.confirm')
+        );
+
+        if (result.confirmed) {
+            this.game.goToStartup();
+        }
+    }
 
     onTouchStart(event: TouchEvent) {
         this.startX = event.touches[0].clientX;
@@ -165,12 +188,10 @@ export class GameComponent {
         // Horizontal swipe detection
         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
             if (diffX > 0) {
-                // Swipe left - could navigate to next section
+                // Swipe left - show opportunities
                 this.game.showOpportunities();
-            } else {
-                // Swipe right - could go back
-                this.game.goToStartup();
             }
+            // Removed swipe right navigation to prevent accidental game loss
         }
 
         this.resetTouchState();

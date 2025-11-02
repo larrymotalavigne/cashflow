@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, inject} from '@angular/core';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {NgForOf, NgIf} from '@angular/common';
@@ -11,6 +11,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {DividerModule} from 'primeng/divider';
 import {AdvancedInvestmentFilterComponent} from './advanced-investment-filter.component';
 import {InvestmentCarouselComponent} from './investment-carousel.component';
+import {TranslationService} from './translation.service';
 
 @Component({
     selector: 'app-random-event-dialog',
@@ -19,7 +20,7 @@ import {InvestmentCarouselComponent} from './investment-carousel.component';
     template: `
         <p-dialog #dialog [(visible)]="visible" [closable]="false" [header]="getYearTitle()" [modal]="true" styleClass="w-75 theme-bg-card">
             <div *ngIf="randomEvents.length" class="mb-4">
-                <h3 class="theme-text-card mb-3">Événements</h3>
+                <h3 class="theme-text-card mb-3">{{ translationService.translate('investments.events') }}</h3>
                 <div *ngFor="let event of randomEvents" class="mb-2 theme-bg-muted p-3 rounded-lg theme-border border">
                     <ng-container *ngIf="event.effect?.amount > 0">📈</ng-container>
                     <ng-container *ngIf="event.effect?.amount < 0">📉</ng-container>
@@ -29,13 +30,13 @@ import {InvestmentCarouselComponent} from './investment-carousel.component';
             </div>
 
             <div>
-                <h3 class="theme-text-card mb-3">Opportunités d'investissement</h3>
+                <h3 class="theme-text-card mb-3">{{ translationService.translate('investments.opportunities') }}</h3>
 
                 <div *ngIf="investmentOpportunities.length; else noInvestments">
                     <!-- Toggle button for advanced filters -->
                     <div class="mb-3">
-                        <p-button 
-                            [label]="showAdvancedFilters ? 'Masquer les filtres avancés' : 'Afficher les filtres avancés'"
+                        <p-button
+                            [label]="showAdvancedFilters ? translationService.translate('investments.hideAdvancedFilters') : translationService.translate('investments.showAdvancedFilters')"
                             icon="pi pi-filter"
                             (click)="showAdvancedFilters = !showAdvancedFilters"
                             styleClass="p-button-outlined p-button-sm"></p-button>
@@ -53,8 +54,8 @@ import {InvestmentCarouselComponent} from './investment-carousel.component';
                     <!-- Comparison Tool -->
                     <div *ngIf="comparisonMode" class="mb-3 p-3 theme-border border rounded-lg theme-bg-muted">
                         <div class="flex justify-content-between align-items-center mb-3">
-                            <h4 class="m-0 theme-text-primary">Comparaison d'investissements</h4>
-                            <p-button icon="pi pi-times" (click)="exitComparisonMode()" 
+                            <h4 class="m-0 theme-text-primary">{{ translationService.translate('investments.comparison') }}</h4>
+                            <p-button icon="pi pi-times" (click)="exitComparisonMode()"
                                       styleClass="p-button-rounded p-button-text"></p-button>
                         </div>
 
@@ -63,20 +64,20 @@ import {InvestmentCarouselComponent} from './investment-carousel.component';
                                 <div class="p-3 theme-border border rounded-lg h-full theme-bg-card theme-shadow-sm">
                                     <h5 class="theme-text-card">{{ investment.name }}</h5>
                                     <div class="grid">
-                                        <div class="col-6 theme-text-muted">Prix:</div>
+                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.price') }}:</div>
                                         <div class="col-6 font-bold theme-text-card">{{ investment.amount }}€</div>
 
-                                        <div class="col-6 theme-text-muted">Revenu:</div>
+                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.income') }}:</div>
                                         <div class="col-6 font-bold theme-text-card">{{ investment.income }}€</div>
 
-                                        <div class="col-6 theme-text-muted">ROI:</div>
+                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.roi') }}:</div>
                                         <div class="col-6 font-bold theme-text-card">{{ (investment.income / investment.amount * 100).toFixed(2) }}%</div>
 
-                                        <div class="col-6 theme-text-muted">Type:</div>
+                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.type') }}:</div>
                                         <div class="col-6 font-bold theme-text-card">{{ investment.type }}</div>
                                     </div>
                                     <div class="mt-3">
-                                        <p-button label="Retirer" (click)="removeFromComparison(investment)" 
+                                        <p-button [label]="translationService.translate('investments.remove')" (click)="removeFromComparison(investment)"
                                                   styleClass="p-button-sm p-button-outlined"></p-button>
                                     </div>
                                 </div>
@@ -85,11 +86,11 @@ import {InvestmentCarouselComponent} from './investment-carousel.component';
                     </div>
 
                     <div class="flex justify-content-between align-items-center mb-3">
-                        <p-button *ngIf="!comparisonMode" label="Comparer des investissements" 
+                        <p-button *ngIf="!comparisonMode" [label]="translationService.translate('investments.compareInvestments')"
                                   icon="pi pi-chart-bar" (click)="enterComparisonMode()"
                                   [disabled]="selectedInvestments.length < 2"></p-button>
                         <span *ngIf="comparisonMode" class="text-sm theme-text-muted">
-                            Sélectionnez des investissements pour les comparer
+                            {{ translationService.translate('investments.selectToCompare') }}
                         </span>
                     </div>
 
@@ -107,13 +108,13 @@ import {InvestmentCarouselComponent} from './investment-carousel.component';
                     </app-investment-carousel>
                 </div>
                 <ng-template #noInvestments>
-                    <p class="text-center text-sm theme-text-muted mt-2">Aucune opportunité d'investissement disponible.</p>
+                    <p class="text-center text-sm theme-text-muted mt-2">{{ translationService.translate('investments.noOpportunities') }}</p>
                 </ng-template>
             </div>
             <ng-template #footer>
                 <div class="flex justify-content-center w-full">
-                    <p-button 
-                        label="Next Year" 
+                    <p-button
+                        [label]="translationService.translate('investments.nextYear')"
                         (click)="close()"
                         styleClass="w-full md:w-auto min-h-[48px] touch-manipulation p-button-lg"
                         icon="pi pi-arrow-right"></p-button>
@@ -128,6 +129,8 @@ export class RandomEventDialogComponent {
     @Input() investmentOpportunities: any[] = [];
     @Output() visibleChange = new EventEmitter<boolean>();
     @Output() investmentAction = new EventEmitter<{ investment: any, action: 'buy' | 'reject' | 'loan' }>();
+
+    translationService = inject(TranslationService);
 
     // Filtered investments from advanced filter
     filteredInvestments: Investment[] = [];
@@ -199,19 +202,25 @@ export class RandomEventDialogComponent {
     deleteInvestment(investment: Investment) {
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
         // The advanced filter will automatically update when investmentOpportunities changes
-        if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
+        if (this.investmentOpportunities.length === 0) {
+            this.visibleChange.emit(false);
+        }
     }
 
     buyInvestmentWithLoan(investment: any) {
         this.gameService.buyInvestmentWithLoan(investment);
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
-        if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
+        if (this.investmentOpportunities.length === 0) {
+            this.visibleChange.emit(false);
+        }
     }
 
     buyInvestment(investment: any) {
         this.gameService.buyInvestment(investment);
         this.investmentOpportunities = this.investmentOpportunities.filter(i => i !== investment);
-        if (this.investmentOpportunities.length === 0) this.gameService.nextTurn();
+        if (this.investmentOpportunities.length === 0) {
+            this.visibleChange.emit(false);
+        }
     }
 
     addToComparison(investment: Investment) {

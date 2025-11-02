@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { GameConfigService } from './game-config.service';
 import { GameEvent, Investment, InvestmentSector, TaxCalculation, RetirementAccount, RetirementPlan, TaxBracket, RetirementAccountType } from './data';
 import { ToastService } from './toast.service';
+import { TranslationService } from './translation.service';
 
 interface TurnHistoryEntry {
   turnNumber: number;
@@ -58,6 +59,7 @@ export class GameService {
   currentTurn: number = 0;
   investmentsPurchasedThisTurn: Investment[] = [];
   selectedOpportunitiesPerYear: { [year: number]: string[] } = {};
+  isLoading: boolean = false;
   // Inflation tracking properties for task 1.5
   baseIncome: number = 0; // Original income before inflation adjustments
   baseExpenses: number = 0; // Original expenses before inflation adjustments
@@ -77,6 +79,7 @@ export class GameService {
   stateChanged = new EventEmitter<void>();
 
   private toastService = inject(ToastService);
+  private translationService = inject(TranslationService);
 
   constructor(private router: Router, private configService: GameConfigService) {
     // Try to load saved game state first
@@ -402,20 +405,20 @@ export class GameService {
 
   checkWinCondition() {
     if (this.passiveIncome >= this.expenses) {
-      this.eventMessage = 'Félicitations ! Vous avez atteint la liberté financière !';
+      this.eventMessage = this.translationService.translate('game.victoryMessage');
       this.eventVisible = true;
-      
+
       // Show victory toast notification
       this.toastService.success(
-        '🎉 Victoire !',
-        'Vous avez atteint l\'indépendance financière !',
+        '🎉 ' + this.translationService.translate('common.success') + ' !',
+        this.translationService.translate('game.victoryMessage'),
         { persistent: true }
       );
     }
   }
 
   buyInvestment(investment: Investment) { // Updated method
-    this.passiveIncome += investment.income;
+    // Don't add to passiveIncome here - it will be recalculated in nextTurn()
     this.cash -= investment.amount;
 
     const newInvestment = {
@@ -457,7 +460,7 @@ export class GameService {
     const loanFee = loanAmount * loanRate;
 
     this.loanTotal += loanFee;
-    this.passiveIncome += investment.income;
+    // Don't add to passiveIncome here - it will be recalculated in nextTurn()
 
     const newInvestment = {
       ...investment,

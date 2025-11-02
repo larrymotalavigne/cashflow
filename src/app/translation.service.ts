@@ -31,7 +31,19 @@ export class TranslationService {
         loading: 'Chargement...',
         error: 'Erreur',
         success: 'Succès',
-        warning: 'Attention'
+        warning: 'Attention',
+        continue: 'Continuer',
+        back: 'Retour'
+      },
+      dialogs: {
+        confirmBackTitle: 'Retour au menu',
+        confirmBackMessage: 'Êtes-vous sûr de vouloir retourner au menu principal ? Votre progression sera sauvegardée automatiquement.',
+        confirmRejectTitle: 'Rejeter l\'opportunité',
+        confirmRejectMessage: 'Êtes-vous sûr de vouloir rejeter cette opportunité d\'investissement ?',
+        purchaseSuccessTitle: 'Achat réussi !',
+        purchaseSuccessMessage: 'Votre investissement a été ajouté à votre portfolio',
+        loanPurchaseTitle: 'Achat avec emprunt',
+        loanPurchaseMessage: 'Investissement acheté avec un emprunt'
       },
       startup: {
         welcome: 'Bienvenue',
@@ -102,7 +114,29 @@ export class TranslationService {
         investments: 'Investissements',
         portfolio: 'Portefeuille',
         progress: 'Progression',
-        financialGoal: 'Objectif financier'
+        financialGoal: 'Objectif financier',
+        personalInfo: 'Informations Personnelles',
+        financialSituation: 'Situation Financière',
+        name: 'Nom',
+        years: 'ans',
+        monthly: 'Mensuel',
+        yearly: 'Annuel',
+        annualPeriod: 'annuel',
+        monthlyPeriod: 'mensuel',
+        loans: 'Emprunts',
+        economicCycle: 'Cycle Économique',
+        currentPhase: 'Phase Actuelle',
+        turnsRemaining: 'Tours restants',
+        currentEffects: 'Effets Actuels',
+        returns: 'Rendements',
+        jobSecurity: 'Sécurité emploi',
+        events: 'Événements',
+        inflation: 'Inflation',
+        investmentPortfolio: 'Portfolio d\'Investissements',
+        amount: 'Montant',
+        annualPayments: 'Paiements annuels',
+        annualRevenue: 'Revenu annuel',
+        victoryMessage: 'Félicitations ! Vous avez atteint la liberté financière !'
       },
       investments: {
         title: 'Opportunités d\'investissement',
@@ -114,7 +148,54 @@ export class TranslationService {
         cost: 'Coût',
         loan: 'Prêt',
         portfolio: 'Portefeuille',
-        noInvestments: 'Aucun investissement dans votre portefeuille'
+        noInvestments: 'Aucun investissement dans votre portefeuille',
+        events: 'Événements',
+        opportunities: 'Opportunités d\'investissement',
+        noOpportunities: 'Aucune opportunité d\'investissement disponible.',
+        showAdvancedFilters: 'Afficher les filtres avancés',
+        hideAdvancedFilters: 'Masquer les filtres avancés',
+        compareInvestments: 'Comparer des investissements',
+        comparison: 'Comparaison d\'investissements',
+        selectToCompare: 'Sélectionnez des investissements pour les comparer',
+        remove: 'Retirer',
+        nextYear: 'Année suivante',
+        price: 'Prix',
+        income: 'Revenu',
+        roi: 'ROI',
+        type: 'Type',
+        riskLevels: {
+          veryHigh: 'Très élevé',
+          high: 'Élevé',
+          medium: 'Moyen',
+          low: 'Faible'
+        },
+        riskTooltips: {
+          veryHigh: 'Risque très élevé - Rendements très variables',
+          high: 'Risque élevé - Rendements volatils',
+          medium: 'Risque modéré - Équilibre risque/rendement',
+          low: 'Risque faible - Rendements stables'
+        },
+        monthlyLabel: 'Mensuel',
+        paybackPeriod: 'Rentabilité',
+        months: 'mois',
+        performance: 'Performance',
+        performanceRatings: {
+          excellent: 'Excellent',
+          good: 'Bon',
+          fair: 'Correct',
+          poor: 'Faible'
+        },
+        actions: {
+          buy: 'Acheter',
+          insufficientFunds: 'Fonds insuffisants',
+          buyWithCash: 'Acheter avec vos liquidités',
+          loan: 'Emprunt',
+          loanTooltip: 'Acheter avec un emprunt (frais',
+          reject: 'Refuser',
+          rejectTooltip: 'Rejeter cette opportunité',
+          compare: 'Comparer',
+          compareTooltip: 'Ajouter à la comparaison'
+        }
       },
       events: {
         randomEvent: 'Événement aléatoire',
@@ -186,7 +267,19 @@ export class TranslationService {
         loading: 'Loading...',
         error: 'Error',
         success: 'Success',
-        warning: 'Warning'
+        warning: 'Warning',
+        continue: 'Continue',
+        back: 'Back'
+      },
+      dialogs: {
+        confirmBackTitle: 'Back to Menu',
+        confirmBackMessage: 'Are you sure you want to return to the main menu? Your progress will be saved automatically.',
+        confirmRejectTitle: 'Reject Opportunity',
+        confirmRejectMessage: 'Are you sure you want to reject this investment opportunity?',
+        purchaseSuccessTitle: 'Purchase Successful!',
+        purchaseSuccessMessage: 'Your investment has been added to your portfolio',
+        loanPurchaseTitle: 'Purchase with Loan',
+        loanPurchaseMessage: 'Investment purchased with a loan'
       },
       startup: {
         welcome: 'Welcome',
@@ -257,7 +350,29 @@ export class TranslationService {
         investments: 'Investments',
         portfolio: 'Portfolio',
         progress: 'Progress',
-        financialGoal: 'Financial goal'
+        financialGoal: 'Financial goal',
+        personalInfo: 'Personal Information',
+        financialSituation: 'Financial Situation',
+        name: 'Name',
+        years: 'years old',
+        monthly: 'Monthly',
+        yearly: 'Yearly',
+        annualPeriod: 'yearly',
+        monthlyPeriod: 'monthly',
+        loans: 'Loans',
+        economicCycle: 'Economic Cycle',
+        currentPhase: 'Current Phase',
+        turnsRemaining: 'Turns remaining',
+        currentEffects: 'Current Effects',
+        returns: 'Returns',
+        jobSecurity: 'Job security',
+        events: 'Events',
+        inflation: 'Inflation',
+        investmentPortfolio: 'Investment Portfolio',
+        amount: 'Amount',
+        annualPayments: 'Annual payments',
+        annualRevenue: 'Annual income',
+        victoryMessage: 'Congratulations! You have achieved financial freedom!'
       },
       investments: {
         title: 'Investment opportunities',
@@ -269,7 +384,54 @@ export class TranslationService {
         cost: 'Cost',
         loan: 'Loan',
         portfolio: 'Portfolio',
-        noInvestments: 'No investments in your portfolio'
+        noInvestments: 'No investments in your portfolio',
+        events: 'Events',
+        opportunities: 'Investment Opportunities',
+        noOpportunities: 'No investment opportunities available.',
+        showAdvancedFilters: 'Show advanced filters',
+        hideAdvancedFilters: 'Hide advanced filters',
+        compareInvestments: 'Compare investments',
+        comparison: 'Investment Comparison',
+        selectToCompare: 'Select investments to compare',
+        remove: 'Remove',
+        nextYear: 'Next Year',
+        price: 'Price',
+        income: 'Income',
+        roi: 'ROI',
+        type: 'Type',
+        riskLevels: {
+          veryHigh: 'Very High',
+          high: 'High',
+          medium: 'Medium',
+          low: 'Low'
+        },
+        riskTooltips: {
+          veryHigh: 'Very high risk - Highly variable returns',
+          high: 'High risk - Volatile returns',
+          medium: 'Moderate risk - Balanced risk/return',
+          low: 'Low risk - Stable returns'
+        },
+        monthlyLabel: 'Monthly',
+        paybackPeriod: 'Payback',
+        months: 'months',
+        performance: 'Performance',
+        performanceRatings: {
+          excellent: 'Excellent',
+          good: 'Good',
+          fair: 'Fair',
+          poor: 'Poor'
+        },
+        actions: {
+          buy: 'Buy',
+          insufficientFunds: 'Insufficient funds',
+          buyWithCash: 'Buy with your cash',
+          loan: 'Loan',
+          loanTooltip: 'Buy with a loan (fee',
+          reject: 'Reject',
+          rejectTooltip: 'Reject this opportunity',
+          compare: 'Compare',
+          compareTooltip: 'Add to comparison'
+        }
       },
       events: {
         randomEvent: 'Random event',

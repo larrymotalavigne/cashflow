@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -9,6 +9,7 @@ import { Investment, InvestmentSector } from './data';
 import { GameConfigService } from './game-config.service';
 import { GameService } from './game.service';
 import { FinancialCounterComponent } from './loading.component';
+import { TranslationService } from './translation.service';
 
 @Component({
   selector: 'app-enhanced-investment-card',
@@ -16,7 +17,8 @@ import { FinancialCounterComponent } from './loading.component';
   imports: [CommonModule, FormsModule, ButtonModule, BadgeModule, TooltipModule, CheckboxModule, FinancialCounterComponent],
   template: `
     <div class="investment-card theme-bg-card theme-shadow-md hover:theme-shadow-lg transition-all duration-300 rounded-xl border theme-border overflow-hidden group hover:scale-[1.02] cursor-pointer"
-         [ngClass]="getCardClasses()">
+         [ngClass]="getCardClasses()"
+         [attr.data-investment]="investment.name">
       
       <!-- Header Section -->
       <div class="card-header p-4 pb-3 border-b theme-border">
@@ -69,7 +71,7 @@ import { FinancialCounterComponent } from './loading.component';
           <div class="metric-item">
             <div class="flex items-center gap-1 mb-1">
               <i class="pi pi-euro text-warning-500 text-xs"></i>
-              <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">Prix</span>
+              <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">{{ translationService.translate('investments.price') }}</span>
             </div>
             <app-financial-counter 
               [value]="investment.amount" 
@@ -82,7 +84,7 @@ import { FinancialCounterComponent } from './loading.component';
           <div class="metric-item">
             <div class="flex items-center gap-1 mb-1">
               <i class="pi pi-chart-line text-success-500 text-xs"></i>
-              <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">Mensuel</span>
+              <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">{{ translationService.translate('investments.monthlyLabel') }}</span>
             </div>
             <app-financial-counter 
               [value]="investment.income" 
@@ -96,15 +98,15 @@ import { FinancialCounterComponent } from './loading.component';
         <div class="mt-3 flex items-center justify-between">
           <div class="flex items-center gap-1">
             <i class="pi pi-clock text-primary-500 text-xs"></i>
-            <span class="text-xs theme-text-muted">Rentabilité:</span>
+            <span class="text-xs theme-text-muted">{{ translationService.translate('investments.paybackPeriod') }}:</span>
           </div>
-          <span class="text-sm font-semibold theme-text-card">{{ getPaybackPeriod() }} mois</span>
+          <span class="text-sm font-semibold theme-text-card">{{ getPaybackPeriod() }} {{ translationService.translate('investments.months') }}</span>
         </div>
 
         <!-- Progress Bar for ROI -->
         <div class="mt-3">
           <div class="flex justify-between items-center mb-1">
-            <span class="text-xs theme-text-muted">Performance</span>
+            <span class="text-xs theme-text-muted">{{ translationService.translate('investments.performance') }}</span>
             <span class="text-xs font-medium" [ngClass]="getROITextClass()">{{ getPerformanceRating() }}</span>
           </div>
           <div class="w-full theme-bg-muted rounded-full h-1.5">
@@ -124,42 +126,42 @@ import { FinancialCounterComponent } from './loading.component';
           <!-- Primary Actions -->
           <div *ngIf="!comparisonMode" class="flex flex-col gap-2">
             <!-- Buy Button -->
-            <p-button 
-              [label]="canAfford ? 'Acheter' : 'Fonds insuffisants'" 
+            <p-button
+              [label]="canAfford ? translationService.translate('investments.actions.buy') : translationService.translate('investments.actions.insufficientFunds')"
               [icon]="canAfford ? 'pi pi-shopping-cart' : 'pi pi-exclamation-triangle'"
-              (click)="onBuy()" 
+              (click)="onBuy()"
               [disabled]="!canAfford"
               [styleClass]="'w-full p-button-sm ' + (canAfford ? 'p-button-success' : 'p-button-warning')"
-              [pTooltip]="canAfford ? 'Acheter avec vos liquidités' : 'Vous n\\'avez pas assez de liquidités'">
+              [pTooltip]="canAfford ? translationService.translate('investments.actions.buyWithCash') : translationService.translate('investments.actions.insufficientFunds')">
             </p-button>
 
             <!-- Loan Button -->
-            <p-button 
-              [label]="'Emprunt (' + (configService.loanRate * 100) + '%)'" 
+            <p-button
+              [label]="translationService.translate('investments.actions.loan') + ' (' + (configService.loanRate * 100) + '%)'"
               icon="pi pi-credit-card"
-              (click)="onBuyWithLoan()" 
+              (click)="onBuyWithLoan()"
               styleClass="w-full p-button-sm p-button-info p-button-outlined"
-              [pTooltip]="'Acheter avec un emprunt (frais: ' + (configService.loanRate * 100) + '%)'">
+              [pTooltip]="translationService.translate('investments.actions.loanTooltip') + ': ' + (configService.loanRate * 100) + '%)'">
             </p-button>
           </div>
 
           <!-- Secondary Actions -->
           <div class="flex flex-col gap-2">
-            <p-button 
-              label="Refuser" 
+            <p-button
+              [label]="translationService.translate('investments.actions.reject')"
               icon="pi pi-times"
-              (click)="onReject()" 
+              (click)="onReject()"
               styleClass="w-full p-button-sm p-button-danger p-button-outlined"
-              pTooltip="Rejeter cette opportunité">
+              [pTooltip]="translationService.translate('investments.actions.rejectTooltip')">
             </p-button>
 
-            <p-button 
+            <p-button
               *ngIf="!comparisonMode"
-              label="Comparer" 
+              [label]="translationService.translate('investments.actions.compare')"
               icon="pi pi-chart-bar"
-              (click)="onCompare()" 
+              (click)="onCompare()"
               styleClass="w-full p-button-sm p-button-secondary p-button-outlined"
-              pTooltip="Ajouter à la comparaison">
+              [pTooltip]="translationService.translate('investments.actions.compareTooltip')">
             </p-button>
           </div>
         </div>
@@ -219,6 +221,8 @@ export class EnhancedInvestmentCardComponent {
   @Output() compare = new EventEmitter<Investment>();
   @Output() selectionChange = new EventEmitter<{investment: Investment, selected: boolean}>();
 
+  translationService = inject(TranslationService);
+
   constructor(
     public gameService: GameService,
     public configService: GameConfigService
@@ -269,19 +273,19 @@ export class EnhancedInvestmentCardComponent {
     // Use new risk assessment system (Task 1.3)
     if (this.investment.riskCategory) {
       switch (this.investment.riskCategory) {
-        case 'very_high': return 'Très élevé';
-        case 'high': return 'Élevé';
-        case 'medium': return 'Moyen';
-        case 'low': return 'Faible';
-        default: return 'Moyen';
+        case 'very_high': return this.translationService.translate('investments.riskLevels.veryHigh');
+        case 'high': return this.translationService.translate('investments.riskLevels.high');
+        case 'medium': return this.translationService.translate('investments.riskLevels.medium');
+        case 'low': return this.translationService.translate('investments.riskLevels.low');
+        default: return this.translationService.translate('investments.riskLevels.medium');
       }
     }
-    
+
     // Fallback to old ROI-based system
     const roi = this.getROIValue();
-    if (roi > 20) return 'Élevé';
-    if (roi > 12) return 'Moyen';
-    return 'Faible';
+    if (roi > 20) return this.translationService.translate('investments.riskLevels.high');
+    if (roi > 12) return this.translationService.translate('investments.riskLevels.medium');
+    return this.translationService.translate('investments.riskLevels.low');
   }
 
   getRiskIcon(): string {
@@ -360,10 +364,10 @@ export class EnhancedInvestmentCardComponent {
 
   getPerformanceRating(): string {
     const roi = this.getROIValue();
-    if (roi > 15) return 'Excellent';
-    if (roi > 8) return 'Bon';
-    if (roi > 0) return 'Correct';
-    return 'Faible';
+    if (roi > 15) return this.translationService.translate('investments.performanceRatings.excellent');
+    if (roi > 8) return this.translationService.translate('investments.performanceRatings.good');
+    if (roi > 0) return this.translationService.translate('investments.performanceRatings.fair');
+    return this.translationService.translate('investments.performanceRatings.poor');
   }
 
   getCardClasses(): string {
@@ -379,11 +383,23 @@ export class EnhancedInvestmentCardComponent {
 
   onBuy(): void {
     if (this.canAfford) {
+      // Add visual feedback class
+      const card = document.querySelector(`[data-investment="${this.investment.name}"]`);
+      if (card) {
+        card.classList.add('purchase-success');
+        setTimeout(() => card.classList.remove('purchase-success'), 600);
+      }
       this.buy.emit(this.investment);
     }
   }
 
   onBuyWithLoan(): void {
+    // Add visual feedback class
+    const card = document.querySelector(`[data-investment="${this.investment.name}"]`);
+    if (card) {
+      card.classList.add('purchase-success');
+      setTimeout(() => card.classList.remove('purchase-success'), 600);
+    }
     this.buyWithLoan.emit(this.investment);
   }
 
