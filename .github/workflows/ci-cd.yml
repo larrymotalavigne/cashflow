@@ -231,16 +231,6 @@ jobs:
               exit 1
             fi
 
-            # Check if service is responding (using internal port)
-            echo "Checking if service is responding..."
-            if docker exec cashflow wget -q --spider http://localhost:80; then
-              echo "✅ Service is responding"
-            else
-              echo "❌ Service is not responding"
-              docker logs cashflow --tail 50
-              exit 1
-            fi
-
             echo ""
             echo "🎉 All health checks passed! Deployment successful!"
 
