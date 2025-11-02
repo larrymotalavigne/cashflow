@@ -1,6 +1,6 @@
 services:
   cashflow:
-    image: registry.atomdev.fr/cashflow:latest
+    image: ghcr.io/larrymotalavigne/cashflow:latest
     container_name: cashflow
     restart: unless-stopped
     ports:
