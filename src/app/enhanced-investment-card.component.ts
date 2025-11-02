@@ -16,12 +16,20 @@ import { TranslationService } from './translation.service';
   standalone: true,
   imports: [CommonModule, FormsModule, ButtonModule, BadgeModule, TooltipModule, CheckboxModule, FinancialCounterComponent],
   template: `
-    <div class="investment-card theme-bg-card theme-shadow-md hover:theme-shadow-lg transition-all duration-300 rounded-xl border theme-border overflow-hidden group hover:scale-[1.02] cursor-pointer"
+    <div class="investment-card theme-bg-card theme-shadow-lg hover:theme-shadow-2xl transition-all duration-300 rounded-2xl border-2 theme-border overflow-hidden group hover:scale-[1.03] cursor-pointer relative"
          [ngClass]="getCardClasses()"
          [attr.data-investment]="investment.name">
-      
+
+      <!-- Gradient top border -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500"></div>
+
+      <!-- Shimmer effect on hover -->
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+        <div class="shimmer absolute inset-0"></div>
+      </div>
+
       <!-- Header Section -->
-      <div class="card-header p-4 pb-3 border-b theme-border">
+      <div class="card-header p-4 pb-3 border-b theme-border bg-gradient-to-r from-transparent to-primary-50/30 dark:to-primary-900/20">
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
@@ -120,7 +128,7 @@ import { TranslationService } from './translation.service';
       </div>
 
       <!-- Actions Section -->
-      <div class="card-actions p-4 pt-3 bg-gradient-to-r from-neutral-50/50 to-primary-50/30 dark:from-neutral-800/50 dark:to-primary-900/30">
+      <div class="card-actions p-4 pt-3 bg-gradient-to-r from-neutral-50/50 via-primary-50/20 to-secondary-50/30 dark:from-neutral-800/50 dark:via-primary-900/20 dark:to-secondary-900/30">
         <div class="grid grid-cols-1 gap-2" [ngClass]="comparisonMode ? 'grid-cols-1' : 'grid-cols-2'">
           
           <!-- Primary Actions -->
@@ -174,21 +182,25 @@ import { TranslationService } from './translation.service';
   styles: [`
     .investment-card {
       position: relative;
-      min-height: 320px;
-      max-width: 400px;
+      min-height: 340px;
+      max-width: 420px;
+      backdrop-filter: blur(10px);
     }
 
     .roi-indicator {
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
       font-weight: 700;
       text-align: center;
-      min-width: 60px;
+      min-width: 70px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .metric-value {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       font-weight: 700;
+      background: linear-gradient(135deg, currentColor 0%, currentColor 100%);
+      -webkit-background-clip: text;
     }
 
     .line-clamp-2 {
@@ -200,13 +212,30 @@ import { TranslationService } from './translation.service';
 
     /* Animation for hover states */
     .investment-card:hover .roi-indicator {
-      transform: scale(1.05);
-      transition: transform 0.2s ease-out;
+      transform: scale(1.1) rotate(-2deg);
+      transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .investment-card:hover {
+      border-color: rgba(14, 165, 233, 0.5);
     }
 
     /* Performance bar animations */
     .performance-bar {
       animation: fillBar 1s ease-out;
+    }
+
+    @keyframes fillBar {
+      from {
+        width: 0%;
+      }
+    }
+
+    /* Icon animations */
+    .investment-card:hover i {
+      transform: scale(1.1);
+      transition: transform 0.2s ease-out;
     }
   `]
 })

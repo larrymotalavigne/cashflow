@@ -56,22 +56,32 @@ import {CommonModule} from '@angular/common';
             </div>
         </div>
 
-        <p-toolbar class="theme-bg-card theme-shadow-sm border-b theme-border">
+        <p-toolbar class="theme-bg-card theme-shadow-md border-b-2 border-primary-200 dark:border-primary-800 relative overflow-hidden">
+            <!-- Animated gradient border -->
+            <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500"></div>
+
             <div class="flex align-items-center justify-between w-full relative">
                 <!-- Left side: Back button -->
                 <div class="flex align-items-center">
                     <button (click)="goBack()"
-                            class="p-button p-button-text p-0 hover:bg-primary-50 dark:hover:bg-primary-900/20 focus-visible rounded-lg p-3 min-h-[44px] min-w-[44px] touch-manipulation">
+                            class="p-button p-button-text p-0 hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 dark:hover:from-primary-900/20 dark:hover:to-secondary-900/20 focus-visible rounded-xl p-3 min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-200 hover:scale-105">
                         <i class="pi pi-arrow-left text-lg sm:text-xl theme-text-primary"></i>
                     </button>
                 </div>
-                
+
                 <!-- Center: Logo and Title -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 flex align-items-center gap-2">
-                    <img src="logo.svg" alt="Logo" class="w-8 h-8 sm:w-10 sm:h-10">
-                    <span class="text-lg sm:text-xl font-semibold theme-text-primary">{{ translationService.translate('game.dashboard') }}</span>
+                <div class="absolute left-1/2 transform -translate-x-1/2 flex align-items-center gap-3">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full blur-md opacity-50"></div>
+                        <div class="relative bg-gradient-to-br from-primary-500 to-secondary-500 p-2 rounded-full">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400">{{ translationService.translate('game.dashboard') }}</span>
                 </div>
-                
+
                 <!-- Right side: Theme toggle -->
                 <div class="flex align-items-center">
                     <app-theme-toggle></app-theme-toggle>
