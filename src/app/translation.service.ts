@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-export type Language = 'fr' | 'en';
+export type Language = 'fr' | 'en' | 'es' | 'de';
 
 export interface Translations {
   [key: string]: string | Translations;
@@ -11,7 +11,7 @@ export interface Translations {
 })
 export class TranslationService {
   private readonly LANGUAGE_KEY = 'cashflow-language';
-  
+
   // Current language signal
   language = signal<Language>('fr');
   
@@ -546,6 +546,318 @@ export class TranslationService {
         reducedMotionEnabled: 'Reduced motion enabled',
         keyboardNavigationEnabled: 'Keyboard navigation enabled'
       }
+    },
+    es: {
+      common: {
+        loading: 'Cargando...',
+        yes: 'Sí',
+        no: 'No',
+        cancel: 'Cancelar',
+        confirm: 'Confirmar',
+        close: 'Cerrar',
+        save: 'Guardar',
+        back: 'Volver',
+        next: 'Siguiente',
+        previous: 'Anterior',
+        error: 'Error',
+        success: 'Éxito',
+        warning: 'Advertencia',
+        info: 'Información'
+      },
+      dialogs: {
+        confirmBackTitle: 'Volver al menú',
+        confirmBackMessage: '¿Estás seguro de que quieres volver al menú de inicio? Tu progreso actual se perderá.',
+        confirmResetTitle: 'Reiniciar juego',
+        confirmResetMessage: '¿Estás seguro de que quieres reiniciar el juego? Todos los progresos se perderán.',
+        confirmSellTitle: 'Vender inversión',
+        confirmSellMessage: '¿Estás seguro de que quieres vender esta inversión?',
+        confirmBuyTitle: 'Comprar inversión',
+        confirmBuyMessage: '¿Estás seguro de que quieres comprar esta inversión?'
+      },
+      startup: {
+        title: 'Bienvenido a CashFlow',
+        subtitle: 'Un juego de educación financiera',
+        start: 'Iniciar juego',
+        settings: 'Configuración',
+        about: 'Acerca de',
+        selectJob: 'Selecciona tu profesión',
+        selectDifficulty: 'Selecciona la dificultad',
+        easy: 'Fácil',
+        medium: 'Medio',
+        hard: 'Difícil',
+        difficultyDescription: {
+          easy: 'Eventos favorables más frecuentes, inflación baja',
+          medium: 'Equilibrio entre eventos positivos y negativos',
+          hard: 'Eventos desafiantes, inflación alta, mayor volatilidad'
+        },
+        jobInfo: 'Información de la profesión',
+        salary: 'Salario',
+        expenses: 'Gastos',
+        startingCash: 'Efectivo inicial',
+        begin: 'Comenzar el juego'
+      },
+      game: {
+        dashboard: 'Tablero',
+        turn: 'Turno',
+        age: 'Edad',
+        years: 'años',
+        cash: 'Efectivo',
+        income: 'Ingresos',
+        expenses: 'Gastos',
+        passiveIncome: 'Ingresos pasivos',
+        cashFlow: 'Flujo de caja',
+        netWorth: 'Patrimonio neto',
+        investments: 'Inversiones',
+        noInvestments: 'No tienes inversiones todavía',
+        buyInvestment: 'Comprar inversión',
+        sellInvestment: 'Vender inversión',
+        nextTurn: 'Siguiente turno',
+        opportunities: 'Oportunidades',
+        viewOpportunities: 'Ver oportunidades',
+        events: 'Eventos',
+        randomEvent: 'Evento aleatorio',
+        winCondition: '¡Felicitaciones! Has alcanzado el objetivo de ingresos pasivos',
+        winMessage: '¡Has ganado el juego! Tus ingresos pasivos exceden tus gastos.',
+        loseCondition: 'Fin del juego',
+        loseMessage: 'Te has quedado sin dinero. El juego ha terminado.',
+        monthlyPeriod: 'Mensual',
+        yearlyPeriod: 'Anual',
+        annualRevenue: 'Ingresos anuales',
+        export: {
+          title: 'Exportar datos',
+          csv: 'Exportar historial CSV',
+          json: 'Exportar datos JSON',
+          summary: 'Exportar informe resumido'
+        }
+      },
+      statistics: {
+        title: 'Estadísticas del juego',
+        netWorth: 'Patrimonio neto',
+        totalReturns: 'Rendimientos totales',
+        averageROI: 'ROI promedio',
+        turnsPlayed: 'Turnos jugados',
+        netWorthEvolution: 'Evolución del patrimonio neto',
+        incomeVsExpenses: 'Ingresos vs Gastos',
+        portfolioDistribution: 'Distribución del portafolio',
+        cashFlowTrend: 'Tendencia del flujo de caja',
+        investmentPerformance: 'Rendimiento de las inversiones',
+        investment: 'Inversión',
+        amount: 'Cantidad',
+        annualReturn: 'Rendimiento anual',
+        roi: 'ROI',
+        paybackYears: 'Años de recuperación',
+        total: 'Total',
+        noInvestments: 'Sin inversiones todavía',
+        fromInvestments: 'De inversiones',
+        annual: 'Anual',
+        cashFlow: 'Flujo de caja'
+      },
+      investments: {
+        type: 'Tipo',
+        cost: 'Costo',
+        return: 'Rendimiento',
+        roi: 'ROI',
+        description: 'Descripción',
+        buy: 'Comprar',
+        sell: 'Vender',
+        owned: 'Poseído',
+        notOwned: 'No poseído',
+        insufficientFunds: 'Fondos insuficientes',
+        purchaseSuccess: 'Inversión comprada exitosamente',
+        saleSuccess: 'Inversión vendida exitosamente',
+        monthlyLabel: 'Mensual',
+        yearlyLabel: 'Anual',
+        paybackPeriod: 'Período de recuperación'
+      },
+      events: {
+        title: 'Evento aleatorio',
+        positive: 'Buenas noticias',
+        negative: 'Malas noticias',
+        neutral: 'Noticia',
+        continue: 'Continuar'
+      },
+      jobs: {
+        title: 'Profesión',
+        salary: 'Salario',
+        expenses: 'Gastos',
+        startingCash: 'Efectivo inicial',
+        select: 'Seleccionar'
+      },
+      accessibility: {
+        skipToContent: 'Saltar al contenido',
+        openMenu: 'Abrir menú',
+        closeMenu: 'Cerrar menú',
+        toggleTheme: 'Cambiar tema',
+        increaseTextSize: 'Aumentar tamaño de texto',
+        decreaseTextSize: 'Disminuir tamaño de texto',
+        enableHighContrast: 'Activar alto contraste',
+        disableHighContrast: 'Desactivar alto contraste',
+        enableReducedMotion: 'Activar movimiento reducido',
+        disableReducedMotion: 'Desactivar movimiento reducido',
+        enableKeyboardNavigation: 'Activar navegación por teclado',
+        disableKeyboardNavigation: 'Desactivar navegación por teclado',
+        currentLanguage: 'Idioma actual',
+        changeLanguage: 'Cambiar idioma',
+        highContrastEnabled: 'Modo de alto contraste activado',
+        reducedMotionEnabled: 'Movimiento reducido activado',
+        keyboardNavigationEnabled: 'Navegación por teclado activada'
+      }
+    },
+    de: {
+      common: {
+        loading: 'Lädt...',
+        yes: 'Ja',
+        no: 'Nein',
+        cancel: 'Abbrechen',
+        confirm: 'Bestätigen',
+        close: 'Schließen',
+        save: 'Speichern',
+        back: 'Zurück',
+        next: 'Weiter',
+        previous: 'Vorherige',
+        error: 'Fehler',
+        success: 'Erfolg',
+        warning: 'Warnung',
+        info: 'Information'
+      },
+      dialogs: {
+        confirmBackTitle: 'Zurück zum Menü',
+        confirmBackMessage: 'Bist du sicher, dass du zum Startmenü zurückkehren möchtest? Dein aktueller Fortschritt geht verloren.',
+        confirmResetTitle: 'Spiel zurücksetzen',
+        confirmResetMessage: 'Bist du sicher, dass du das Spiel zurücksetzen möchtest? Aller Fortschritt geht verloren.',
+        confirmSellTitle: 'Investition verkaufen',
+        confirmSellMessage: 'Bist du sicher, dass du diese Investition verkaufen möchtest?',
+        confirmBuyTitle: 'Investition kaufen',
+        confirmBuyMessage: 'Bist du sicher, dass du diese Investition kaufen möchtest?'
+      },
+      startup: {
+        title: 'Willkommen bei CashFlow',
+        subtitle: 'Ein Finanzbildungsspiel',
+        start: 'Spiel starten',
+        settings: 'Einstellungen',
+        about: 'Über',
+        selectJob: 'Wähle deinen Beruf',
+        selectDifficulty: 'Wähle die Schwierigkeit',
+        easy: 'Einfach',
+        medium: 'Mittel',
+        hard: 'Schwer',
+        difficultyDescription: {
+          easy: 'Häufigere günstige Ereignisse, niedrige Inflation',
+          medium: 'Ausgewogene positive und negative Ereignisse',
+          hard: 'Herausfordernde Ereignisse, hohe Inflation, höhere Volatilität'
+        },
+        jobInfo: 'Berufsinformation',
+        salary: 'Gehalt',
+        expenses: 'Ausgaben',
+        startingCash: 'Startkapital',
+        begin: 'Spiel beginnen'
+      },
+      game: {
+        dashboard: 'Dashboard',
+        turn: 'Runde',
+        age: 'Alter',
+        years: 'Jahre',
+        cash: 'Bargeld',
+        income: 'Einkommen',
+        expenses: 'Ausgaben',
+        passiveIncome: 'Passives Einkommen',
+        cashFlow: 'Cashflow',
+        netWorth: 'Nettovermögen',
+        investments: 'Investitionen',
+        noInvestments: 'Du hast noch keine Investitionen',
+        buyInvestment: 'Investition kaufen',
+        sellInvestment: 'Investition verkaufen',
+        nextTurn: 'Nächste Runde',
+        opportunities: 'Möglichkeiten',
+        viewOpportunities: 'Möglichkeiten anzeigen',
+        events: 'Ereignisse',
+        randomEvent: 'Zufälliges Ereignis',
+        winCondition: 'Herzlichen Glückwunsch! Du hast das Ziel für passives Einkommen erreicht',
+        winMessage: 'Du hast das Spiel gewonnen! Dein passives Einkommen übersteigt deine Ausgaben.',
+        loseCondition: 'Spielende',
+        loseMessage: 'Dir ist das Geld ausgegangen. Das Spiel ist vorbei.',
+        monthlyPeriod: 'Monatlich',
+        yearlyPeriod: 'Jährlich',
+        annualRevenue: 'Jahreseinkommen',
+        export: {
+          title: 'Daten exportieren',
+          csv: 'Verlauf CSV exportieren',
+          json: 'JSON-Daten exportieren',
+          summary: 'Zusammenfassungsbericht exportieren'
+        }
+      },
+      statistics: {
+        title: 'Spielstatistiken',
+        netWorth: 'Nettovermögen',
+        totalReturns: 'Gesamtrenditen',
+        averageROI: 'Durchschnittlicher ROI',
+        turnsPlayed: 'Gespielte Runden',
+        netWorthEvolution: 'Entwicklung des Nettovermögens',
+        incomeVsExpenses: 'Einkommen vs Ausgaben',
+        portfolioDistribution: 'Portfolio-Verteilung',
+        cashFlowTrend: 'Cashflow-Trend',
+        investmentPerformance: 'Investitionsleistung',
+        investment: 'Investition',
+        amount: 'Betrag',
+        annualReturn: 'Jährliche Rendite',
+        roi: 'ROI',
+        paybackYears: 'Amortisationsjahre',
+        total: 'Gesamt',
+        noInvestments: 'Noch keine Investitionen',
+        fromInvestments: 'Aus Investitionen',
+        annual: 'Jährlich',
+        cashFlow: 'Cashflow'
+      },
+      investments: {
+        type: 'Typ',
+        cost: 'Kosten',
+        return: 'Rendite',
+        roi: 'ROI',
+        description: 'Beschreibung',
+        buy: 'Kaufen',
+        sell: 'Verkaufen',
+        owned: 'Im Besitz',
+        notOwned: 'Nicht im Besitz',
+        insufficientFunds: 'Unzureichende Mittel',
+        purchaseSuccess: 'Investition erfolgreich gekauft',
+        saleSuccess: 'Investition erfolgreich verkauft',
+        monthlyLabel: 'Monatlich',
+        yearlyLabel: 'Jährlich',
+        paybackPeriod: 'Amortisationsdauer'
+      },
+      events: {
+        title: 'Zufälliges Ereignis',
+        positive: 'Gute Nachrichten',
+        negative: 'Schlechte Nachrichten',
+        neutral: 'Nachricht',
+        continue: 'Fortfahren'
+      },
+      jobs: {
+        title: 'Beruf',
+        salary: 'Gehalt',
+        expenses: 'Ausgaben',
+        startingCash: 'Startkapital',
+        select: 'Auswählen'
+      },
+      accessibility: {
+        skipToContent: 'Zum Inhalt springen',
+        openMenu: 'Menü öffnen',
+        closeMenu: 'Menü schließen',
+        toggleTheme: 'Design wechseln',
+        increaseTextSize: 'Textgröße erhöhen',
+        decreaseTextSize: 'Textgröße verringern',
+        enableHighContrast: 'Hohen Kontrast aktivieren',
+        disableHighContrast: 'Hohen Kontrast deaktivieren',
+        enableReducedMotion: 'Reduzierte Bewegung aktivieren',
+        disableReducedMotion: 'Reduzierte Bewegung deaktivieren',
+        enableKeyboardNavigation: 'Tastaturnavigation aktivieren',
+        disableKeyboardNavigation: 'Tastaturnavigation deaktivieren',
+        currentLanguage: 'Aktuelle Sprache',
+        changeLanguage: 'Sprache ändern',
+        highContrastEnabled: 'Hoher Kontrast aktiviert',
+        reducedMotionEnabled: 'Reduzierte Bewegung aktiviert',
+        keyboardNavigationEnabled: 'Tastaturnavigation aktiviert'
+      }
     }
   };
 
@@ -563,8 +875,10 @@ export class TranslationService {
   }
 
   toggleLanguage(): void {
-    const current = this.language();
-    this.setLanguage(current === 'fr' ? 'en' : 'fr');
+    const languages: Language[] = ['fr', 'en', 'es', 'de'];
+    const currentIndex = languages.indexOf(this.language());
+    const nextIndex = (currentIndex + 1) % languages.length;
+    this.setLanguage(languages[nextIndex]);
   }
 
   // Get translation by key path (e.g., 'common.welcome' or 'startup.tagline')
@@ -591,7 +905,13 @@ export class TranslationService {
 
   // Get current language label
   getLanguageLabel(): string {
-    return this.language() === 'fr' ? 'Français' : 'English';
+    const labels: Record<Language, string> = {
+      'fr': 'Français',
+      'en': 'English',
+      'es': 'Español',
+      'de': 'Deutsch'
+    };
+    return labels[this.language()];
   }
 
   // Get current language flag/icon
@@ -612,24 +932,35 @@ export class TranslationService {
   getAvailableLanguages(): { code: Language; label: string; icon: string }[] {
     return [
       { code: 'fr', label: 'Français', icon: '🇫🇷' },
-      { code: 'en', label: 'English', icon: '🇬🇧' }
+      { code: 'en', label: 'English', icon: '🇬🇧' },
+      { code: 'es', label: 'Español', icon: '🇪🇸' },
+      { code: 'de', label: 'Deutsch', icon: '🇩🇪' }
     ];
   }
 
   // Format currency based on current language
   formatCurrency(amount: number): string {
-    const locale = this.language() === 'fr' ? 'fr-FR' : 'en-US';
-    const currency = this.language() === 'fr' ? 'EUR' : 'USD';
-    
-    return new Intl.NumberFormat(locale, {
+    const locales: Record<Language, string> = {
+      'fr': 'fr-FR',
+      'en': 'en-US',
+      'es': 'es-ES',
+      'de': 'de-DE'
+    };
+
+    return new Intl.NumberFormat(locales[this.language()], {
       style: 'currency',
-      currency: currency
+      currency: 'EUR'
     }).format(amount);
   }
 
   // Format numbers based on current language
   formatNumber(value: number): string {
-    const locale = this.language() === 'fr' ? 'fr-FR' : 'en-US';
-    return new Intl.NumberFormat(locale).format(value);
+    const locales: Record<Language, string> = {
+      'fr': 'fr-FR',
+      'en': 'en-US',
+      'es': 'es-ES',
+      'de': 'de-DE'
+    };
+    return new Intl.NumberFormat(locales[this.language()]).format(value);
   }
 }
