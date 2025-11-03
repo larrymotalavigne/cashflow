@@ -147,7 +147,10 @@ import { Subscription } from 'rxjs';
                                  class="theme-bg-card rounded-md p-3 theme-border border theme-shadow-sm">
                                 <p class="font-semibold theme-text-card">{{ investment.name }}</p>
                                 <p class="text-sm theme-text-muted">{{ translationService.translate('game.amount') }}: {{ investment.amount | number:'1.0-0' }}€</p>
-                                <p class="text-sm text-primary-600 dark:text-primary-400">{{ translationService.translate('game.annualRevenue') }}: {{ investment.income * 12 | number:'1.0-0' }}€</p>
+                                <p class="text-sm text-primary-600 dark:text-primary-400">
+                                    {{ isYearlyView ? translationService.translate('game.annualRevenue') : translationService.translate('game.monthlyPeriod') }}:
+                                    {{ isYearlyView ? (investment.income | number:'1.0-0') : (investment.income / 12 | number:'1.0-0') }}€
+                                </p>
                             </div>
                         </div>
                     </div>

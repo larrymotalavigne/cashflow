@@ -88,14 +88,14 @@ import { TranslationService } from './translation.service';
             </app-financial-counter>
           </div>
 
-          <!-- Monthly Return -->
+          <!-- Annual Return -->
           <div class="metric-item">
             <div class="flex items-center gap-1 mb-1">
               <i class="pi pi-chart-line text-success-500 text-xs"></i>
-              <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">{{ translationService.translate('investments.monthlyLabel') }}</span>
+              <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">{{ translationService.translate('investments.yearlyLabel') }}</span>
             </div>
-            <app-financial-counter 
-              [value]="investment.income" 
+            <app-financial-counter
+              [value]="investment.income"
               [animate]="false"
               class="metric-value">
             </app-financial-counter>

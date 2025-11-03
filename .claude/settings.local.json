@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(tree:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run build:prod:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat(security): Add comprehensive security headers to nginx configuration\n\nAdded production-ready security headers to protect against common web vulnerabilities:\n- Content-Security-Policy: Restricts content sources and prevents XSS attacks\n- X-Frame-Options: Prevents clickjacking by denying iframe embedding\n- X-Content-Type-Options: Prevents MIME type sniffing attacks\n- X-XSS-Protection: Enables browser XSS filtering (legacy support)\n- Referrer-Policy: Controls referrer information leakage\n- Permissions-Policy: Restricts access to browser features (geolocation, camera, etc.)\n- HSTS: Commented out for HTTP, ready to enable with HTTPS in production\n\nThese headers significantly improve the application''s security posture and protect users from common attack vectors.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

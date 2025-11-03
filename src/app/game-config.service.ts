@@ -8,43 +8,43 @@ import {TranslationService} from './translation.service';
 export class GameConfigService {
     constructor(private translationService: TranslationService) {}
     jobs: Job[] = [
-        { label: 'Agriculteur', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
-        { label: 'Aide-soignant', value: { minSalary: 19000, maxSalary: 23000, expenses: 17000 } },
-        { label: 'Agent d\'entretien', value: { minSalary: 18000, maxSalary: 22000, expenses: 16000 } },
-        { label: 'Architecte', value: { minSalary: 35000, maxSalary: 50000, expenses: 30000 } },
-        { label: 'Avocat', value: { minSalary: 45000, maxSalary: 80000, expenses: 40000 } },
-        { label: 'Boulanger', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
-        { label: 'Caissier', value: { minSalary: 18000, maxSalary: 22000, expenses: 16000 } },
-        { label: 'Cariste', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
-        { label: 'Charpentier', value: { minSalary: 22000, maxSalary: 28000, expenses: 20000 } },
-        { label: 'Chef de projet', value: { minSalary: 35000, maxSalary: 45000, expenses: 32000 } },
-        { label: 'Chauffeur poids lourd', value: { minSalary: 24000, maxSalary: 30000, expenses: 22000 } },
-        { label: 'Coiffeur', value: { minSalary: 19000, maxSalary: 23000, expenses: 17000 } },
-        { label: 'Comptable', value: { minSalary: 30000, maxSalary: 40000, expenses: 25000 } },
-        { label: 'Cuisinier', value: { minSalary: 22000, maxSalary: 28000, expenses: 20000 } },
-        { label: 'Développeur', value: { minSalary: 35000, maxSalary: 50000, expenses: 30000 } },
-        { label: 'Electricien', value: { minSalary: 23000, maxSalary: 30000, expenses: 20000 } },
-        { label: 'Employé de bureau', value: { minSalary: 22000, maxSalary: 28000, expenses: 20000 } },
-        { label: 'Enseignant', value: { minSalary: 27000, maxSalary: 35000, expenses: 23000 } },
-        { label: 'Facteur', value: { minSalary: 22000, maxSalary: 27000, expenses: 20000 } },
-        { label: 'Ingénieur', value: { minSalary: 40000, maxSalary: 55000, expenses: 35000 } },
-        { label: 'Infirmier', value: { minSalary: 26000, maxSalary: 32000, expenses: 24000 } },
-        { label: 'Journaliste', value: { minSalary: 28000, maxSalary: 40000, expenses: 26000 } },
-        { label: 'Magasinier', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
-        { label: 'Maçon', value: { minSalary: 22000, maxSalary: 28000, expenses: 20000 } },
-        { label: 'Médecin', value: { minSalary: 60000, maxSalary: 90000, expenses: 50000 } },
-        { label: 'Ouvrier du bâtiment', value: { minSalary: 22000, maxSalary: 28000, expenses: 20000 } },
-        { label: 'Pharmacien', value: { minSalary: 45000, maxSalary: 60000, expenses: 40000 } },
-        { label: 'Plombier', value: { minSalary: 25000, maxSalary: 32000, expenses: 22000 } },
-        { label: 'Policier', value: { minSalary: 23000, maxSalary: 30000, expenses: 21000 } },
-        { label: 'Serveur', value: { minSalary: 19000, maxSalary: 23000, expenses: 17000 } },
-        { label: 'Secrétaire', value: { minSalary: 21000, maxSalary: 26000, expenses: 19000 } },
-        { label: 'Soudeur', value: { minSalary: 23000, maxSalary: 28000, expenses: 20000 } },
-        { label: 'Technicien', value: { minSalary: 28000, maxSalary: 35000, expenses: 25000 } },
-        { label: 'Vendeur', value: { minSalary: 20000, maxSalary: 25000, expenses: 18000 } },
-        { label: 'SMIC', value: { minSalary: 20000, maxSalary: 20000, expenses: 18000 } },
-        { label: 'SMIC x2', value: { minSalary: 40000, maxSalary: 40000, expenses: 30000 } },
-        { label: 'SMIC x3', value: { minSalary: 60000, maxSalary: 60000, expenses: 42000 } }
+        { label: 'Agriculteur', value: { minSalary: 22000, maxSalary: 28000, expenses: 19000 } },
+        { label: 'Aide-soignant', value: { minSalary: 21000, maxSalary: 26000, expenses: 18000 } },
+        { label: 'Agent d\'entretien', value: { minSalary: 20000, maxSalary: 24000, expenses: 17000 } },
+        { label: 'Architecte', value: { minSalary: 38000, maxSalary: 52000, expenses: 32000 } },
+        { label: 'Avocat', value: { minSalary: 48000, maxSalary: 85000, expenses: 38000 } },
+        { label: 'Boulanger', value: { minSalary: 22000, maxSalary: 28000, expenses: 19000 } },
+        { label: 'Caissier', value: { minSalary: 20000, maxSalary: 24000, expenses: 17000 } },
+        { label: 'Cariste', value: { minSalary: 21000, maxSalary: 26000, expenses: 18000 } },
+        { label: 'Charpentier', value: { minSalary: 24000, maxSalary: 30000, expenses: 20000 } },
+        { label: 'Chef de projet', value: { minSalary: 38000, maxSalary: 50000, expenses: 32000 } },
+        { label: 'Chauffeur poids lourd', value: { minSalary: 25000, maxSalary: 32000, expenses: 21000 } },
+        { label: 'Coiffeur', value: { minSalary: 20000, maxSalary: 25000, expenses: 17000 } },
+        { label: 'Comptable', value: { minSalary: 32000, maxSalary: 42000, expenses: 27000 } },
+        { label: 'Cuisinier', value: { minSalary: 23000, maxSalary: 29000, expenses: 20000 } },
+        { label: 'Développeur', value: { minSalary: 38000, maxSalary: 55000, expenses: 30000 } },
+        { label: 'Electricien', value: { minSalary: 25000, maxSalary: 32000, expenses: 21000 } },
+        { label: 'Employé de bureau', value: { minSalary: 23000, maxSalary: 29000, expenses: 20000 } },
+        { label: 'Enseignant', value: { minSalary: 28000, maxSalary: 40000, expenses: 24000 } },
+        { label: 'Facteur', value: { minSalary: 23000, maxSalary: 28000, expenses: 20000 } },
+        { label: 'Ingénieur', value: { minSalary: 42000, maxSalary: 60000, expenses: 35000 } },
+        { label: 'Infirmier', value: { minSalary: 28000, maxSalary: 38000, expenses: 24000 } },
+        { label: 'Journaliste', value: { minSalary: 30000, maxSalary: 42000, expenses: 26000 } },
+        { label: 'Magasinier', value: { minSalary: 21000, maxSalary: 26000, expenses: 18000 } },
+        { label: 'Maçon', value: { minSalary: 23000, maxSalary: 29000, expenses: 20000 } },
+        { label: 'Médecin', value: { minSalary: 60000, maxSalary: 100000, expenses: 48000 } },
+        { label: 'Ouvrier du bâtiment', value: { minSalary: 23000, maxSalary: 29000, expenses: 20000 } },
+        { label: 'Pharmacien', value: { minSalary: 46000, maxSalary: 62000, expenses: 38000 } },
+        { label: 'Plombier', value: { minSalary: 26000, maxSalary: 34000, expenses: 22000 } },
+        { label: 'Policier', value: { minSalary: 24000, maxSalary: 31000, expenses: 21000 } },
+        { label: 'Serveur', value: { minSalary: 20000, maxSalary: 25000, expenses: 17000 } },
+        { label: 'Secrétaire', value: { minSalary: 22000, maxSalary: 27000, expenses: 19000 } },
+        { label: 'Soudeur', value: { minSalary: 24000, maxSalary: 30000, expenses: 20000 } },
+        { label: 'Technicien', value: { minSalary: 29000, maxSalary: 37000, expenses: 25000 } },
+        { label: 'Vendeur', value: { minSalary: 21000, maxSalary: 26000, expenses: 18000 } },
+        { label: 'SMIC', value: { minSalary: 21000, maxSalary: 21000, expenses: 18000 } },
+        { label: 'SMIC x2', value: { minSalary: 42000, maxSalary: 42000, expenses: 32000 } },
+        { label: 'SMIC x3', value: { minSalary: 63000, maxSalary: 63000, expenses: 48000 } }
     ];
 
     investments: Investment[] = [
@@ -79,36 +79,56 @@ export class GameConfigService {
     ];
 
     events: GameEvent[] = [
-        {message: 'Réparation voiture: -500€', effect: {type: 'cash', amount: -500}},
-        {message: 'Bonus au travail: +1000€', effect: {type: 'cash', amount: 1000}},
-        {message: 'Taxe imprévue: -700€', effect: {type: 'cash', amount: -700}},
-        {message: 'Promotion au travail: +2000€', effect: {type: 'cash', amount: 2000}},
-        {message: 'Investissement réussi: +1500€', effect: {type: 'cash', amount: 1500}},
-        {message: 'Frais médicaux: -1200€', effect: {type: 'expenses', amount: 1200}},
-        {message: 'Déménagement: -800€', effect: {type: 'cash', amount: -800}},
-        {message: 'Réduction d\'impôts: +600€', effect: {type: 'cash', amount: 600}},
+        // Small negative events (frequent)
         {message: 'Amende de stationnement: -100€', effect: {type: 'cash', amount: -100}},
-        {message: 'Prime d\'année: +2500€', effect: {type: 'cash', amount: 2500}},
-        {message: 'Réparation maison: -900€', effect: {type: 'cash', amount: -900}},
-        {message: 'Panne d\'ascenseur: -400€', effect: {type: 'cash', amount: -400}},
-        {message: 'Remboursement bancaire: +800€', effect: {type: 'cash', amount: 800}},
-        {message: 'Frais de scolarité: -1500€', effect: {type: 'expenses', amount: 1500}},
-        {message: 'Héritage: +5000€', effect: {type: 'cash', amount: 5000}},
-        {message: 'Dividende d\'actions: +700€', effect: {type: 'cash', amount: 700}},
-        {message: 'Frais juridiques: -1100€', effect: {type: 'expenses', amount: 1100}},
-        {message: 'Vente d\'actifs: +1300€', effect: {type: 'cash', amount: 1300}},
-        {message: 'Rachat d\'entreprise: -3000€', effect: {type: 'cash', amount: -3000}},
-        {message: 'Gains de loterie: +10000€', effect: {type: 'cash', amount: 10000}},
-        {message: 'Dépenses imprévues: -600€', effect: {type: 'cash', amount: -600}},
-        {message: 'Rénovation: -2000€', effect: {type: 'cash', amount: -2000}},
-        {message: 'Aide gouvernementale: +900€', effect: {type: 'cash', amount: 900}},
-        {message: 'Perte sur investissement: -2500€', effect: {type: 'cash', amount: -2500}},
-        {message: 'Frais de voyage: -750€', effect: {type: 'cash', amount: -750}},
+        {message: 'Panne d\'électroménager: -300€', effect: {type: 'cash', amount: -300}},
+        {message: 'Frais de vétérinaire: -250€', effect: {type: 'cash', amount: -250}},
+        {message: 'Réparation vélo/trottinette: -150€', effect: {type: 'cash', amount: -150}},
+        {message: 'Facture imprévue: -350€', effect: {type: 'cash', amount: -350}},
+
+        // Small positive events (frequent)
+        {message: 'Remboursement de frais: +200€', effect: {type: 'cash', amount: 200}},
+        {message: 'Vente d\'objets inutilisés: +300€', effect: {type: 'cash', amount: 300}},
+        {message: 'Bonus de performance: +500€', effect: {type: 'cash', amount: 500}},
+        {message: 'Dividende d\'actions: +400€', effect: {type: 'cash', amount: 400}},
+        {message: 'Cadeau d\'entreprise: +250€', effect: {type: 'cash', amount: 250}},
+
+        // Medium negative events (occasional)
+        {message: 'Réparation voiture: -800€', effect: {type: 'cash', amount: -800}},
+        {message: 'Frais médicaux non remboursés: -650€', effect: {type: 'cash', amount: -650}},
+        {message: 'Déménagement: -1200€', effect: {type: 'cash', amount: -1200}},
+        {message: 'Taxe foncière imprévue: -900€', effect: {type: 'cash', amount: -900}},
+        {message: 'Problème de plomberie: -700€', effect: {type: 'cash', amount: -700}},
+        {message: 'Remplacement chaudière: -1500€', effect: {type: 'cash', amount: -1500}},
+
+        // Medium positive events (occasional)
+        {message: 'Prime annuelle: +1800€', effect: {type: 'cash', amount: 1800}},
+        {message: 'Bonus au travail: +1200€', effect: {type: 'cash', amount: 1200}},
+        {message: 'Réduction d\'impôts: +800€', effect: {type: 'cash', amount: 800}},
+        {message: 'Investissement réussi: +1500€', effect: {type: 'cash', amount: 1500}},
+        {message: 'Vente d\'actifs: +2000€', effect: {type: 'cash', amount: 2000}},
+        {message: 'Remboursement bancaire: +1000€', effect: {type: 'cash', amount: 1000}},
+
+        // Large negative events (rare)
+        {message: 'Accident de voiture (franchise): -2500€', effect: {type: 'cash', amount: -2500}},
+        {message: 'Rénovation urgente: -3000€', effect: {type: 'cash', amount: -3000}},
+        {message: 'Perte sur investissement: -2200€', effect: {type: 'cash', amount: -2200}},
+        {message: 'Frais juridiques: -1800€', effect: {type: 'cash', amount: -1800}},
+
+        // Large positive events (rare)
+        {message: 'Promotion avec augmentation: +3500€', effect: {type: 'cash', amount: 3500}},
+        {message: 'Héritage modeste: +4000€', effect: {type: 'cash', amount: 4000}},
         {message: 'Prime exceptionnelle: +3000€', effect: {type: 'cash', amount: 3000}},
-        {message: 'Cadeau d\'entreprise: +400€', effect: {type: 'cash', amount: 400}},
-        {message: 'Erreur comptable: -650€', effect: {type: 'cash', amount: -650}},
-        {message: 'Fonds de roulement: +1200€', effect: {type: 'cash', amount: 1200}},
-        {message: 'Crise économique: -3500€', effect: {type: 'cash', amount: -3500}}
+        {message: 'Plus-value immobilière: +3800€', effect: {type: 'cash', amount: 3800}},
+
+        // Very large positive events (very rare)
+        {message: 'Héritage important: +8000€', effect: {type: 'cash', amount: 8000}},
+        {message: 'Gains au loto: +10000€', effect: {type: 'cash', amount: 10000}},
+
+        // Expense increase events (affects monthly expenses)
+        {message: 'Augmentation de loyer: +150€/mois', effect: {type: 'expenses', amount: 150}},
+        {message: 'Nouvelle assurance: +80€/mois', effect: {type: 'expenses', amount: 80}},
+        {message: 'Frais de garde d\'enfant: +200€/mois', effect: {type: 'expenses', amount: 200}}
     ];
 
     randomNames: string[] = [

@@ -182,6 +182,7 @@ export class TranslationService {
           low: 'Risque faible - Rendements stables'
         },
         monthlyLabel: 'Mensuel',
+        yearlyLabel: 'Annuel',
         paybackPeriod: 'Rentabilité',
         months: 'mois',
         performance: 'Performance',
@@ -424,6 +425,7 @@ export class TranslationService {
           low: 'Low risk - Stable returns'
         },
         monthlyLabel: 'Monthly',
+        yearlyLabel: 'Yearly',
         paybackPeriod: 'Payback',
         months: 'months',
         performance: 'Performance',
