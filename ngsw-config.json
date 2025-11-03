@@ -5,6 +5,7 @@
     {
       "name": "app",
       "installMode": "prefetch",
+      "updateMode": "prefetch",
       "resources": {
         "files": [
           "/favicon.ico",
@@ -23,8 +24,26 @@
         "files": [
           "/assets/**",
           "/icons/**",
+          "/screenshots/**",
           "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
         ]
+      },
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      }
+    },
+    {
+      "name": "fonts",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "urls": [
+          "https://fonts.googleapis.com/**",
+          "https://fonts.gstatic.com/**"
+        ]
+      },
+      "cacheQueryOptions": {
+        "ignoreVary": true
       }
     }
   ],
@@ -37,7 +56,20 @@
       "cacheConfig": {
         "strategy": "performance",
         "maxSize": 100,
-        "maxAge": "3d"
+        "maxAge": "7d",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "game-state",
+      "urls": [
+        "/api/game-state/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 50,
+        "maxAge": "1h",
+        "timeout": "5s"
       }
     },
     {
@@ -48,7 +80,8 @@
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 10,
-        "maxAge": "1h"
+        "maxAge": "1h",
+        "timeout": "3s"
       }
     }
   ],
@@ -57,5 +90,6 @@
     "!/**/*.*",
     "!/**/*__*",
     "!/**/*__*/**"
-  ]
+  ],
+  "navigationRequestStrategy": "performance"
 }

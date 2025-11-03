@@ -1,15 +1,16 @@
 {
-  "name": "CashFlow Game",
+  "name": "CashFlow Game - Financial Education",
   "short_name": "CashFlow",
-  "description": "A financial education game teaching investment and wealth-building strategies",
+  "description": "A financial education game teaching investment and wealth-building strategies. Learn to manage money, make smart investments, and achieve financial freedom through interactive gameplay.",
   "theme_color": "#1e40af",
   "background_color": "#ffffff",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "categories": ["education", "finance", "games"],
   "lang": "en-US",
+  "dir": "ltr",
   "icons": [
     {
       "src": "icons/icon-72x72.svg",
@@ -59,5 +60,58 @@
       "type": "image/svg+xml",
       "purpose": "maskable any"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "New Game",
+      "short_name": "New Game",
+      "description": "Start a new CashFlow game",
+      "url": "/?action=new-game",
+      "icons": [
+        {
+          "src": "icons/icon-192x192.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Continue Game",
+      "short_name": "Continue",
+      "description": "Continue your current game",
+      "url": "/?action=continue",
+      "icons": [
+        {
+          "src": "icons/icon-192x192.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/game-dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Game Dashboard - Track your investments and financial progress"
+    },
+    {
+      "src": "screenshots/investments.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Investment Opportunities - Choose from various investment options"
+    }
+  ],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
