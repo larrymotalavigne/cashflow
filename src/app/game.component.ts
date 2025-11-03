@@ -14,11 +14,15 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {TranslationService} from './translation.service';
 import {ConfirmationDialogService} from './confirmation-dialog.service';
 import {CommonModule} from '@angular/common';
+import {ExportService} from './export.service';
+import {MenuModule} from 'primeng/menu';
+import {MenuItem} from 'primeng/api';
+import {TooltipModule} from 'primeng/tooltip';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [CommonModule, FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent],
+    imports: [CommonModule, FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent, MenuModule, TooltipModule],
     animations: [
         trigger('financialChange', [
             state('increase', style({
@@ -82,8 +86,17 @@ import {CommonModule} from '@angular/common';
                     <span class="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400">{{ translationService.translate('game.dashboard') }}</span>
                 </div>
 
-                <!-- Right side: Theme toggle -->
-                <div class="flex align-items-center">
+                <!-- Right side: Export button and Theme toggle -->
+                <div class="flex align-items-center gap-2">
+                    <p-button icon="pi pi-download"
+                              (click)="exportMenu.toggle($event)"
+                              [outlined]="true"
+                              [rounded]="true"
+                              severity="secondary"
+                              [pTooltip]="translationService.translate('game.export.title')"
+                              tooltipPosition="bottom"
+                              class="theme-shadow-sm hover:theme-shadow-md transition-all duration-200"></p-button>
+                    <p-menu #exportMenu [model]="exportMenuItems" [popup]="true" styleClass="w-64"></p-menu>
                     <app-theme-toggle></app-theme-toggle>
                 </div>
             </div>
@@ -117,6 +130,25 @@ export class GameComponent {
     game = inject(GameService);
     translationService = inject(TranslationService);
     confirmationService = inject(ConfirmationDialogService);
+    exportService = inject(ExportService);
+
+    exportMenuItems: MenuItem[] = [
+        {
+            label: this.translationService.translate('game.export.csv'),
+            icon: 'pi pi-file',
+            command: () => this.exportService.exportToCSV()
+        },
+        {
+            label: this.translationService.translate('game.export.summary'),
+            icon: 'pi pi-file-edit',
+            command: () => this.exportService.exportSummaryReport()
+        },
+        {
+            label: this.translationService.translate('game.export.json'),
+            icon: 'pi pi-code',
+            command: () => this.exportService.exportToJSON()
+        }
+    ];
 
     private startX: number = 0;
     private startY: number = 0;

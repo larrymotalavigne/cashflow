@@ -136,7 +136,13 @@ export class TranslationService {
         amount: 'Montant',
         annualPayments: 'Paiements annuels',
         annualRevenue: 'Revenu annuel',
-        victoryMessage: 'Félicitations ! Vous avez atteint la liberté financière !'
+        victoryMessage: 'Félicitations ! Vous avez atteint la liberté financière !',
+        export: {
+          title: 'Exporter les données',
+          csv: 'Exporter l\'historique (CSV)',
+          summary: 'Exporter le rapport de synthèse (TXT)',
+          json: 'Exporter les données complètes (JSON)'
+        }
       },
       investments: {
         title: 'Opportunités d\'investissement',
@@ -372,7 +378,13 @@ export class TranslationService {
         amount: 'Amount',
         annualPayments: 'Annual payments',
         annualRevenue: 'Annual income',
-        victoryMessage: 'Congratulations! You have achieved financial freedom!'
+        victoryMessage: 'Congratulations! You have achieved financial freedom!',
+        export: {
+          title: 'Export data',
+          csv: 'Export history (CSV)',
+          summary: 'Export summary report (TXT)',
+          json: 'Export complete data (JSON)'
+        }
       },
       investments: {
         title: 'Investment opportunities',
