@@ -144,6 +144,28 @@ export class TranslationService {
           json: 'Exporter les données complètes (JSON)'
         }
       },
+      statistics: {
+        title: 'Statistiques et analyses',
+        netWorth: 'Valeur nette',
+        netWorthEvolution: 'Évolution de la valeur nette',
+        totalReturns: 'Rendements totaux',
+        fromInvestments: 'des investissements',
+        averageROI: 'ROI moyen',
+        annual: 'Annuel',
+        turnsPlayed: 'Tours joués',
+        incomeVsExpenses: 'Revenus vs dépenses',
+        portfolioDistribution: 'Répartition du portfolio',
+        cashFlowTrend: 'Tendance du cash-flow',
+        cashFlow: 'Cash-flow',
+        investmentPerformance: 'Performance des investissements',
+        investment: 'Investissement',
+        amount: 'Montant',
+        annualReturn: 'Rendement annuel',
+        roi: 'ROI',
+        paybackYears: 'Rentabilité (années)',
+        total: 'Total',
+        noInvestments: 'Aucun investissement pour le moment'
+      },
       investments: {
         title: 'Opportunités d\'investissement',
         buy: 'Acheter',
@@ -386,6 +408,28 @@ export class TranslationService {
           summary: 'Export summary report (TXT)',
           json: 'Export complete data (JSON)'
         }
+      },
+      statistics: {
+        title: 'Statistics & Analysis',
+        netWorth: 'Net Worth',
+        netWorthEvolution: 'Net Worth Evolution',
+        totalReturns: 'Total Returns',
+        fromInvestments: 'from investments',
+        averageROI: 'Average ROI',
+        annual: 'Annual',
+        turnsPlayed: 'Turns Played',
+        incomeVsExpenses: 'Income vs Expenses',
+        portfolioDistribution: 'Portfolio Distribution',
+        cashFlowTrend: 'Cash Flow Trend',
+        cashFlow: 'Cash Flow',
+        investmentPerformance: 'Investment Performance',
+        investment: 'Investment',
+        amount: 'Amount',
+        annualReturn: 'Annual Return',
+        roi: 'ROI',
+        paybackYears: 'Payback (years)',
+        total: 'Total',
+        noInvestments: 'No investments yet'
       },
       investments: {
         title: 'Investment opportunities',

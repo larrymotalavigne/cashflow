@@ -18,11 +18,12 @@ import {ExportService} from './export.service';
 import {MenuModule} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {TooltipModule} from 'primeng/tooltip';
+import {GameStatisticsComponent} from './game-statistics.component';
 
 @Component({
     selector: 'app-game',
     standalone: true,
-    imports: [CommonModule, FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent, MenuModule, TooltipModule],
+    imports: [CommonModule, FormsModule, RandomEventDialogComponent, ButtonModule, CardModule, PlayerInfoComponent, ProgressChartComponent, InvestmentComparisonChartComponent, DragDropPortfolioComponent, ToolbarModule, ThemeToggleComponent, MenuModule, TooltipModule, GameStatisticsComponent],
     animations: [
         trigger('financialChange', [
             state('increase', style({
@@ -86,8 +87,9 @@ import {TooltipModule} from 'primeng/tooltip';
                     <span class="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400">{{ translationService.translate('game.dashboard') }}</span>
                 </div>
 
-                <!-- Right side: Export button and Theme toggle -->
+                <!-- Right side: Statistics, Export button and Theme toggle -->
                 <div class="flex align-items-center gap-2">
+                    <app-game-statistics></app-game-statistics>
                     <p-button icon="pi pi-download"
                               (click)="exportMenu.toggle($event)"
                               [outlined]="true"
