@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {ButtonModule} from 'primeng/button';
 import {animate, style, transition, trigger} from '@angular/animations';
 
@@ -11,7 +11,7 @@ interface BeforeInstallPromptEvent extends Event {
 @Component({
     selector: 'app-pwa-install-prompt',
     standalone: true,
-    imports: [CommonModule, ButtonModule],
+    imports: [ButtonModule],
     animations: [
         trigger('slideIn', [
             transition(':enter', [
@@ -24,58 +24,57 @@ interface BeforeInstallPromptEvent extends Event {
         ])
     ],
     template: `
-        <div *ngIf="showPrompt && !isInstalled && deferredPrompt"
-             @slideIn
+        @if (showPrompt && !isInstalled && deferredPrompt) {
+          <div
+            @slideIn
              class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-md z-50
                     theme-bg-card theme-shadow-2xl rounded-2xl border-2 border-primary-500
                     p-4 backdrop-blur-lg bg-opacity-95">
             <div class="flex items-start gap-3">
-                <!-- Icon -->
-                <div class="flex-shrink-0 bg-gradient-to-br from-primary-500 to-secondary-500 p-2.5 rounded-xl">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
+              <!-- Icon -->
+              <div class="flex-shrink-0 bg-gradient-to-br from-primary-500 to-secondary-500 p-2.5 rounded-xl">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <!-- Content -->
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold theme-text-primary text-base mb-1">
+                  Install CashFlow App
+                </h3>
+                <p class="theme-text-secondary text-sm mb-3">
+                  Install the app on your device for quick access and a better experience, even offline!
+                </p>
+                <!-- Actions -->
+                <div class="flex gap-2">
+                  <p-button label="Install"
+                    (click)="install()"
+                    [outlined]="false"
+                    size="small"
+                    class="flex-1"
+                    icon="pi pi-download"
+                  styleClass="p-button-success p-button-sm"></p-button>
+                  <p-button label="Later"
+                    (click)="dismiss()"
+                    [outlined]="true"
+                    size="small"
+                    class="flex-1"
+                  styleClass="p-button-secondary p-button-sm"></p-button>
                 </div>
-
-                <!-- Content -->
-                <div class="flex-1 min-w-0">
-                    <h3 class="font-semibold theme-text-primary text-base mb-1">
-                        Install CashFlow App
-                    </h3>
-                    <p class="theme-text-secondary text-sm mb-3">
-                        Install the app on your device for quick access and a better experience, even offline!
-                    </p>
-
-                    <!-- Actions -->
-                    <div class="flex gap-2">
-                        <p-button label="Install"
-                                  (click)="install()"
-                                  [outlined]="false"
-                                  size="small"
-                                  class="flex-1"
-                                  icon="pi pi-download"
-                                  styleClass="p-button-success p-button-sm"></p-button>
-                        <p-button label="Later"
-                                  (click)="dismiss()"
-                                  [outlined]="true"
-                                  size="small"
-                                  class="flex-1"
-                                  styleClass="p-button-secondary p-button-sm"></p-button>
-                    </div>
-                </div>
-
-                <!-- Close button -->
-                <button (click)="close()"
+              </div>
+              <!-- Close button -->
+              <button (click)="close()"
                         class="flex-shrink-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200
                                transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-        </div>
-    `
+          </div>
+        }
+        `
 })
 export class PwaInstallPromptComponent implements OnInit {
     showPrompt = false;

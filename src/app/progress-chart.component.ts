@@ -20,16 +20,16 @@ import { Subscription } from 'rxjs';
         <div class="flex justify-content-between align-items-center p-3">
           <h3 class="m-0 theme-text-card">📊 Évolution Financière</h3>
           <div class="flex gap-2">
-            <p-button 
-              icon="pi pi-download" 
-              (click)="exportChart()" 
+            <p-button
+              icon="pi pi-download"
+              (click)="exportChart()"
               class="p-button-outlined p-button-sm"
               pTooltip="Exporter le graphique">
             </p-button>
           </div>
         </div>
       </ng-template>
-      
+    
       <ng-template pTemplate="content">
         <!-- Controls Section -->
         <div class="mb-4 p-3 theme-bg-muted rounded-lg">
@@ -37,84 +37,90 @@ import { Subscription } from 'rxjs';
             <!-- Time Range Selector -->
             <div>
               <label class="block text-sm font-medium theme-text-primary mb-2">Période d'affichage</label>
-              <p-dropdown 
-                [options]="timeRangeOptions" 
-                [(ngModel)]="selectedTimeRange" 
+              <p-dropdown
+                [options]="timeRangeOptions"
+                [(ngModel)]="selectedTimeRange"
                 (onChange)="updateChartData()"
                 placeholder="Sélectionner période"
                 class="w-full">
               </p-dropdown>
             </div>
-            
+    
             <!-- Chart Type Selector -->
             <div>
               <label class="block text-sm font-medium theme-text-primary mb-2">Type de graphique</label>
-              <p-dropdown 
-                [options]="chartTypeOptions" 
-                [(ngModel)]="selectedChartType" 
+              <p-dropdown
+                [options]="chartTypeOptions"
+                [(ngModel)]="selectedChartType"
                 (onChange)="updateChartData()"
                 placeholder="Type de graphique"
                 class="w-full">
               </p-dropdown>
             </div>
-            
+    
             <!-- Data Series Toggle -->
             <div>
               <label class="block text-sm font-medium theme-text-primary mb-2">Données affichées</label>
               <div class="space-y-2">
-                <div class="flex align-items-center" *ngFor="let series of dataSeriesOptions">
-                  <p-checkbox 
-                    [(ngModel)]="series.visible" 
-                    (onChange)="updateChartData()"
-                    [inputId]="series.key">
-                  </p-checkbox>
-                  <label [for]="series.key" class="ml-2 text-sm theme-text-primary cursor-pointer">
-                    {{ series.label }}
-                  </label>
-                </div>
+                @for (series of dataSeriesOptions; track series) {
+                  <div class="flex align-items-center">
+                    <p-checkbox
+                      [(ngModel)]="series.visible"
+                      (onChange)="updateChartData()"
+                      [inputId]="series.key">
+                    </p-checkbox>
+                    <label [for]="series.key" class="ml-2 text-sm theme-text-primary cursor-pointer">
+                      {{ series.label }}
+                    </label>
+                  </div>
+                }
               </div>
             </div>
           </div>
         </div>
-
+    
         <!-- Financial Goals Progress -->
-        <div class="mb-4 p-3 theme-bg-muted rounded-lg" *ngIf="financialGoals.length > 0">
-          <h4 class="theme-text-primary mb-3 flex items-center">
-            <i class="pi pi-flag mr-2 text-primary-600 dark:text-primary-400"></i>
-            Objectifs Financiers
-          </h4>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div *ngFor="let goal of financialGoals" class="p-3 theme-bg-card rounded-lg theme-shadow-sm">
-              <div class="flex justify-content-between align-items-center mb-2">
-                <span class="font-medium theme-text-card">{{ goal.name }}</span>
-                <span class="text-sm" [ngClass]="goal.achieved ? 'text-success-600 dark:text-success-400' : 'theme-text-muted'">
-                  {{ goal.achieved ? '✅ Atteint' : getProgressPercentage(goal) + '%' }}
-                </span>
-              </div>
-              <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
-                <div 
-                  class="h-2 rounded-full transition-all duration-300"
-                  [ngClass]="goal.achieved ? 'bg-success-500' : 'bg-primary-500'"
-                  [style.width.%]="Math.min(getProgressPercentage(goal), 100)">
+        @if (financialGoals.length > 0) {
+          <div class="mb-4 p-3 theme-bg-muted rounded-lg">
+            <h4 class="theme-text-primary mb-3 flex items-center">
+              <i class="pi pi-flag mr-2 text-primary-600 dark:text-primary-400"></i>
+              Objectifs Financiers
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              @for (goal of financialGoals; track goal) {
+                <div class="p-3 theme-bg-card rounded-lg theme-shadow-sm">
+                  <div class="flex justify-content-between align-items-center mb-2">
+                    <span class="font-medium theme-text-card">{{ goal.name }}</span>
+                    <span class="text-sm" [ngClass]="goal.achieved ? 'text-success-600 dark:text-success-400' : 'theme-text-muted'">
+                      {{ goal.achieved ? '✅ Atteint' : getProgressPercentage(goal) + '%' }}
+                    </span>
+                  </div>
+                  <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+                    <div
+                      class="h-2 rounded-full transition-all duration-300"
+                      [ngClass]="goal.achieved ? 'bg-success-500' : 'bg-primary-500'"
+                      [style.width.%]="Math.min(getProgressPercentage(goal), 100)">
+                    </div>
+                  </div>
+                  <div class="mt-1 text-xs theme-text-muted">
+                    {{ formatCurrency(goal.currentValue) }} / {{ formatCurrency(goal.targetValue) }}
+                  </div>
                 </div>
-              </div>
-              <div class="mt-1 text-xs theme-text-muted">
-                {{ formatCurrency(goal.currentValue) }} / {{ formatCurrency(goal.targetValue) }}
-              </div>
+              }
             </div>
           </div>
-        </div>
-
+        }
+    
         <!-- Chart -->
         <div class="chart-container">
-          <p-chart 
-            [type]="selectedChartType" 
-            [data]="chartData" 
+          <p-chart
+            [type]="selectedChartType"
+            [data]="chartData"
             [options]="chartOptions"
             class="w-full">
           </p-chart>
         </div>
-
+    
         <!-- Statistics Summary -->
         <div class="mt-4 p-3 theme-bg-muted rounded-lg">
           <h4 class="theme-text-primary mb-3 flex items-center">
@@ -142,7 +148,7 @@ import { Subscription } from 'rxjs';
         </div>
       </ng-template>
     </p-card>
-  `
+    `
 })
 export class ProgressChartComponent implements OnInit, OnDestroy {
   private game = inject(GameService);

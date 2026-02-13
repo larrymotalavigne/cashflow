@@ -30,180 +30,186 @@ interface InvestmentPerformance {
         <div class="flex justify-content-between align-items-center p-3">
           <h3 class="m-0 theme-text-card">📈 Comparaison des Investissements</h3>
           <div class="flex gap-2">
-            <p-button 
-              icon="pi pi-refresh" 
-              (click)="updateData()" 
+            <p-button
+              icon="pi pi-refresh"
+              (click)="updateData()"
               class="p-button-outlined p-button-sm"
               pTooltip="Actualiser les données">
             </p-button>
-            <p-button 
-              icon="pi pi-download" 
-              (click)="exportComparison()" 
+            <p-button
+              icon="pi pi-download"
+              (click)="exportComparison()"
               class="p-button-outlined p-button-sm"
               pTooltip="Exporter la comparaison">
             </p-button>
           </div>
         </div>
       </ng-template>
-      
+    
       <ng-template pTemplate="content">
-        <div *ngIf="investmentPerformance.length === 0" class="text-center p-6">
-          <div class="text-6xl mb-4">📊</div>
-          <h4 class="theme-text-primary mb-2">Aucun investissement à comparer</h4>
-          <p class="theme-text-muted">Achetez des investissements pour voir leur performance comparative.</p>
-        </div>
-
-        <div *ngIf="investmentPerformance.length > 0">
-          <!-- Controls -->
-          <div class="mb-4 p-3 theme-bg-muted rounded-lg">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-sm font-medium theme-text-primary mb-2">Type de comparaison</label>
-                <p-dropdown 
-                  [options]="comparisonTypes" 
-                  [(ngModel)]="selectedComparisonType" 
-                  (onChange)="updateChart()"
-                  class="w-full">
-                </p-dropdown>
-              </div>
-              <div>
-                <label class="block text-sm font-medium theme-text-primary mb-2">Type de graphique</label>
-                <p-dropdown 
-                  [options]="chartTypes" 
-                  [(ngModel)]="selectedChartType" 
-                  (onChange)="updateChart()"
-                  class="w-full">
-                </p-dropdown>
-              </div>
-            </div>
+        @if (investmentPerformance.length === 0) {
+          <div class="text-center p-6">
+            <div class="text-6xl mb-4">📊</div>
+            <h4 class="theme-text-primary mb-2">Aucun investissement à comparer</h4>
+            <p class="theme-text-muted">Achetez des investissements pour voir leur performance comparative.</p>
           </div>
-
-          <!-- Investment Performance Summary -->
-          <div class="mb-4">
-            <h4 class="theme-text-primary mb-3 flex items-center">
-              <i class="pi pi-chart-line mr-2 text-primary-600 dark:text-primary-400"></i>
-              Performance par Investissement
-            </h4>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <div *ngFor="let investment of investmentPerformance; trackBy: trackByName" 
-                   class="p-3 theme-bg-card rounded-lg theme-shadow-sm border-l-4"
-                   [style.border-left-color]="getInvestmentColor(investment.type)">
-                <div class="flex justify-content-between align-items-start mb-2">
-                  <h5 class="theme-text-card mb-1">{{ investment.name }}</h5>
-                  <span class="text-xs theme-bg-muted px-2 py-1 rounded-full">{{ investment.type }}</span>
+        }
+    
+        @if (investmentPerformance.length > 0) {
+          <div>
+            <!-- Controls -->
+            <div class="mb-4 p-3 theme-bg-muted rounded-lg">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm font-medium theme-text-primary mb-2">Type de comparaison</label>
+                  <p-dropdown
+                    [options]="comparisonTypes"
+                    [(ngModel)]="selectedComparisonType"
+                    (onChange)="updateChart()"
+                    class="w-full">
+                  </p-dropdown>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span class="theme-text-muted">Investi:</span>
-                    <span class="font-semibold theme-text-card ml-1">{{ formatCurrency(investment.totalInvested) }}</span>
-                  </div>
-                  <div>
-                    <span class="theme-text-muted">ROI:</span>
-                    <span class="font-semibold ml-1" [ngClass]="getROIClass(investment.roi)">
-                      {{ investment.roi.toFixed(1) }}%
-                    </span>
-                  </div>
-                  <div>
-                    <span class="theme-text-muted">Retour/mois:</span>
-                    <span class="font-semibold theme-text-card ml-1">{{ formatCurrency(investment.monthlyReturn) }}</span>
-                  </div>
-                  <div>
-                    <span class="theme-text-muted">Rentabilité:</span>
-                    <span class="font-semibold theme-text-card ml-1">{{ investment.paybackPeriod }} mois</span>
-                  </div>
+                <div>
+                  <label class="block text-sm font-medium theme-text-primary mb-2">Type de graphique</label>
+                  <p-dropdown
+                    [options]="chartTypes"
+                    [(ngModel)]="selectedChartType"
+                    (onChange)="updateChart()"
+                    class="w-full">
+                  </p-dropdown>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Comparison Chart -->
-          <div class="chart-container mb-4" style="height: 400px;">
-            <p-chart 
-              [type]="selectedChartType" 
-              [data]="chartData" 
-              [options]="chartOptions"
-              class="w-full h-full">
-            </p-chart>
-          </div>
-
-          <!-- Investment Type Analysis -->
-          <div class="mb-4">
-            <h4 class="theme-text-primary mb-3 flex items-center">
-              <i class="pi pi-objects-column mr-2 text-primary-600 dark:text-primary-400"></i>
-              Analyse par Type d'Investissement
-            </h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div *ngFor="let typeStats of investmentTypeStats" 
-                   class="p-4 theme-bg-muted rounded-lg text-center">
-                <div class="text-2xl mb-2">{{ getTypeIcon(typeStats.type) }}</div>
-                <h5 class="theme-text-primary mb-2">{{ typeStats.type }}</h5>
-                <div class="space-y-1 text-sm">
-                  <div>
-                    <span class="theme-text-muted">Nombre:</span>
-                    <span class="font-semibold theme-text-primary ml-1">{{ typeStats.count }}</span>
+            <!-- Investment Performance Summary -->
+            <div class="mb-4">
+              <h4 class="theme-text-primary mb-3 flex items-center">
+                <i class="pi pi-chart-line mr-2 text-primary-600 dark:text-primary-400"></i>
+                Performance par Investissement
+              </h4>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                @for (investment of investmentPerformance; track trackByName($index, investment)) {
+                  <div
+                    class="p-3 theme-bg-card rounded-lg theme-shadow-sm border-l-4"
+                    [style.border-left-color]="getInvestmentColor(investment.type)">
+                    <div class="flex justify-content-between align-items-start mb-2">
+                      <h5 class="theme-text-card mb-1">{{ investment.name }}</h5>
+                      <span class="text-xs theme-bg-muted px-2 py-1 rounded-full">{{ investment.type }}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span class="theme-text-muted">Investi:</span>
+                        <span class="font-semibold theme-text-card ml-1">{{ formatCurrency(investment.totalInvested) }}</span>
+                      </div>
+                      <div>
+                        <span class="theme-text-muted">ROI:</span>
+                        <span class="font-semibold ml-1" [ngClass]="getROIClass(investment.roi)">
+                          {{ investment.roi.toFixed(1) }}%
+                        </span>
+                      </div>
+                      <div>
+                        <span class="theme-text-muted">Retour/mois:</span>
+                        <span class="font-semibold theme-text-card ml-1">{{ formatCurrency(investment.monthlyReturn) }}</span>
+                      </div>
+                      <div>
+                        <span class="theme-text-muted">Rentabilité:</span>
+                        <span class="font-semibold theme-text-card ml-1">{{ investment.paybackPeriod }} mois</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span class="theme-text-muted">Investi total:</span>
-                    <span class="font-semibold theme-text-primary ml-1">{{ formatCurrency(typeStats.totalInvested) }}</span>
+                }
+              </div>
+            </div>
+            <!-- Comparison Chart -->
+            <div class="chart-container mb-4" style="height: 400px;">
+              <p-chart
+                [type]="selectedChartType"
+                [data]="chartData"
+                [options]="chartOptions"
+                class="w-full h-full">
+              </p-chart>
+            </div>
+            <!-- Investment Type Analysis -->
+            <div class="mb-4">
+              <h4 class="theme-text-primary mb-3 flex items-center">
+                <i class="pi pi-objects-column mr-2 text-primary-600 dark:text-primary-400"></i>
+                Analyse par Type d'Investissement
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                @for (typeStats of investmentTypeStats; track typeStats) {
+                  <div
+                    class="p-4 theme-bg-muted rounded-lg text-center">
+                    <div class="text-2xl mb-2">{{ getTypeIcon(typeStats.type) }}</div>
+                    <h5 class="theme-text-primary mb-2">{{ typeStats.type }}</h5>
+                    <div class="space-y-1 text-sm">
+                      <div>
+                        <span class="theme-text-muted">Nombre:</span>
+                        <span class="font-semibold theme-text-primary ml-1">{{ typeStats.count }}</span>
+                      </div>
+                      <div>
+                        <span class="theme-text-muted">Investi total:</span>
+                        <span class="font-semibold theme-text-primary ml-1">{{ formatCurrency(typeStats.totalInvested) }}</span>
+                      </div>
+                      <div>
+                        <span class="theme-text-muted">ROI moyen:</span>
+                        <span class="font-semibold ml-1" [ngClass]="getROIClass(typeStats.avgROI)">
+                          {{ typeStats.avgROI.toFixed(1) }}%
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span class="theme-text-muted">ROI moyen:</span>
-                    <span class="font-semibold ml-1" [ngClass]="getROIClass(typeStats.avgROI)">
-                      {{ typeStats.avgROI.toFixed(1) }}%
-                    </span>
+                }
+              </div>
+            </div>
+            <!-- Best/Worst Performers -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 theme-bg-muted rounded-lg">
+                <h5 class="theme-text-primary mb-3 flex items-center">
+                  <i class="pi pi-crown mr-2 text-success-600 dark:text-success-400"></i>
+                  Meilleur Investissement
+                </h5>
+                @if (bestPerformer) {
+                  <div class="p-3 theme-bg-card rounded-lg">
+                    <h6 class="theme-text-card mb-2">{{ bestPerformer.name }}</h6>
+                    <div class="text-sm space-y-1">
+                      <div class="flex justify-content-between">
+                        <span class="theme-text-muted">ROI:</span>
+                        <span class="font-semibold text-success-600 dark:text-success-400">{{ bestPerformer.roi.toFixed(1) }}%</span>
+                      </div>
+                      <div class="flex justify-content-between">
+                        <span class="theme-text-muted">Retour mensuel:</span>
+                        <span class="font-semibold theme-text-card">{{ formatCurrency(bestPerformer.monthlyReturn) }}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                }
+              </div>
+              <div class="p-4 theme-bg-muted rounded-lg">
+                <h5 class="theme-text-primary mb-3 flex items-center">
+                  <i class="pi pi-exclamation-triangle mr-2 text-warning-600 dark:text-warning-400"></i>
+                  Moins Performant
+                </h5>
+                @if (worstPerformer) {
+                  <div class="p-3 theme-bg-card rounded-lg">
+                    <h6 class="theme-text-card mb-2">{{ worstPerformer.name }}</h6>
+                    <div class="text-sm space-y-1">
+                      <div class="flex justify-content-between">
+                        <span class="theme-text-muted">ROI:</span>
+                        <span class="font-semibold text-warning-600 dark:text-warning-400">{{ worstPerformer.roi.toFixed(1) }}%</span>
+                      </div>
+                      <div class="flex justify-content-between">
+                        <span class="theme-text-muted">Retour mensuel:</span>
+                        <span class="font-semibold theme-text-card">{{ formatCurrency(worstPerformer.monthlyReturn) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                }
               </div>
             </div>
           </div>
-
-          <!-- Best/Worst Performers -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 theme-bg-muted rounded-lg">
-              <h5 class="theme-text-primary mb-3 flex items-center">
-                <i class="pi pi-crown mr-2 text-success-600 dark:text-success-400"></i>
-                Meilleur Investissement
-              </h5>
-              <div *ngIf="bestPerformer" class="p-3 theme-bg-card rounded-lg">
-                <h6 class="theme-text-card mb-2">{{ bestPerformer.name }}</h6>
-                <div class="text-sm space-y-1">
-                  <div class="flex justify-content-between">
-                    <span class="theme-text-muted">ROI:</span>
-                    <span class="font-semibold text-success-600 dark:text-success-400">{{ bestPerformer.roi.toFixed(1) }}%</span>
-                  </div>
-                  <div class="flex justify-content-between">
-                    <span class="theme-text-muted">Retour mensuel:</span>
-                    <span class="font-semibold theme-text-card">{{ formatCurrency(bestPerformer.monthlyReturn) }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-4 theme-bg-muted rounded-lg">
-              <h5 class="theme-text-primary mb-3 flex items-center">
-                <i class="pi pi-exclamation-triangle mr-2 text-warning-600 dark:text-warning-400"></i>
-                Moins Performant
-              </h5>
-              <div *ngIf="worstPerformer" class="p-3 theme-bg-card rounded-lg">
-                <h6 class="theme-text-card mb-2">{{ worstPerformer.name }}</h6>
-                <div class="text-sm space-y-1">
-                  <div class="flex justify-content-between">
-                    <span class="theme-text-muted">ROI:</span>
-                    <span class="font-semibold text-warning-600 dark:text-warning-400">{{ worstPerformer.roi.toFixed(1) }}%</span>
-                  </div>
-                  <div class="flex justify-content-between">
-                    <span class="theme-text-muted">Retour mensuel:</span>
-                    <span class="font-semibold theme-text-card">{{ formatCurrency(worstPerformer.monthlyReturn) }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        }
       </ng-template>
     </p-card>
-  `
+    `
 })
 export class InvestmentComparisonChartComponent implements OnInit, OnDestroy {
   private game = inject(GameService);

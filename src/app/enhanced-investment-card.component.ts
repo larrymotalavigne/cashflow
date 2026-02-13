@@ -17,46 +17,50 @@ import { TranslationService } from './translation.service';
   imports: [CommonModule, FormsModule, ButtonModule, BadgeModule, TooltipModule, CheckboxModule, FinancialCounterComponent],
   template: `
     <div class="investment-card theme-bg-card theme-shadow-lg hover:theme-shadow-2xl transition-all duration-300 rounded-2xl border-2 theme-border overflow-hidden group hover:scale-[1.03] cursor-pointer relative"
-         [ngClass]="getCardClasses()"
-         [attr.data-investment]="investment.name">
-
+      [ngClass]="getCardClasses()"
+      [attr.data-investment]="investment.name">
+    
       <!-- Gradient top border -->
       <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500"></div>
-
+    
       <!-- Shimmer effect on hover -->
       <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
         <div class="shimmer absolute inset-0"></div>
       </div>
-
+    
       <!-- Header Section -->
       <div class="card-header p-4 pb-3 border-b theme-border bg-gradient-to-r from-transparent to-primary-50/30 dark:to-primary-900/20">
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <div class="flex items-center gap-2 mb-2">
-              <div *ngIf="comparisonMode" class="flex-shrink-0">
-                <p-checkbox 
-                  [(ngModel)]="isSelected" 
-                  (onChange)="onSelectionChange()"
-                  [inputId]="'select-' + investment.name">
-                </p-checkbox>
-              </div>
+              @if (comparisonMode) {
+                <div class="flex-shrink-0">
+                  <p-checkbox
+                    [(ngModel)]="isSelected"
+                    (onChange)="onSelectionChange()"
+                    [inputId]="'select-' + investment.name">
+                  </p-checkbox>
+                </div>
+              }
               <h3 class="text-lg font-bold theme-text-card line-clamp-2 flex-1">
                 {{ investment.name }}
               </h3>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                    [ngClass]="getTypeBadgeClasses(investment.type)">
+                [ngClass]="getTypeBadgeClasses(investment.type)">
                 {{ getTypeIcon(investment.type) }} {{ investment.type }}
               </span>
-              <span *ngIf="investment.sector" 
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                    [ngClass]="getSectorBadgeClasses()"
-                    [pTooltip]="getSectorTooltip()" 
-                    tooltipPosition="top">
-                <i class="pi text-xs mr-1" [ngClass]="getSectorIcon()"></i>
-                {{ getSectorName() }}
-              </span>
+              @if (investment.sector) {
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [ngClass]="getSectorBadgeClasses()"
+                  [pTooltip]="getSectorTooltip()"
+                  tooltipPosition="top">
+                  <i class="pi text-xs mr-1" [ngClass]="getSectorIcon()"></i>
+                  {{ getSectorName() }}
+                </span>
+              }
               <div class="flex items-center gap-1" [pTooltip]="getRiskTooltip()" tooltipPosition="top">
                 <i class="pi text-xs" [ngClass]="getRiskIcon()"></i>
                 <span class="text-xs theme-text-muted">{{ getRiskLevel() }}</span>
@@ -71,7 +75,7 @@ import { TranslationService } from './translation.service';
           </div>
         </div>
       </div>
-
+    
       <!-- Metrics Section -->
       <div class="card-metrics p-4 py-3">
         <div class="grid grid-cols-2 gap-4">
@@ -81,13 +85,13 @@ import { TranslationService } from './translation.service';
               <i class="pi pi-euro text-warning-500 text-xs"></i>
               <span class="text-xs font-medium theme-text-muted uppercase tracking-wide">{{ translationService.translate('investments.price') }}</span>
             </div>
-            <app-financial-counter 
-              [value]="investment.amount" 
+            <app-financial-counter
+              [value]="investment.amount"
               [animate]="false"
               class="metric-value">
             </app-financial-counter>
           </div>
-
+    
           <!-- Annual Return -->
           <div class="metric-item">
             <div class="flex items-center gap-1 mb-1">
@@ -101,7 +105,7 @@ import { TranslationService } from './translation.service';
             </app-financial-counter>
           </div>
         </div>
-
+    
         <!-- Payback Period -->
         <div class="mt-3 flex items-center justify-between">
           <div class="flex items-center gap-1">
@@ -110,7 +114,7 @@ import { TranslationService } from './translation.service';
           </div>
           <span class="text-sm font-semibold theme-text-card">{{ getPaybackPeriod() }} {{ translationService.translate('investments.months') }}</span>
         </div>
-
+    
         <!-- Progress Bar for ROI -->
         <div class="mt-3">
           <div class="flex justify-between items-center mb-1">
@@ -118,7 +122,7 @@ import { TranslationService } from './translation.service';
             <span class="text-xs font-medium" [ngClass]="getROITextClass()">{{ getPerformanceRating() }}</span>
           </div>
           <div class="w-full theme-bg-muted rounded-full h-1.5">
-            <div 
+            <div
               class="h-1.5 rounded-full transition-all duration-500"
               [ngClass]="getROIBarClass()"
               [style.width.%]="getROIBarWidth()">
@@ -126,33 +130,34 @@ import { TranslationService } from './translation.service';
           </div>
         </div>
       </div>
-
+    
       <!-- Actions Section -->
       <div class="card-actions p-4 pt-3 bg-gradient-to-r from-neutral-50/50 via-primary-50/20 to-secondary-50/30 dark:from-neutral-800/50 dark:via-primary-900/20 dark:to-secondary-900/30">
         <div class="grid grid-cols-1 gap-2" [ngClass]="comparisonMode ? 'grid-cols-1' : 'grid-cols-2'">
-          
+    
           <!-- Primary Actions -->
-          <div *ngIf="!comparisonMode" class="flex flex-col gap-2">
-            <!-- Buy Button -->
-            <p-button
-              [label]="canAfford ? translationService.translate('investments.actions.buy') : translationService.translate('investments.actions.insufficientFunds')"
-              [icon]="canAfford ? 'pi pi-shopping-cart' : 'pi pi-exclamation-triangle'"
-              (click)="onBuy()"
-              [disabled]="!canAfford"
-              [styleClass]="'w-full p-button-sm ' + (canAfford ? 'p-button-success' : 'p-button-warning')"
-              [pTooltip]="canAfford ? translationService.translate('investments.actions.buyWithCash') : translationService.translate('investments.actions.insufficientFunds')">
-            </p-button>
-
-            <!-- Loan Button -->
-            <p-button
-              [label]="translationService.translate('investments.actions.loan') + ' (' + (configService.loanRate * 100) + '%)'"
-              icon="pi pi-credit-card"
-              (click)="onBuyWithLoan()"
-              styleClass="w-full p-button-sm p-button-info p-button-outlined"
-              [pTooltip]="translationService.translate('investments.actions.loanTooltip') + ': ' + (configService.loanRate * 100) + '%)'">
-            </p-button>
-          </div>
-
+          @if (!comparisonMode) {
+            <div class="flex flex-col gap-2">
+              <!-- Buy Button -->
+              <p-button
+                [label]="canAfford ? translationService.translate('investments.actions.buy') : translationService.translate('investments.actions.insufficientFunds')"
+                [icon]="canAfford ? 'pi pi-shopping-cart' : 'pi pi-exclamation-triangle'"
+                (click)="onBuy()"
+                [disabled]="!canAfford"
+                [styleClass]="'w-full p-button-sm ' + (canAfford ? 'p-button-success' : 'p-button-warning')"
+                [pTooltip]="canAfford ? translationService.translate('investments.actions.buyWithCash') : translationService.translate('investments.actions.insufficientFunds')">
+              </p-button>
+              <!-- Loan Button -->
+              <p-button
+                [label]="translationService.translate('investments.actions.loan') + ' (' + (configService.loanRate * 100) + '%)'"
+                icon="pi pi-credit-card"
+                (click)="onBuyWithLoan()"
+                styleClass="w-full p-button-sm p-button-info p-button-outlined"
+                [pTooltip]="translationService.translate('investments.actions.loanTooltip') + ': ' + (configService.loanRate * 100) + '%)'">
+              </p-button>
+            </div>
+          }
+    
           <!-- Secondary Actions -->
           <div class="flex flex-col gap-2">
             <p-button
@@ -162,23 +167,24 @@ import { TranslationService } from './translation.service';
               styleClass="w-full p-button-sm p-button-danger p-button-outlined"
               [pTooltip]="translationService.translate('investments.actions.rejectTooltip')">
             </p-button>
-
-            <p-button
-              *ngIf="!comparisonMode"
-              [label]="translationService.translate('investments.actions.compare')"
-              icon="pi pi-chart-bar"
-              (click)="onCompare()"
-              styleClass="w-full p-button-sm p-button-secondary p-button-outlined"
-              [pTooltip]="translationService.translate('investments.actions.compareTooltip')">
-            </p-button>
+    
+            @if (!comparisonMode) {
+              <p-button
+                [label]="translationService.translate('investments.actions.compare')"
+                icon="pi pi-chart-bar"
+                (click)="onCompare()"
+                styleClass="w-full p-button-sm p-button-secondary p-button-outlined"
+                [pTooltip]="translationService.translate('investments.actions.compareTooltip')">
+              </p-button>
+            }
           </div>
         </div>
       </div>
-
+    
       <!-- Hover Overlay for Additional Info -->
       <div class="absolute inset-0 bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
     </div>
-  `,
+    `,
   styles: [`
     .investment-card {
       position: relative;

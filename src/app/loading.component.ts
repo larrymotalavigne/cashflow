@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import {NgClass, NgIf} from '@angular/common';
+import { NgClass } from '@angular/common';
 
 export type LoadingSize = 'sm' | 'md' | 'lg' | 'xl';
 export type LoadingVariant = 'spinner' | 'dots' | 'pulse' | 'shimmer' | 'skeleton';
@@ -7,42 +7,54 @@ export type LoadingVariant = 'spinner' | 'dots' | 'pulse' | 'shimmer' | 'skeleto
 @Component({
   selector: 'app-loading',
   standalone: true,
-    imports: [NgClass, NgIf],
+    imports: [NgClass],
   template: `
     <!-- Spinner variant -->
-    <div *ngIf="variant === 'spinner'" 
-         [ngClass]="getSpinnerClasses()"
-         class="loading-spin rounded-full border-2 border-current border-t-transparent">
-    </div>
+    @if (variant === 'spinner') {
+      <div
+        [ngClass]="getSpinnerClasses()"
+        class="loading-spin rounded-full border-2 border-current border-t-transparent">
+      </div>
+    }
     
     <!-- Dots variant -->
-    <div *ngIf="variant === 'dots'" class="flex items-center justify-center space-x-1">
-      <div *ngFor="let dot of dots; let i = index" 
-           [ngClass]="getDotClasses()"
-           [style.animation-delay]="(i * 0.15) + 's'"
-           class="bg-current rounded-full animate-bounce">
+    @if (variant === 'dots') {
+      <div class="flex items-center justify-center space-x-1">
+        @for (dot of dots; track dot; let i = $index) {
+          <div
+            [ngClass]="getDotClasses()"
+            [style.animation-delay]="(i * 0.15) + 's'"
+            class="bg-current rounded-full animate-bounce">
+          </div>
+        }
       </div>
-    </div>
+    }
     
     <!-- Pulse variant -->
-    <div *ngIf="variant === 'pulse'" 
-         [ngClass]="getPulseClasses()"
-         class="bg-primary-200 dark:bg-primary-800 rounded animate-pulse-soft">
-    </div>
+    @if (variant === 'pulse') {
+      <div
+        [ngClass]="getPulseClasses()"
+        class="bg-primary-200 dark:bg-primary-800 rounded animate-pulse-soft">
+      </div>
+    }
     
     <!-- Shimmer variant -->
-    <div *ngIf="variant === 'shimmer'" 
-         [ngClass]="getShimmerClasses()"
-         class="loading-shimmer rounded">
-    </div>
+    @if (variant === 'shimmer') {
+      <div
+        [ngClass]="getShimmerClasses()"
+        class="loading-shimmer rounded">
+      </div>
+    }
     
     <!-- Skeleton variant -->
-    <div *ngIf="variant === 'skeleton'" class="space-y-2">
-      <div class="loading-shimmer rounded h-4 w-3/4"></div>
-      <div class="loading-shimmer rounded h-4 w-1/2"></div>
-      <div class="loading-shimmer rounded h-4 w-5/6"></div>
-    </div>
-  `,
+    @if (variant === 'skeleton') {
+      <div class="space-y-2">
+        <div class="loading-shimmer rounded h-4 w-3/4"></div>
+        <div class="loading-shimmer rounded h-4 w-1/2"></div>
+        <div class="loading-shimmer rounded h-4 w-5/6"></div>
+      </div>
+    }
+    `,
   styles: [`
     :host {
       display: inline-block;
@@ -118,18 +130,22 @@ export class LoadingComponent {
 @Component({
   selector: 'app-loading-overlay',
   standalone: true,
-    imports: [LoadingComponent, NgIf],
+    imports: [LoadingComponent],
   template: `
     <div class="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
       <div class="theme-bg-card theme-shadow-xl rounded-2xl p-8 max-w-sm mx-4 text-center animate-slide-up">
         <div class="flex justify-center mb-4">
           <app-loading [variant]="variant" [size]="size"></app-loading>
         </div>
-        <h3 *ngIf="title" class="text-lg font-semibold theme-text-card mb-2">{{ title }}</h3>
-        <p *ngIf="message" class="theme-text-muted text-sm">{{ message }}</p>
+        @if (title) {
+          <h3 class="text-lg font-semibold theme-text-card mb-2">{{ title }}</h3>
+        }
+        @if (message) {
+          <p class="theme-text-muted text-sm">{{ message }}</p>
+        }
       </div>
     </div>
-  `
+    `
 })
 export class LoadingOverlayComponent {
   @Input() variant: LoadingVariant = 'spinner';
@@ -149,13 +165,15 @@ export class LoadingOverlayComponent {
       <span class="value text-xl font-bold ml-1 tabular-nums" [attr.data-value]="animatedValue">
         {{ displayValue }}
       </span>
-      <div *ngIf="showDifference && difference !== 0" 
-           class="difference text-xs mt-1 transition-opacity duration-300"
-           [ngClass]="getDifferenceClasses()">
-        {{ difference > 0 ? '+' : '' }}{{ formatNumber(difference) }}{{ currency }}
-      </div>
+      @if (showDifference && difference !== 0) {
+        <div
+          class="difference text-xs mt-1 transition-opacity duration-300"
+          [ngClass]="getDifferenceClasses()">
+          {{ difference > 0 ? '+' : '' }}{{ formatNumber(difference) }}{{ currency }}
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [`
     :host {
       display: inline-block;

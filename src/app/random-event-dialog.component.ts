@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, inject} from '@angular/core';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
-import {NgForOf, NgIf} from '@angular/common';
+
 import {GameConfigService} from './game-config.service';
 import {GameService} from './game.service';
 import {Investment} from './data';
@@ -16,112 +16,124 @@ import {TranslationService} from './translation.service';
 @Component({
     selector: 'app-random-event-dialog',
     standalone: true,
-    imports: [DialogModule, ButtonModule, NgForOf, NgIf, DropdownModule, FormsModule, InputTextModule, DividerModule, AdvancedInvestmentFilterComponent, InvestmentCarouselComponent],
+    imports: [DialogModule, ButtonModule, DropdownModule, FormsModule, InputTextModule, DividerModule, AdvancedInvestmentFilterComponent, InvestmentCarouselComponent],
     template: `
         <p-dialog #dialog [(visible)]="visible" [closable]="false" [header]="getYearTitle()" [modal]="true" styleClass="w-75 theme-bg-card">
-            <div *ngIf="randomEvents.length" class="mb-4">
-                <h3 class="theme-text-card mb-3">{{ translationService.translate('investments.events') }}</h3>
-                <div *ngFor="let event of randomEvents" class="mb-2 theme-bg-muted p-3 rounded-lg theme-border border">
-                    <ng-container *ngIf="event.effect?.amount > 0">📈</ng-container>
-                    <ng-container *ngIf="event.effect?.amount < 0">📉</ng-container>
-                    <span class="theme-text-card">{{ event.message }}</span>
-                    <span *ngIf="event.effect?.type" class="ml-2 text-sm theme-text-muted">({{ event.effect.type }})</span>
+          @if (randomEvents.length) {
+            <div class="mb-4">
+              <h3 class="theme-text-card mb-3">{{ translationService.translate('investments.events') }}</h3>
+              @for (event of randomEvents; track event) {
+                <div class="mb-2 theme-bg-muted p-3 rounded-lg theme-border border">
+                  @if (event.effect?.amount > 0) {
+                    📈
+                  }
+                  @if (event.effect?.amount < 0) {
+                    📉
+                  }
+                  <span class="theme-text-card">{{ event.message }}</span>
+                  @if (event.effect?.type) {
+                    <span class="ml-2 text-sm theme-text-muted">({{ event.effect.type }})</span>
+                  }
                 </div>
+              }
             </div>
-
-            <div>
-                <h3 class="theme-text-card mb-3">{{ translationService.translate('investments.opportunities') }}</h3>
-
-                <div *ngIf="investmentOpportunities.length; else noInvestments">
-                    <!-- Toggle button for advanced filters -->
-                    <div class="mb-3">
-                        <p-button
-                            [label]="showAdvancedFilters ? translationService.translate('investments.hideAdvancedFilters') : translationService.translate('investments.showAdvancedFilters')"
-                            icon="pi pi-filter"
-                            (click)="showAdvancedFilters = !showAdvancedFilters"
-                            styleClass="p-button-outlined p-button-sm"></p-button>
-                    </div>
-                    
-                    <!-- Advanced Filtering Component -->
-                    <div *ngIf="showAdvancedFilters">
-                        <app-advanced-investment-filter
-                            [investments]="investmentOpportunities"
-                            [userCash]="gameService.cash"
-                            (filterChange)="onAdvancedFilterChange($event)">
-                        </app-advanced-investment-filter>
-                    </div>
-
-                    <!-- Comparison Tool -->
-                    <div *ngIf="comparisonMode" class="mb-3 p-3 theme-border border rounded-lg theme-bg-muted">
-                        <div class="flex justify-content-between align-items-center mb-3">
-                            <h4 class="m-0 theme-text-primary">{{ translationService.translate('investments.comparison') }}</h4>
-                            <p-button icon="pi pi-times" (click)="exitComparisonMode()"
-                                      styleClass="p-button-rounded p-button-text"></p-button>
-                        </div>
-
-                        <div class="grid">
-                            <div *ngFor="let investment of selectedInvestments" class="col-12 md:col-6 lg:col-4">
-                                <div class="p-3 theme-border border rounded-lg h-full theme-bg-card theme-shadow-sm">
-                                    <h5 class="theme-text-card">{{ investment.name }}</h5>
-                                    <div class="grid">
-                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.price') }}:</div>
-                                        <div class="col-6 font-bold theme-text-card">{{ investment.amount }}€</div>
-
-                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.income') }}:</div>
-                                        <div class="col-6 font-bold theme-text-card">{{ investment.income }}€</div>
-
-                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.roi') }}:</div>
-                                        <div class="col-6 font-bold theme-text-card">{{ (investment.income / investment.amount * 100).toFixed(2) }}%</div>
-
-                                        <div class="col-6 theme-text-muted">{{ translationService.translate('investments.type') }}:</div>
-                                        <div class="col-6 font-bold theme-text-card">{{ investment.type }}</div>
-                                    </div>
-                                    <div class="mt-3">
-                                        <p-button [label]="translationService.translate('investments.remove')" (click)="removeFromComparison(investment)"
-                                                  styleClass="p-button-sm p-button-outlined"></p-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+          }
+        
+          <div>
+            <h3 class="theme-text-card mb-3">{{ translationService.translate('investments.opportunities') }}</h3>
+        
+            @if (investmentOpportunities.length) {
+              <div>
+                <!-- Toggle button for advanced filters -->
+                <div class="mb-3">
+                  <p-button
+                    [label]="showAdvancedFilters ? translationService.translate('investments.hideAdvancedFilters') : translationService.translate('investments.showAdvancedFilters')"
+                    icon="pi pi-filter"
+                    (click)="showAdvancedFilters = !showAdvancedFilters"
+                  styleClass="p-button-outlined p-button-sm"></p-button>
+                </div>
+                <!-- Advanced Filtering Component -->
+                @if (showAdvancedFilters) {
+                  <div>
+                    <app-advanced-investment-filter
+                      [investments]="investmentOpportunities"
+                      [userCash]="gameService.cash"
+                      (filterChange)="onAdvancedFilterChange($event)">
+                    </app-advanced-investment-filter>
+                  </div>
+                }
+                <!-- Comparison Tool -->
+                @if (comparisonMode) {
+                  <div class="mb-3 p-3 theme-border border rounded-lg theme-bg-muted">
                     <div class="flex justify-content-between align-items-center mb-3">
-                        <p-button *ngIf="!comparisonMode" [label]="translationService.translate('investments.compareInvestments')"
-                                  icon="pi pi-chart-bar" (click)="enterComparisonMode()"
-                                  [disabled]="selectedInvestments.length < 2"></p-button>
-                        <span *ngIf="comparisonMode" class="text-sm theme-text-muted">
-                            {{ translationService.translate('investments.selectToCompare') }}
-                        </span>
+                      <h4 class="m-0 theme-text-primary">{{ translationService.translate('investments.comparison') }}</h4>
+                      <p-button icon="pi pi-times" (click)="exitComparisonMode()"
+                      styleClass="p-button-rounded p-button-text"></p-button>
                     </div>
-
-                    <p-divider></p-divider>
-
-                    <app-investment-carousel
-                        [investments]="filteredInvestments"
-                        [comparisonMode]="comparisonMode"
-                        [selectedInvestments]="selectedInvestments"
-                        (buy)="buyInvestment($event)"
-                        (buyWithLoan)="buyInvestmentWithLoan($event)"
-                        (reject)="deleteInvestment($event)"
-                        (compare)="addToComparison($event)"
-                        (selectionChange)="onInvestmentSelectionChange($event)">
-                    </app-investment-carousel>
+                    <div class="grid">
+                      @for (investment of selectedInvestments; track investment) {
+                        <div class="col-12 md:col-6 lg:col-4">
+                          <div class="p-3 theme-border border rounded-lg h-full theme-bg-card theme-shadow-sm">
+                            <h5 class="theme-text-card">{{ investment.name }}</h5>
+                            <div class="grid">
+                              <div class="col-6 theme-text-muted">{{ translationService.translate('investments.price') }}:</div>
+                              <div class="col-6 font-bold theme-text-card">{{ investment.amount }}€</div>
+                              <div class="col-6 theme-text-muted">{{ translationService.translate('investments.income') }}:</div>
+                              <div class="col-6 font-bold theme-text-card">{{ investment.income }}€</div>
+                              <div class="col-6 theme-text-muted">{{ translationService.translate('investments.roi') }}:</div>
+                              <div class="col-6 font-bold theme-text-card">{{ (investment.income / investment.amount * 100).toFixed(2) }}%</div>
+                              <div class="col-6 theme-text-muted">{{ translationService.translate('investments.type') }}:</div>
+                              <div class="col-6 font-bold theme-text-card">{{ investment.type }}</div>
+                            </div>
+                            <div class="mt-3">
+                              <p-button [label]="translationService.translate('investments.remove')" (click)="removeFromComparison(investment)"
+                              styleClass="p-button-sm p-button-outlined"></p-button>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+                <div class="flex justify-content-between align-items-center mb-3">
+                  @if (!comparisonMode) {
+                    <p-button [label]="translationService.translate('investments.compareInvestments')"
+                      icon="pi pi-chart-bar" (click)="enterComparisonMode()"
+                    [disabled]="selectedInvestments.length < 2"></p-button>
+                  }
+                  @if (comparisonMode) {
+                    <span class="text-sm theme-text-muted">
+                      {{ translationService.translate('investments.selectToCompare') }}
+                    </span>
+                  }
                 </div>
-                <ng-template #noInvestments>
-                    <p class="text-center text-sm theme-text-muted mt-2">{{ translationService.translate('investments.noOpportunities') }}</p>
-                </ng-template>
+                <p-divider></p-divider>
+                <app-investment-carousel
+                  [investments]="filteredInvestments"
+                  [comparisonMode]="comparisonMode"
+                  [selectedInvestments]="selectedInvestments"
+                  (buy)="buyInvestment($event)"
+                  (buyWithLoan)="buyInvestmentWithLoan($event)"
+                  (reject)="deleteInvestment($event)"
+                  (compare)="addToComparison($event)"
+                  (selectionChange)="onInvestmentSelectionChange($event)">
+                </app-investment-carousel>
+              </div>
+            } @else {
+              <p class="text-center text-sm theme-text-muted mt-2">{{ translationService.translate('investments.noOpportunities') }}</p>
+            }
+          </div>
+          <ng-template #footer>
+            <div class="flex justify-content-center w-full">
+              <p-button
+                [label]="translationService.translate('investments.nextYear')"
+                (click)="close()"
+                styleClass="w-full md:w-auto min-h-[48px] touch-manipulation p-button-lg"
+              icon="pi pi-arrow-right"></p-button>
             </div>
-            <ng-template #footer>
-                <div class="flex justify-content-center w-full">
-                    <p-button
-                        [label]="translationService.translate('investments.nextYear')"
-                        (click)="close()"
-                        styleClass="w-full md:w-auto min-h-[48px] touch-manipulation p-button-lg"
-                        icon="pi pi-arrow-right"></p-button>
-                </div>
-            </ng-template>
+          </ng-template>
         </p-dialog>
-    `
+        `
 })
 export class RandomEventDialogComponent {
     @Input() message: string = '';

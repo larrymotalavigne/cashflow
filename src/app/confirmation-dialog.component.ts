@@ -22,50 +22,50 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ],
   template: `
-    <div *ngFor="let dialog of confirmationService.dialogs$()" [@dialogAnimation]>
-      <p-dialog 
-        [visible]="true"
-        [modal]="true"
-        [closable]="false"
-        [header]="dialog.title"
-        [style]="{width: '450px'}"
-        styleClass="confirmation-dialog theme-bg-card">
-        
-        <div class="confirmation-content">
-          <!-- Icon based on dialog type -->
-          <div class="flex items-start mb-4">
-            <div class="flex-shrink-0 mr-4">
-              <div [ngClass]="getIconWrapperClass(dialog)" class="w-12 h-12 rounded-full flex items-center justify-center">
-                <i [ngClass]="getIconClass(dialog)" class="text-2xl"></i>
+    @for (dialog of confirmationService.dialogs$(); track dialog) {
+      <div [@dialogAnimation]>
+        <p-dialog
+          [visible]="true"
+          [modal]="true"
+          [closable]="false"
+          [header]="dialog.title"
+          [style]="{width: '450px'}"
+          styleClass="confirmation-dialog theme-bg-card">
+          <div class="confirmation-content">
+            <!-- Icon based on dialog type -->
+            <div class="flex items-start mb-4">
+              <div class="flex-shrink-0 mr-4">
+                <div [ngClass]="getIconWrapperClass(dialog)" class="w-12 h-12 rounded-full flex items-center justify-center">
+                  <i [ngClass]="getIconClass(dialog)" class="text-2xl"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="theme-text-card text-base leading-relaxed">
+                  {{ dialog.message }}
+                </p>
               </div>
             </div>
-            <div class="flex-1">
-              <p class="theme-text-card text-base leading-relaxed">
-                {{ dialog.message }}
-              </p>
+          </div>
+          <ng-template pTemplate="footer">
+            <div class="flex justify-end gap-3">
+              <p-button
+                [label]="dialog.cancelText || 'Annuler'"
+                (click)="confirmationService.resolveDialog(dialog.id, false)"
+                [styleClass]="'p-button-outlined ' + getCancelButtonClass(dialog)"
+                size="small">
+              </p-button>
+              <p-button
+                [label]="dialog.confirmText || 'Confirmer'"
+                (click)="confirmationService.resolveDialog(dialog.id, true)"
+                [styleClass]="getConfirmButtonClass(dialog)"
+                size="small">
+              </p-button>
             </div>
-          </div>
-        </div>
-        
-        <ng-template pTemplate="footer">
-          <div class="flex justify-end gap-3">
-            <p-button 
-              [label]="dialog.cancelText || 'Annuler'"
-              (click)="confirmationService.resolveDialog(dialog.id, false)"
-              [styleClass]="'p-button-outlined ' + getCancelButtonClass(dialog)"
-              size="small">
-            </p-button>
-            <p-button 
-              [label]="dialog.confirmText || 'Confirmer'"
-              (click)="confirmationService.resolveDialog(dialog.id, true)"
-              [styleClass]="getConfirmButtonClass(dialog)"
-              size="small">
-            </p-button>
-          </div>
-        </ng-template>
-      </p-dialog>
-    </div>
-  `,
+          </ng-template>
+        </p-dialog>
+      </div>
+    }
+    `,
   styles: [`
     :host {
       position: relative;

@@ -28,143 +28,143 @@ interface InvestmentGroup {
         <div class="flex justify-content-between align-items-center p-3">
           <h3 class="m-0 theme-text-card">🎯 Gestion de Portfolio (Glisser-Déposer)</h3>
           <div class="flex gap-2">
-            <p-button 
-              icon="pi pi-refresh" 
-              (click)="refreshPortfolio()" 
+            <p-button
+              icon="pi pi-refresh"
+              (click)="refreshPortfolio()"
               class="p-button-outlined p-button-sm"
               pTooltip="Actualiser le portfolio">
             </p-button>
-            <p-button 
-              icon="pi pi-sort-alpha-down" 
-              (click)="autoSortByType()" 
+            <p-button
+              icon="pi pi-sort-alpha-down"
+              (click)="autoSortByType()"
               class="p-button-outlined p-button-sm"
               pTooltip="Trier automatiquement par type">
             </p-button>
           </div>
         </div>
       </ng-template>
-      
+    
       <ng-template pTemplate="content">
-        <div *ngIf="investmentGroups.length === 0" class="text-center p-6">
-          <div class="text-6xl mb-4">📊</div>
-          <h4 class="theme-text-primary mb-2">Aucun investissement</h4>
-          <p class="theme-text-muted">Achetez des investissements pour commencer à gérer votre portfolio.</p>
-        </div>
-
-        <div *ngIf="investmentGroups.length > 0" class="portfolio-manager">
-          <!-- Portfolio Overview -->
-          <div class="mb-4 p-3 theme-bg-muted rounded-lg">
-            <h4 class="theme-text-primary mb-3 flex items-center">
-              <i class="pi pi-chart-pie mr-2 text-primary-600 dark:text-primary-400"></i>
-              Vue d'ensemble du Portfolio
-            </h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="text-center">
-                <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ getTotalPortfolioValue() | currency:'EUR':'symbol':'1.0-0' }}</div>
-                <div class="text-sm theme-text-muted">Valeur totale</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl font-bold text-success-600 dark:text-success-400">{{ getTotalMonthlyIncome() | currency:'EUR':'symbol':'1.0-0' }}</div>
-                <div class="text-sm theme-text-muted">Revenus mensuels</div>
-              </div>
-              <div class="text-center">
-                <div class="text-2xl font-bold text-accent-600 dark:text-accent-400">{{ getPortfolioROI().toFixed(1) }}%</div>
-                <div class="text-sm theme-text-muted">ROI moyen</div>
-              </div>
-            </div>
+        @if (investmentGroups.length === 0) {
+          <div class="text-center p-6">
+            <div class="text-6xl mb-4">📊</div>
+            <h4 class="theme-text-primary mb-2">Aucun investissement</h4>
+            <p class="theme-text-muted">Achetez des investissements pour commencer à gérer votre portfolio.</p>
           </div>
-
-          <!-- Drag & Drop Groups -->
-          <div class="investment-groups grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            <div 
-              *ngFor="let group of investmentGroups" 
-              class="investment-group"
-              [style.border-left-color]="group.color">
-              
-              <div class="group-header p-3 rounded-t-lg" [style.background-color]="group.color + '20'">
-                <div class="flex justify-between items-center">
-                  <div class="flex items-center gap-2">
-                    <span class="text-lg">{{ group.icon }}</span>
-                    <h4 class="theme-text-primary font-semibold">{{ group.name }}</h4>
-                    <span class="text-xs theme-bg-card px-2 py-1 rounded-full theme-text-muted">
-                      {{ group.investments.length }}
-                    </span>
-                  </div>
-                  <div class="text-right">
-                    <div class="text-sm font-bold theme-text-primary">{{ group.totalValue | currency:'EUR':'symbol':'1.0-0' }}</div>
-                    <div class="text-xs theme-text-muted">+{{ (group.totalIncome / 12) | currency:'EUR':'symbol':'1.0-0' }}/mois</div>
-                  </div>
+        }
+    
+        @if (investmentGroups.length > 0) {
+          <div class="portfolio-manager">
+            <!-- Portfolio Overview -->
+            <div class="mb-4 p-3 theme-bg-muted rounded-lg">
+              <h4 class="theme-text-primary mb-3 flex items-center">
+                <i class="pi pi-chart-pie mr-2 text-primary-600 dark:text-primary-400"></i>
+                Vue d'ensemble du Portfolio
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-primary-600 dark:text-primary-400">{{ getTotalPortfolioValue() | currency:'EUR':'symbol':'1.0-0' }}</div>
+                  <div class="text-sm theme-text-muted">Valeur totale</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-success-600 dark:text-success-400">{{ getTotalMonthlyIncome() | currency:'EUR':'symbol':'1.0-0' }}</div>
+                  <div class="text-sm theme-text-muted">Revenus mensuels</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-accent-600 dark:text-accent-400">{{ getPortfolioROI().toFixed(1) }}%</div>
+                  <div class="text-sm theme-text-muted">ROI moyen</div>
                 </div>
               </div>
-
-              <div 
-                class="investment-drop-zone min-h-32 p-3 theme-bg-card rounded-b-lg border-2 border-dashed transition-colors duration-200"
-                [attr.data-group-id]="group.id"
-                (dragover)="onDragOver($event)"
-                (drop)="onDrop($event, group.id)"
-                [ngClass]="{'drag-over': isDragOver}">
-                
-                <div 
-                  *ngFor="let investment of group.investments; trackBy: trackByInvestmentName"
-                  class="investment-item mb-2 p-3 theme-bg-muted rounded-lg theme-shadow-sm cursor-move hover:theme-shadow-md transition-all duration-200"
-                  draggable="true"
-                  [attr.data-investment]="investment.name"
-                  [attr.data-group]="group.id"
-                  (dragstart)="onDragStart($event, investment, group.id)"
-                  (dragend)="onDragEnd($event)">
-                  
-                  <div class="flex justify-between items-start">
-                    <div class="flex-1 min-w-0">
-                      <h5 class="theme-text-primary font-semibold text-sm truncate mb-1">{{ investment.name }}</h5>
-                      <div class="flex items-center justify-between text-xs">
-                        <span class="theme-text-muted">{{ investment.amount | currency:'EUR':'symbol':'1.0-0' }}</span>
-                        <span class="text-success-600 dark:text-success-400 font-medium">+{{ (investment.income / 12) | currency:'EUR':'symbol':'1.0-0' }}/mois</span>
-                      </div>
-                      <div class="mt-1">
-                        <span class="text-xs font-medium" [ngClass]="getROIClass(investment)">
-                          ROI: {{ getInvestmentROI(investment).toFixed(1) }}%
+            </div>
+            <!-- Drag & Drop Groups -->
+            <div class="investment-groups grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              @for (group of investmentGroups; track group) {
+                <div
+                  class="investment-group"
+                  [style.border-left-color]="group.color">
+                  <div class="group-header p-3 rounded-t-lg" [style.background-color]="group.color + '20'">
+                    <div class="flex justify-between items-center">
+                      <div class="flex items-center gap-2">
+                        <span class="text-lg">{{ group.icon }}</span>
+                        <h4 class="theme-text-primary font-semibold">{{ group.name }}</h4>
+                        <span class="text-xs theme-bg-card px-2 py-1 rounded-full theme-text-muted">
+                          {{ group.investments.length }}
                         </span>
                       </div>
-                    </div>
-                    
-                    <div class="flex-shrink-0 ml-2">
-                      <button 
-                        (click)="sellInvestment(investment)"
-                        class="p-1 rounded hover:bg-error-100 dark:hover:bg-error-900/20 text-error-600 dark:text-error-400 transition-colors"
-                        [pTooltip]="'Vendre ' + investment.name">
-                        <i class="pi pi-times text-xs"></i>
-                      </button>
+                      <div class="text-right">
+                        <div class="text-sm font-bold theme-text-primary">{{ group.totalValue | currency:'EUR':'symbol':'1.0-0' }}</div>
+                        <div class="text-xs theme-text-muted">+{{ (group.totalIncome / 12) | currency:'EUR':'symbol':'1.0-0' }}/mois</div>
+                      </div>
                     </div>
                   </div>
+                  <div
+                    class="investment-drop-zone min-h-32 p-3 theme-bg-card rounded-b-lg border-2 border-dashed transition-colors duration-200"
+                    [attr.data-group-id]="group.id"
+                    (dragover)="onDragOver($event)"
+                    (drop)="onDrop($event, group.id)"
+                    [ngClass]="{'drag-over': isDragOver}">
+                    @for (investment of group.investments; track trackByInvestmentName($index, investment)) {
+                      <div
+                        class="investment-item mb-2 p-3 theme-bg-muted rounded-lg theme-shadow-sm cursor-move hover:theme-shadow-md transition-all duration-200"
+                        draggable="true"
+                        [attr.data-investment]="investment.name"
+                        [attr.data-group]="group.id"
+                        (dragstart)="onDragStart($event, investment, group.id)"
+                        (dragend)="onDragEnd($event)">
+                        <div class="flex justify-between items-start">
+                          <div class="flex-1 min-w-0">
+                            <h5 class="theme-text-primary font-semibold text-sm truncate mb-1">{{ investment.name }}</h5>
+                            <div class="flex items-center justify-between text-xs">
+                              <span class="theme-text-muted">{{ investment.amount | currency:'EUR':'symbol':'1.0-0' }}</span>
+                              <span class="text-success-600 dark:text-success-400 font-medium">+{{ (investment.income / 12) | currency:'EUR':'symbol':'1.0-0' }}/mois</span>
+                            </div>
+                            <div class="mt-1">
+                              <span class="text-xs font-medium" [ngClass]="getROIClass(investment)">
+                                ROI: {{ getInvestmentROI(investment).toFixed(1) }}%
+                              </span>
+                            </div>
+                          </div>
+                          <div class="flex-shrink-0 ml-2">
+                            <button
+                              (click)="sellInvestment(investment)"
+                              class="p-1 rounded hover:bg-error-100 dark:hover:bg-error-900/20 text-error-600 dark:text-error-400 transition-colors"
+                              [pTooltip]="'Vendre ' + investment.name">
+                              <i class="pi pi-times text-xs"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                    <!-- Empty State -->
+                    @if (group.investments.length === 0) {
+                      <div
+                        class="text-center py-6 theme-text-muted">
+                        <i class="pi pi-inbox text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm">Glissez des investissements ici</p>
+                      </div>
+                    }
+                  </div>
                 </div>
-
-                <!-- Empty State -->
-                <div *ngIf="group.investments.length === 0" 
-                     class="text-center py-6 theme-text-muted">
-                  <i class="pi pi-inbox text-2xl mb-2 opacity-50"></i>
-                  <p class="text-sm">Glissez des investissements ici</p>
-                </div>
-              </div>
+              }
+            </div>
+            <!-- Instructions -->
+            <div class="mt-6 p-4 theme-bg-muted rounded-lg">
+              <h4 class="theme-text-primary mb-2 flex items-center">
+                <i class="pi pi-info-circle mr-2 text-primary-600 dark:text-primary-400"></i>
+                Instructions
+              </h4>
+              <ul class="text-sm theme-text-muted space-y-1">
+                <li>• <strong>Glisser-déposer</strong> : Déplacez les investissements entre les catégories</li>
+                <li>• <strong>Réorganiser</strong> : Changez l'ordre au sein d'une même catégorie</li>
+                <li>• <strong>Vendre</strong> : Cliquez sur ✕ pour vendre un investissement</li>
+                <li>• <strong>Tri automatique</strong> : Utilisez le bouton de tri pour organiser par type</li>
+              </ul>
             </div>
           </div>
-
-          <!-- Instructions -->
-          <div class="mt-6 p-4 theme-bg-muted rounded-lg">
-            <h4 class="theme-text-primary mb-2 flex items-center">
-              <i class="pi pi-info-circle mr-2 text-primary-600 dark:text-primary-400"></i>
-              Instructions
-            </h4>
-            <ul class="text-sm theme-text-muted space-y-1">
-              <li>• <strong>Glisser-déposer</strong> : Déplacez les investissements entre les catégories</li>
-              <li>• <strong>Réorganiser</strong> : Changez l'ordre au sein d'une même catégorie</li>
-              <li>• <strong>Vendre</strong> : Cliquez sur ✕ pour vendre un investissement</li>
-              <li>• <strong>Tri automatique</strong> : Utilisez le bouton de tri pour organiser par type</li>
-            </ul>
-          </div>
-        </div>
+        }
       </ng-template>
     </p-card>
-  `,
+    `,
   styles: [`
     .portfolio-manager {
       min-height: 400px;

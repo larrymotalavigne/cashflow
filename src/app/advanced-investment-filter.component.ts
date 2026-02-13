@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
@@ -27,17 +27,16 @@ export interface InvestmentFilter {
   selector: 'app-advanced-investment-filter',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    InputTextModule, 
-    DropdownModule, 
-    MultiSelectModule, 
-    SliderModule, 
-    ButtonModule, 
-    CheckboxModule, 
+    FormsModule,
+    InputTextModule,
+    DropdownModule,
+    MultiSelectModule,
+    SliderModule,
+    ButtonModule,
+    CheckboxModule,
     CardModule,
     TooltipModule
-  ],
+],
   template: `
     <p-card class="advanced-filter theme-bg-card theme-shadow-md">
       <ng-template pTemplate="header">
@@ -47,22 +46,22 @@ export interface InvestmentFilter {
             Filtres Avancés
           </h4>
           <div class="flex gap-2">
-            <p-button 
-              icon="pi pi-refresh" 
-              (click)="resetFilters()" 
+            <p-button
+              icon="pi pi-refresh"
+              (click)="resetFilters()"
               class="p-button-outlined p-button-sm"
               pTooltip="Réinitialiser les filtres">
             </p-button>
-            <p-button 
-              [icon]="isExpanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" 
-              (click)="toggleExpanded()" 
+            <p-button
+              [icon]="isExpanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+              (click)="toggleExpanded()"
               class="p-button-text p-button-sm"
               [pTooltip]="isExpanded ? 'Réduire' : 'Développer'">
             </p-button>
           </div>
         </div>
       </ng-template>
-      
+    
       <ng-template pTemplate="content">
         <!-- Quick Search & Basic Filters -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -71,21 +70,21 @@ export interface InvestmentFilter {
             <label class="block text-sm font-medium theme-text-primary mb-2">Recherche</label>
             <span class="p-input-icon-left w-full">
               <i class="pi pi-search"></i>
-              <input 
-                type="text" 
-                pInputText 
-                [(ngModel)]="currentFilter.searchText" 
+              <input
+                type="text"
+                pInputText
+                [(ngModel)]="currentFilter.searchText"
                 (input)="onFilterChange()"
-                placeholder="Nom de l'investissement" 
+                placeholder="Nom de l'investissement"
                 class="w-full">
             </span>
           </div>
-
+    
           <!-- Types -->
           <div>
             <label class="block text-sm font-medium theme-text-primary mb-2">Types d'investissement</label>
-            <p-multiSelect 
-              [options]="typeOptions" 
+            <p-multiSelect
+              [options]="typeOptions"
               [(ngModel)]="currentFilter.types"
               (onChange)="onFilterChange()"
               placeholder="Sélectionner types"
@@ -93,18 +92,18 @@ export interface InvestmentFilter {
               class="w-full">
             </p-multiSelect>
           </div>
-
+    
           <!-- Sort -->
           <div>
             <label class="block text-sm font-medium theme-text-primary mb-2">Trier par</label>
             <div class="flex gap-2">
-              <p-dropdown 
-                [options]="sortOptions" 
-                [(ngModel)]="currentFilter.sortBy" 
+              <p-dropdown
+                [options]="sortOptions"
+                [(ngModel)]="currentFilter.sortBy"
                 (onChange)="onFilterChange()"
                 class="flex-1">
               </p-dropdown>
-              <p-button 
+              <p-button
                 [icon]="currentFilter.sortDirection === 'asc' ? 'pi pi-sort-amount-up' : 'pi pi-sort-amount-down'"
                 (click)="toggleSortDirection()"
                 class="p-button-outlined"
@@ -113,114 +112,112 @@ export interface InvestmentFilter {
             </div>
           </div>
         </div>
-
+    
         <!-- Quick Filters -->
         <div class="flex flex-wrap gap-3 mb-4">
-          <p-button 
-            [label]="'Abordables (' + affordableCount + ')'" 
+          <p-button
+            [label]="'Abordables (' + affordableCount + ')'"
             icon="pi pi-money-bill"
             (click)="toggleAffordableFilter()"
             [styleClass]="currentFilter.showAffordableOnly ? 'p-button-success p-button-sm' : 'p-button-outlined p-button-sm'"
             pTooltip="Afficher uniquement les investissements que vous pouvez acheter">
           </p-button>
-          
-          <p-button 
-            [label]="'Haut ROI (' + highROICount + ')'" 
+    
+          <p-button
+            [label]="'Haut ROI (' + highROICount + ')'"
             icon="pi pi-chart-line"
             (click)="toggleHighROIFilter()"
             [styleClass]="currentFilter.showHighROIOnly ? 'p-button-warning p-button-sm' : 'p-button-outlined p-button-sm'"
             pTooltip="Afficher uniquement les investissements avec ROI > 15%">
           </p-button>
-
+    
           <span class="text-sm theme-text-muted flex items-center">
             {{ filteredCount }} / {{ totalCount }} investissements
           </span>
         </div>
-
+    
         <!-- Advanced Filters (Expandable) -->
-        <div *ngIf="isExpanded" class="advanced-filters animate-slide-down">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-            <!-- ROI Range -->
-            <div>
-              <label class="block text-sm font-medium theme-text-primary mb-2">
-                ROI ({{ currentFilter.roiRange[0] }}% - {{ currentFilter.roiRange[1] }}%)
-              </label>
-              <p-slider 
-                [(ngModel)]="currentFilter.roiRange" 
-                (onSlideEnd)="onFilterChange()"
-                [range]="true" 
-                [min]="0" 
-                [max]="50"
-                [step]="1">
-              </p-slider>
+        @if (isExpanded) {
+          <div class="advanced-filters animate-slide-down">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- ROI Range -->
+              <div>
+                <label class="block text-sm font-medium theme-text-primary mb-2">
+                  ROI ({{ currentFilter.roiRange[0] }}% - {{ currentFilter.roiRange[1] }}%)
+                </label>
+                <p-slider
+                  [(ngModel)]="currentFilter.roiRange"
+                  (onSlideEnd)="onFilterChange()"
+                  [range]="true"
+                  [min]="0"
+                  [max]="50"
+                  [step]="1">
+                </p-slider>
+              </div>
+              <!-- Price Range -->
+              <div>
+                <label class="block text-sm font-medium theme-text-primary mb-2">
+                  Prix ({{ formatCurrency(currentFilter.priceRange[0]) }} - {{ formatCurrency(currentFilter.priceRange[1]) }})
+                </label>
+                <p-slider
+                  [(ngModel)]="currentFilter.priceRange"
+                  (onSlideEnd)="onFilterChange()"
+                  [range]="true"
+                  [min]="0"
+                  [max]="maxPrice"
+                  [step]="1000">
+                </p-slider>
+              </div>
+              <!-- Income Range -->
+              <div>
+                <label class="block text-sm font-medium theme-text-primary mb-2">
+                  Revenu mensuel ({{ formatCurrency(currentFilter.incomeRange[0]) }} - {{ formatCurrency(currentFilter.incomeRange[1]) }})
+                </label>
+                <p-slider
+                  [(ngModel)]="currentFilter.incomeRange"
+                  (onSlideEnd)="onFilterChange()"
+                  [range]="true"
+                  [min]="0"
+                  [max]="maxIncome"
+                  [step]="50">
+                </p-slider>
+              </div>
             </div>
-
-            <!-- Price Range -->
-            <div>
-              <label class="block text-sm font-medium theme-text-primary mb-2">
-                Prix ({{ formatCurrency(currentFilter.priceRange[0]) }} - {{ formatCurrency(currentFilter.priceRange[1]) }})
-              </label>
-              <p-slider 
-                [(ngModel)]="currentFilter.priceRange" 
-                (onSlideEnd)="onFilterChange()"
-                [range]="true" 
-                [min]="0" 
-                [max]="maxPrice"
-                [step]="1000">
-              </p-slider>
-            </div>
-
-            <!-- Income Range -->
-            <div>
-              <label class="block text-sm font-medium theme-text-primary mb-2">
-                Revenu mensuel ({{ formatCurrency(currentFilter.incomeRange[0]) }} - {{ formatCurrency(currentFilter.incomeRange[1]) }})
-              </label>
-              <p-slider 
-                [(ngModel)]="currentFilter.incomeRange" 
-                (onSlideEnd)="onFilterChange()"
-                [range]="true" 
-                [min]="0" 
-                [max]="maxIncome"
-                [step]="50">
-              </p-slider>
-            </div>
-          </div>
-
-          <!-- Save/Load Filter Presets -->
-          <div class="mt-4 pt-4 border-t theme-border">
-            <h5 class="theme-text-primary mb-2">Préréglages de filtres</h5>
-            <div class="flex flex-wrap gap-2">
-              <p-button 
-                label="Débutant" 
-                (click)="loadPreset('beginner')"
-                class="p-button-outlined p-button-sm"
-                pTooltip="Investissements sûrs et abordables">
-              </p-button>
-              <p-button 
-                label="Intermédiaire" 
-                (click)="loadPreset('intermediate')"
-                class="p-button-outlined p-button-sm"
-                pTooltip="Équilibre risque/rendement">
-              </p-button>
-              <p-button 
-                label="Aggressif" 
-                (click)="loadPreset('aggressive')"
-                class="p-button-outlined p-button-sm"
-                pTooltip="Hauts rendements, plus de risque">
-              </p-button>
-              <p-button 
-                label="Immobilier" 
-                (click)="loadPreset('property')"
-                class="p-button-outlined p-button-sm"
-                pTooltip="Focus sur l'immobilier">
-              </p-button>
+            <!-- Save/Load Filter Presets -->
+            <div class="mt-4 pt-4 border-t theme-border">
+              <h5 class="theme-text-primary mb-2">Préréglages de filtres</h5>
+              <div class="flex flex-wrap gap-2">
+                <p-button
+                  label="Débutant"
+                  (click)="loadPreset('beginner')"
+                  class="p-button-outlined p-button-sm"
+                  pTooltip="Investissements sûrs et abordables">
+                </p-button>
+                <p-button
+                  label="Intermédiaire"
+                  (click)="loadPreset('intermediate')"
+                  class="p-button-outlined p-button-sm"
+                  pTooltip="Équilibre risque/rendement">
+                </p-button>
+                <p-button
+                  label="Aggressif"
+                  (click)="loadPreset('aggressive')"
+                  class="p-button-outlined p-button-sm"
+                  pTooltip="Hauts rendements, plus de risque">
+                </p-button>
+                <p-button
+                  label="Immobilier"
+                  (click)="loadPreset('property')"
+                  class="p-button-outlined p-button-sm"
+                  pTooltip="Focus sur l'immobilier">
+                </p-button>
+              </div>
             </div>
           </div>
-        </div>
+        }
       </ng-template>
     </p-card>
-  `,
+    `,
   styles: [`
     .advanced-filter {
       margin-bottom: 1rem;

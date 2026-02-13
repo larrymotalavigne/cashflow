@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ButtonModule } from 'primeng/button';
 import { Investment } from './data';
 import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.component';
@@ -7,7 +7,7 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
 @Component({
   selector: 'app-investment-carousel',
   standalone: true,
-  imports: [CommonModule, ButtonModule, EnhancedInvestmentCardComponent],
+  imports: [ButtonModule, EnhancedInvestmentCardComponent],
   template: `
     <div class="investment-carousel-container relative">
       <!-- Mobile Carousel (visible on small screens) -->
@@ -15,7 +15,7 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
         <div class="relative">
           <!-- Carousel wrapper -->
           <div class="overflow-hidden rounded-lg" #carouselWrapper>
-            <div 
+            <div
               class="flex transition-transform duration-300 ease-in-out"
               [style.transform]="'translateX(' + (-currentIndex * 100) + '%)'"
               #carouselTrack
@@ -26,84 +26,93 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
               (mousemove)="onMouseMove($event)"
               (mouseup)="onMouseEnd($event)"
               (mouseleave)="onMouseEnd($event)"
-            >
-              <div 
-                *ngFor="let investment of investments; let i = index"
-                class="w-full flex-shrink-0 px-2"
               >
-                <app-enhanced-investment-card
-                  [investment]="investment"
-                  [comparisonMode]="comparisonMode"
-                  [isSelected]="isSelected(investment)"
-                  (buy)="onBuy($event)"
-                  (buyWithLoan)="onBuyWithLoan($event)"
-                  (reject)="onReject($event)"
-                  (compare)="onCompare($event)"
-                  (selectionChange)="onSelectionChange($event)">
-                </app-enhanced-investment-card>
-              </div>
+              @for (investment of investments; track investment; let i = $index) {
+                <div
+                  class="w-full flex-shrink-0 px-2"
+                  >
+                  <app-enhanced-investment-card
+                    [investment]="investment"
+                    [comparisonMode]="comparisonMode"
+                    [isSelected]="isSelected(investment)"
+                    (buy)="onBuy($event)"
+                    (buyWithLoan)="onBuyWithLoan($event)"
+                    (reject)="onReject($event)"
+                    (compare)="onCompare($event)"
+                    (selectionChange)="onSelectionChange($event)">
+                  </app-enhanced-investment-card>
+                </div>
+              }
             </div>
           </div>
-
+    
           <!-- Navigation arrows -->
-          <div *ngIf="investments.length > 1" class="absolute inset-y-0 left-0 flex items-center">
-            <p-button
-              icon="pi pi-chevron-left"
-              (click)="previousCard()"
-              [disabled]="currentIndex === 0"
-              styleClass="p-button-rounded p-button-text p-button-sm navigation-button left-nav"
-              [style.opacity]="currentIndex === 0 ? '0.5' : '1'">
-            </p-button>
-          </div>
-          
-          <div *ngIf="investments.length > 1" class="absolute inset-y-0 right-0 flex items-center">
-            <p-button
-              icon="pi pi-chevron-right"
-              (click)="nextCard()"
-              [disabled]="currentIndex === investments.length - 1"
-              styleClass="p-button-rounded p-button-text p-button-sm navigation-button right-nav"
-              [style.opacity]="currentIndex === investments.length - 1 ? '0.5' : '1'">
-            </p-button>
-          </div>
-
+          @if (investments.length > 1) {
+            <div class="absolute inset-y-0 left-0 flex items-center">
+              <p-button
+                icon="pi pi-chevron-left"
+                (click)="previousCard()"
+                [disabled]="currentIndex === 0"
+                styleClass="p-button-rounded p-button-text p-button-sm navigation-button left-nav"
+                [style.opacity]="currentIndex === 0 ? '0.5' : '1'">
+              </p-button>
+            </div>
+          }
+    
+          @if (investments.length > 1) {
+            <div class="absolute inset-y-0 right-0 flex items-center">
+              <p-button
+                icon="pi pi-chevron-right"
+                (click)="nextCard()"
+                [disabled]="currentIndex === investments.length - 1"
+                styleClass="p-button-rounded p-button-text p-button-sm navigation-button right-nav"
+                [style.opacity]="currentIndex === investments.length - 1 ? '0.5' : '1'">
+              </p-button>
+            </div>
+          }
+    
           <!-- Indicators -->
-          <div *ngIf="investments.length > 1" class="flex justify-center mt-4 space-x-2">
-            <button
-              *ngFor="let investment of investments; let i = index"
-              (click)="goToCard(i)"
-              class="w-2 h-2 rounded-full transition-all duration-200"
-              [class.bg-primary-500]="i === currentIndex"
-              [class.bg-gray-300]="i !== currentIndex"
-              [class.dark:bg-primary-400]="i === currentIndex"
-              [class.dark:bg-gray-600]="i !== currentIndex">
-            </button>
-          </div>
-
+          @if (investments.length > 1) {
+            <div class="flex justify-center mt-4 space-x-2">
+              @for (investment of investments; track investment; let i = $index) {
+                <button
+                  (click)="goToCard(i)"
+                  class="w-2 h-2 rounded-full transition-all duration-200"
+                  [class.bg-primary-500]="i === currentIndex"
+                  [class.bg-gray-300]="i !== currentIndex"
+                  [class.dark:bg-primary-400]="i === currentIndex"
+                  [class.dark:bg-gray-600]="i !== currentIndex">
+                </button>
+              }
+            </div>
+          }
+    
           <!-- Card counter -->
           <div class="text-center mt-2 text-sm theme-text-muted">
             {{ currentIndex + 1 }} / {{ investments.length }}
           </div>
         </div>
       </div>
-
+    
       <!-- Desktop Grid (visible on medium and larger screens) -->
       <div class="hidden md:block">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <app-enhanced-investment-card
-            *ngFor="let investment of investments"
-            [investment]="investment"
-            [comparisonMode]="comparisonMode"
-            [isSelected]="isSelected(investment)"
-            (buy)="onBuy($event)"
-            (buyWithLoan)="onBuyWithLoan($event)"
-            (reject)="onReject($event)"
-            (compare)="onCompare($event)"
-            (selectionChange)="onSelectionChange($event)">
-          </app-enhanced-investment-card>
+          @for (investment of investments; track investment) {
+            <app-enhanced-investment-card
+              [investment]="investment"
+              [comparisonMode]="comparisonMode"
+              [isSelected]="isSelected(investment)"
+              (buy)="onBuy($event)"
+              (buyWithLoan)="onBuyWithLoan($event)"
+              (reject)="onReject($event)"
+              (compare)="onCompare($event)"
+              (selectionChange)="onSelectionChange($event)">
+            </app-enhanced-investment-card>
+          }
         </div>
       </div>
     </div>
-  `,
+    `,
   styles: [`
     .investment-carousel-container {
       user-select: none;

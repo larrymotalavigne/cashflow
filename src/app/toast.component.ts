@@ -21,50 +21,50 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   ],
   template: `
     <div class="fixed top-4 right-4 z-50 space-y-3 max-w-sm w-full">
-      <div 
-        *ngFor="let toast of toastService.toasts$()" 
-        [@toastAnimation]
-        [ngClass]="getToastClasses(toast)"
-        class="theme-shadow-lg rounded-lg p-4 border-l-4 backdrop-blur-sm relative overflow-hidden">
-        
-        <!-- Progress bar for timed toasts -->
-        <div 
-          *ngIf="!toast.persistent && toast.duration"
-          class="absolute top-0 left-0 h-1 bg-current opacity-30 animate-shrink"
-          [style.animation-duration]="toast.duration + 'ms'">
+      @for (toast of toastService.toasts$(); track toast) {
+        <div
+          [@toastAnimation]
+          [ngClass]="getToastClasses(toast)"
+          class="theme-shadow-lg rounded-lg p-4 border-l-4 backdrop-blur-sm relative overflow-hidden">
+          <!-- Progress bar for timed toasts -->
+          @if (!toast.persistent && toast.duration) {
+            <div
+              class="absolute top-0 left-0 h-1 bg-current opacity-30 animate-shrink"
+              [style.animation-duration]="toast.duration + 'ms'">
+            </div>
+          }
+          <div class="flex items-start">
+            <!-- Icon -->
+            <div class="flex-shrink-0">
+              <i [ngClass]="getIconClass(toast)" class="text-lg"></i>
+            </div>
+            <!-- Content -->
+            <div class="ml-3 flex-1">
+              <p class="text-sm font-medium" [ngClass]="getTitleClass(toast)">
+                {{ toast.title }}
+              </p>
+              @if (toast.message) {
+                <p class="mt-1 text-sm" [ngClass]="getMessageClass(toast)">
+                  {{ toast.message }}
+                </p>
+              }
+            </div>
+            <!-- Close button -->
+            <div class="ml-4 flex-shrink-0">
+              <button
+                type="button"
+                (click)="toastService.remove(toast.id)"
+                class="rounded-md inline-flex focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-75 transition-opacity"
+                [ngClass]="getCloseButtonClass(toast)">
+                <span class="sr-only">Fermer</span>
+                <i class="pi pi-times text-sm"></i>
+              </button>
+            </div>
+          </div>
         </div>
-        
-        <div class="flex items-start">
-          <!-- Icon -->
-          <div class="flex-shrink-0">
-            <i [ngClass]="getIconClass(toast)" class="text-lg"></i>
-          </div>
-          
-          <!-- Content -->
-          <div class="ml-3 flex-1">
-            <p class="text-sm font-medium" [ngClass]="getTitleClass(toast)">
-              {{ toast.title }}
-            </p>
-            <p *ngIf="toast.message" class="mt-1 text-sm" [ngClass]="getMessageClass(toast)">
-              {{ toast.message }}
-            </p>
-          </div>
-          
-          <!-- Close button -->
-          <div class="ml-4 flex-shrink-0">
-            <button
-              type="button"
-              (click)="toastService.remove(toast.id)"
-              class="rounded-md inline-flex focus:outline-none focus:ring-2 focus:ring-offset-2 hover:opacity-75 transition-opacity"
-              [ngClass]="getCloseButtonClass(toast)">
-              <span class="sr-only">Fermer</span>
-              <i class="pi pi-times text-sm"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+      }
     </div>
-  `,
+    `,
   styles: [`
     @keyframes shrink {
       from {
