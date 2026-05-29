@@ -1,4 +1,4 @@
-import { Injectable, ElementRef, signal } from '@angular/core';
+import { Injectable, ElementRef, signal } from "@angular/core";
 
 export interface FocusableElement {
   id: string;
@@ -17,7 +17,7 @@ export interface KeyboardShortcut {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class KeyboardNavigationService {
   private focusableElements = signal<FocusableElement[]>([]);
@@ -36,7 +36,7 @@ export class KeyboardNavigationService {
   }
 
   private setupGlobalKeyboardListeners(): void {
-    document.addEventListener('keydown', (event) => {
+    document.addEventListener("keydown", (event) => {
       if (!this.isEnabled()) return;
 
       // Handle keyboard shortcuts
@@ -49,8 +49,8 @@ export class KeyboardNavigationService {
     });
 
     // Handle focus trap for modals
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Tab') {
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Tab") {
         this.handleTabNavigation(event);
       }
     });
@@ -58,7 +58,7 @@ export class KeyboardNavigationService {
 
   private handleShortcuts(event: KeyboardEvent): boolean {
     const shortcuts = this.shortcuts();
-    
+
     for (const shortcut of shortcuts) {
       const ctrlMatch = !shortcut.ctrlKey || event.ctrlKey;
       const altMatch = !shortcut.altKey || event.altKey;
@@ -80,25 +80,25 @@ export class KeyboardNavigationService {
     if (elements.length === 0) return;
 
     switch (event.key) {
-      case 'ArrowDown':
-      case 'ArrowRight':
+      case "ArrowDown":
+      case "ArrowRight":
         event.preventDefault();
         this.focusNext();
         break;
-      case 'ArrowUp':
-      case 'ArrowLeft':
+      case "ArrowUp":
+      case "ArrowLeft":
         event.preventDefault();
         this.focusPrevious();
         break;
-      case 'Home':
+      case "Home":
         event.preventDefault();
         this.focusFirst();
         break;
-      case 'End':
+      case "End":
         event.preventDefault();
         this.focusLast();
         break;
-      case 'Escape':
+      case "Escape":
         event.preventDefault();
         this.clearFocus();
         break;
@@ -106,13 +106,15 @@ export class KeyboardNavigationService {
   }
 
   private handleTabNavigation(event: KeyboardEvent): void {
-    const modalElements = document.querySelectorAll('[role="dialog"]:not([hidden])');
+    const modalElements = document.querySelectorAll(
+      '[role="dialog"]:not([hidden])',
+    );
     if (modalElements.length === 0) return;
 
     // Find the topmost modal
     const modal = modalElements[modalElements.length - 1] as HTMLElement;
     const focusableElements = this.getFocusableElementsInContainer(modal);
-    
+
     if (focusableElements.length === 0) return;
 
     const firstElement = focusableElements[0];
@@ -133,7 +135,9 @@ export class KeyboardNavigationService {
     }
   }
 
-  private getFocusableElementsInContainer(container: HTMLElement): HTMLElement[] {
+  private getFocusableElementsInContainer(
+    container: HTMLElement,
+  ): HTMLElement[] {
     const focusableSelectors = [
       'button:not([disabled]):not([tabindex="-1"])',
       'input:not([disabled]):not([tabindex="-1"])',
@@ -141,42 +145,61 @@ export class KeyboardNavigationService {
       'textarea:not([disabled]):not([tabindex="-1"])',
       'a[href]:not([tabindex="-1"])',
       '[tabindex]:not([tabindex="-1"])',
-      '[contenteditable]:not([tabindex="-1"])'
+      '[contenteditable]:not([tabindex="-1"])',
     ];
 
-    return Array.from(container.querySelectorAll(focusableSelectors.join(', '))) as HTMLElement[];
+    return Array.from(
+      container.querySelectorAll(focusableSelectors.join(", ")),
+    ) as HTMLElement[];
   }
 
-  registerFocusableElement(element: HTMLElement, id: string, priority: number = 0, group?: string): void {
+  registerFocusableElement(
+    element: HTMLElement,
+    id: string,
+    priority: number = 0,
+    group?: string,
+  ): void {
     const focusableElement: FocusableElement = {
       id,
       element,
       priority,
-      group
+      group,
     };
 
-    this.focusableElements.update(elements => {
-      const filtered = elements.filter(el => el.id !== id);
-      return [...filtered, focusableElement].sort((a, b) => b.priority - a.priority);
+    this.focusableElements.update((elements) => {
+      const filtered = elements.filter((el) => el.id !== id);
+      return [...filtered, focusableElement].sort(
+        (a, b) => b.priority - a.priority,
+      );
     });
   }
 
   unregisterFocusableElement(id: string): void {
-    this.focusableElements.update(elements => elements.filter(el => el.id !== id));
+    this.focusableElements.update((elements) =>
+      elements.filter((el) => el.id !== id),
+    );
   }
 
   registerShortcut(shortcut: KeyboardShortcut): void {
-    this.shortcuts.update(shortcuts => [...shortcuts, shortcut]);
+    this.shortcuts.update((shortcuts) => [...shortcuts, shortcut]);
   }
 
-  unregisterShortcut(key: string, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean): void {
-    this.shortcuts.update(shortcuts => 
-      shortcuts.filter(s => !(
-        s.key === key &&
-        s.ctrlKey === ctrlKey &&
-        s.altKey === altKey &&
-        s.shiftKey === shiftKey
-      ))
+  unregisterShortcut(
+    key: string,
+    ctrlKey?: boolean,
+    altKey?: boolean,
+    shiftKey?: boolean,
+  ): void {
+    this.shortcuts.update((shortcuts) =>
+      shortcuts.filter(
+        (s) =>
+          !(
+            s.key === key &&
+            s.ctrlKey === ctrlKey &&
+            s.altKey === altKey &&
+            s.shiftKey === shiftKey
+          ),
+      ),
     );
   }
 
@@ -185,8 +208,9 @@ export class KeyboardNavigationService {
     if (elements.length === 0) return;
 
     const currentIndex = this.currentFocusIndex();
-    const nextIndex = currentIndex >= elements.length - 1 ? 0 : currentIndex + 1;
-    
+    const nextIndex =
+      currentIndex >= elements.length - 1 ? 0 : currentIndex + 1;
+
     this.focusElementAtIndex(nextIndex);
   }
 
@@ -195,8 +219,9 @@ export class KeyboardNavigationService {
     if (elements.length === 0) return;
 
     const currentIndex = this.currentFocusIndex();
-    const prevIndex = currentIndex <= 0 ? elements.length - 1 : currentIndex - 1;
-    
+    const prevIndex =
+      currentIndex <= 0 ? elements.length - 1 : currentIndex - 1;
+
     this.focusElementAtIndex(prevIndex);
   }
 
@@ -213,7 +238,7 @@ export class KeyboardNavigationService {
 
   focusElement(id: string): void {
     const elements = this.focusableElements();
-    const index = elements.findIndex(el => el.id === id);
+    const index = elements.findIndex((el) => el.id === id);
     if (index !== -1) {
       this.focusElementAtIndex(index);
     }
@@ -244,14 +269,14 @@ export class KeyboardNavigationService {
   }
 
   getShortcutHelp(): string[] {
-    return this.shortcuts().map(shortcut => {
+    return this.shortcuts().map((shortcut) => {
       const keys = [];
-      if (shortcut.ctrlKey) keys.push('Ctrl');
-      if (shortcut.altKey) keys.push('Alt');
-      if (shortcut.shiftKey) keys.push('Shift');
+      if (shortcut.ctrlKey) keys.push("Ctrl");
+      if (shortcut.altKey) keys.push("Alt");
+      if (shortcut.shiftKey) keys.push("Shift");
       keys.push(shortcut.key.toUpperCase());
-      
-      return `${keys.join('+')} - ${shortcut.description}`;
+
+      return `${keys.join("+")} - ${shortcut.description}`;
     });
   }
 }

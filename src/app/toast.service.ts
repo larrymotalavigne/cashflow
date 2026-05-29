@@ -1,8 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from "@angular/core";
 
 export interface Toast {
   id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
+  type: "success" | "error" | "warning" | "info";
   title: string;
   message?: string;
   duration?: number;
@@ -10,7 +10,7 @@ export interface Toast {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ToastService {
   private toasts = signal<Toast[]>([]);
@@ -19,15 +19,15 @@ export class ToastService {
   // Read-only signal for components to subscribe to
   readonly toasts$ = this.toasts.asReadonly();
 
-  show(toast: Omit<Toast, 'id'>): string {
+  show(toast: Omit<Toast, "id">): string {
     const id = `toast-${this.nextId++}`;
     const newToast: Toast = {
       id,
       duration: 5000, // Default 5 seconds
-      ...toast
+      ...toast,
     };
 
-    this.toasts.update(toasts => [...toasts, newToast]);
+    this.toasts.update((toasts) => [...toasts, newToast]);
 
     // Auto-dismiss if not persistent
     if (!newToast.persistent && newToast.duration) {
@@ -41,42 +41,42 @@ export class ToastService {
 
   success(title: string, message?: string, options?: Partial<Toast>): string {
     return this.show({
-      type: 'success',
+      type: "success",
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
   error(title: string, message?: string, options?: Partial<Toast>): string {
     return this.show({
-      type: 'error',
+      type: "error",
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
   warning(title: string, message?: string, options?: Partial<Toast>): string {
     return this.show({
-      type: 'warning',
+      type: "warning",
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
   info(title: string, message?: string, options?: Partial<Toast>): string {
     return this.show({
-      type: 'info',
+      type: "info",
       title,
       message,
-      ...options
+      ...options,
     });
   }
 
   remove(id: string): void {
-    this.toasts.update(toasts => toasts.filter(toast => toast.id !== id));
+    this.toasts.update((toasts) => toasts.filter((toast) => toast.id !== id));
   }
 
   clear(): void {

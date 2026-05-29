@@ -1,11 +1,20 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from "@angular/core";
 
-import { ButtonModule } from 'primeng/button';
-import { Investment } from './data';
-import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.component';
+import { ButtonModule } from "primeng/button";
+import { Investment } from "./data";
+import { EnhancedInvestmentCardComponent } from "./enhanced-investment-card.component";
 
 @Component({
-  selector: 'app-investment-carousel',
+  selector: "app-investment-carousel",
   standalone: true,
   imports: [ButtonModule, EnhancedInvestmentCardComponent],
   template: `
@@ -17,7 +26,7 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
           <div class="overflow-hidden rounded-lg" #carouselWrapper>
             <div
               class="flex transition-transform duration-300 ease-in-out"
-              [style.transform]="'translateX(' + (-currentIndex * 100) + '%)'"
+              [style.transform]="'translateX(' + -currentIndex * 100 + '%)'"
               #carouselTrack
               (touchstart)="onTouchStart($event)"
               (touchmove)="onTouchMove($event)"
@@ -26,11 +35,13 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
               (mousemove)="onMouseMove($event)"
               (mouseup)="onMouseEnd($event)"
               (mouseleave)="onMouseEnd($event)"
-              >
-              @for (investment of investments; track investment; let i = $index) {
-                <div
-                  class="w-full flex-shrink-0 px-2"
-                  >
+            >
+              @for (
+                investment of investments;
+                track investment;
+                let i = $index
+              ) {
+                <div class="w-full flex-shrink-0 px-2">
                   <app-enhanced-investment-card
                     [investment]="investment"
                     [comparisonMode]="comparisonMode"
@@ -39,13 +50,14 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
                     (buyWithLoan)="onBuyWithLoan($event)"
                     (reject)="onReject($event)"
                     (compare)="onCompare($event)"
-                    (selectionChange)="onSelectionChange($event)">
+                    (selectionChange)="onSelectionChange($event)"
+                  >
                   </app-enhanced-investment-card>
                 </div>
               }
             </div>
           </div>
-    
+
           <!-- Navigation arrows -->
           @if (investments.length > 1) {
             <div class="absolute inset-y-0 left-0 flex items-center">
@@ -54,11 +66,12 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
                 (click)="previousCard()"
                 [disabled]="currentIndex === 0"
                 styleClass="p-button-rounded p-button-text p-button-sm navigation-button left-nav"
-                [style.opacity]="currentIndex === 0 ? '0.5' : '1'">
+                [style.opacity]="currentIndex === 0 ? '0.5' : '1'"
+              >
               </p-button>
             </div>
           }
-    
+
           @if (investments.length > 1) {
             <div class="absolute inset-y-0 right-0 flex items-center">
               <p-button
@@ -66,34 +79,41 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
                 (click)="nextCard()"
                 [disabled]="currentIndex === investments.length - 1"
                 styleClass="p-button-rounded p-button-text p-button-sm navigation-button right-nav"
-                [style.opacity]="currentIndex === investments.length - 1 ? '0.5' : '1'">
+                [style.opacity]="
+                  currentIndex === investments.length - 1 ? '0.5' : '1'
+                "
+              >
               </p-button>
             </div>
           }
-    
+
           <!-- Indicators -->
           @if (investments.length > 1) {
             <div class="flex justify-center mt-4 space-x-2">
-              @for (investment of investments; track investment; let i = $index) {
+              @for (
+                investment of investments;
+                track investment;
+                let i = $index
+              ) {
                 <button
                   (click)="goToCard(i)"
                   class="w-2 h-2 rounded-full transition-all duration-200"
                   [class.bg-primary-500]="i === currentIndex"
                   [class.bg-gray-300]="i !== currentIndex"
                   [class.dark:bg-primary-400]="i === currentIndex"
-                  [class.dark:bg-gray-600]="i !== currentIndex">
-                </button>
+                  [class.dark:bg-gray-600]="i !== currentIndex"
+                ></button>
               }
             </div>
           }
-    
+
           <!-- Card counter -->
           <div class="text-center mt-2 text-sm theme-text-muted">
             {{ currentIndex + 1 }} / {{ investments.length }}
           </div>
         </div>
       </div>
-    
+
       <!-- Desktop Grid (visible on medium and larger screens) -->
       <div class="hidden md:block">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -106,65 +126,68 @@ import { EnhancedInvestmentCardComponent } from './enhanced-investment-card.comp
               (buyWithLoan)="onBuyWithLoan($event)"
               (reject)="onReject($event)"
               (compare)="onCompare($event)"
-              (selectionChange)="onSelectionChange($event)">
+              (selectionChange)="onSelectionChange($event)"
+            >
             </app-enhanced-investment-card>
           }
         </div>
       </div>
     </div>
+  `,
+  styles: [
+    `
+      .investment-carousel-container {
+        user-select: none;
+      }
+
+      .navigation-button {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        min-width: 40px !important;
+        min-height: 40px !important;
+        z-index: 10;
+      }
+
+      .navigation-button:hover:not([disabled]) {
+        background: rgba(255, 255, 255, 1) !important;
+        transform: scale(1.05);
+      }
+
+      .left-nav {
+        margin-left: 8px;
+      }
+
+      .right-nav {
+        margin-right: 8px;
+      }
+
+      .dark .navigation-button {
+        background: rgba(0, 0, 0, 0.8) !important;
+        color: white !important;
+      }
+
+      .dark .navigation-button:hover:not([disabled]) {
+        background: rgba(0, 0, 0, 0.9) !important;
+      }
+
+      /* Touch-friendly indicators */
+      .indicator-dot {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
+      }
+
+      /* Smooth scrolling for touch devices */
+      .carousel-track {
+        touch-action: pan-x;
+        -webkit-overflow-scrolling: touch;
+      }
     `,
-  styles: [`
-    .investment-carousel-container {
-      user-select: none;
-    }
-    
-    .navigation-button {
-      background: rgba(255, 255, 255, 0.9) !important;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      min-width: 40px !important;
-      min-height: 40px !important;
-      z-index: 10;
-    }
-    
-    .navigation-button:hover:not([disabled]) {
-      background: rgba(255, 255, 255, 1) !important;
-      transform: scale(1.05);
-    }
-    
-    .left-nav {
-      margin-left: 8px;
-    }
-    
-    .right-nav {
-      margin-right: 8px;
-    }
-    
-    .dark .navigation-button {
-      background: rgba(0, 0, 0, 0.8) !important;
-      color: white !important;
-    }
-    
-    .dark .navigation-button:hover:not([disabled]) {
-      background: rgba(0, 0, 0, 0.9) !important;
-    }
-
-    /* Touch-friendly indicators */
-    .indicator-dot {
-      min-width: 44px;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      touch-action: manipulation;
-    }
-
-    /* Smooth scrolling for touch devices */
-    .carousel-track {
-      touch-action: pan-x;
-      -webkit-overflow-scrolling: touch;
-    }
-  `]
+  ],
 })
 export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
   @Input() investments: Investment[] = [];
@@ -175,10 +198,13 @@ export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
   @Output() buyWithLoan = new EventEmitter<Investment>();
   @Output() reject = new EventEmitter<Investment>();
   @Output() compare = new EventEmitter<Investment>();
-  @Output() selectionChange = new EventEmitter<{investment: Investment, selected: boolean}>();
+  @Output() selectionChange = new EventEmitter<{
+    investment: Investment;
+    selected: boolean;
+  }>();
 
-  @ViewChild('carouselWrapper', { static: false }) carouselWrapper!: ElementRef;
-  @ViewChild('carouselTrack', { static: false }) carouselTrack!: ElementRef;
+  @ViewChild("carouselWrapper", { static: false }) carouselWrapper!: ElementRef;
+  @ViewChild("carouselTrack", { static: false }) carouselTrack!: ElementRef;
 
   currentIndex = 0;
 
@@ -260,11 +286,11 @@ export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
 
   private moveInteraction(clientX: number, clientY: number) {
     this.currentX = clientX;
-    
+
     if (!this.isDragging) {
       const deltaX = Math.abs(clientX - this.startX);
       const deltaY = Math.abs(clientY - this.startY);
-      
+
       // Only start dragging if horizontal movement is dominant
       if (deltaX > deltaY && deltaX > 10) {
         this.isDragging = true;
@@ -275,20 +301,20 @@ export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
       const deltaX = clientX - this.startX;
       const containerWidth = this.carouselWrapper.nativeElement.clientWidth;
       const dragPercentage = (deltaX / containerWidth) * 100;
-      
+
       // Apply transform with resistance at boundaries
       let newTransform = this.initialTransform + dragPercentage;
-      
+
       // Add resistance at boundaries
       if (newTransform > 0) {
         newTransform = newTransform * 0.3; // Resistance when trying to go before first card
       } else if (newTransform < -(this.investments.length - 1) * 100) {
         const overflow = newTransform + (this.investments.length - 1) * 100;
-        newTransform = -(this.investments.length - 1) * 100 + (overflow * 0.3);
+        newTransform = -(this.investments.length - 1) * 100 + overflow * 0.3;
       }
 
       this.carouselTrack.nativeElement.style.transform = `translateX(${newTransform}%)`;
-      this.carouselTrack.nativeElement.style.transition = 'none';
+      this.carouselTrack.nativeElement.style.transition = "none";
     }
   }
 
@@ -301,16 +327,20 @@ export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
       // Determine if we should snap to next/previous card
       const containerWidth = this.carouselWrapper.nativeElement.clientWidth;
       const threshold = containerWidth * 0.3; // 30% of container width
-      
+
       // Reset transition
-      this.carouselTrack.nativeElement.style.transition = 'transform 0.3s ease-in-out';
+      this.carouselTrack.nativeElement.style.transition =
+        "transform 0.3s ease-in-out";
 
       // Check if swipe distance or velocity is sufficient
       if (Math.abs(deltaX) > threshold || velocity > 0.5) {
         if (deltaX > 0 && this.currentIndex > 0) {
           // Swipe right - go to previous card
           this.previousCard();
-        } else if (deltaX < 0 && this.currentIndex < this.investments.length - 1) {
+        } else if (
+          deltaX < 0 &&
+          this.currentIndex < this.investments.length - 1
+        ) {
           // Swipe left - go to next card
           this.nextCard();
         } else {
@@ -327,16 +357,18 @@ export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
   }
 
   private getCurrentTransform(): number {
-    const matrix = window.getComputedStyle(this.carouselTrack.nativeElement).transform;
-    if (matrix === 'none') return 0;
-    
-    const values = matrix.split('(')[1].split(')')[0].split(',');
+    const matrix = window.getComputedStyle(
+      this.carouselTrack.nativeElement,
+    ).transform;
+    if (matrix === "none") return 0;
+
+    const values = matrix.split("(")[1].split(")")[0].split(",");
     return parseFloat(values[4]) || 0;
   }
 
   // Event handlers for investment card actions
   isSelected(investment: Investment): boolean {
-    return this.selectedInvestments.some(inv => inv.name === investment.name);
+    return this.selectedInvestments.some((inv) => inv.name === investment.name);
   }
 
   onBuy(investment: Investment) {
@@ -355,7 +387,7 @@ export class InvestmentCarouselComponent implements OnInit, AfterViewInit {
     this.compare.emit(investment);
   }
 
-  onSelectionChange(event: {investment: Investment, selected: boolean}) {
+  onSelectionChange(event: { investment: Investment; selected: boolean }) {
     this.selectionChange.emit(event);
   }
 }
