@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { ChartModule } from "primeng/chart";
 import { CardModule } from "primeng/card";
 import { ButtonModule } from "primeng/button";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { CheckboxModule } from "primeng/checkbox";
 import { FormsModule } from "@angular/forms";
 import { GameService } from "./game.service";
@@ -28,7 +28,7 @@ interface InvestmentPerformance {
     ChartModule,
     CardModule,
     ButtonModule,
-    DropdownModule,
+    SelectModule,
     CheckboxModule,
     FormsModule,
   ],
@@ -82,26 +82,26 @@ interface InvestmentPerformance {
                     class="block text-sm font-medium theme-text-primary mb-2"
                     >Type de comparaison</label
                   >
-                  <p-dropdown
+                  <p-select
                     [options]="comparisonTypes"
                     [(ngModel)]="selectedComparisonType"
                     (onChange)="updateChart()"
                     class="w-full"
                   >
-                  </p-dropdown>
+                  </p-select>
                 </div>
                 <div>
                   <label
                     class="block text-sm font-medium theme-text-primary mb-2"
                     >Type de graphique</label
                   >
-                  <p-dropdown
+                  <p-select
                     [options]="chartTypes"
                     [(ngModel)]="selectedChartType"
                     (onChange)="updateChart()"
                     class="w-full"
                   >
-                  </p-dropdown>
+                  </p-select>
                 </div>
               </div>
             </div>

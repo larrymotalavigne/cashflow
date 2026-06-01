@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ChartModule } from "primeng/chart";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { CheckboxModule } from "primeng/checkbox";
@@ -16,7 +16,7 @@ import { Subscription } from "rxjs";
   imports: [
     CommonModule,
     ChartModule,
-    DropdownModule,
+    SelectModule,
     ButtonModule,
     CardModule,
     CheckboxModule,
@@ -48,14 +48,14 @@ import { Subscription } from "rxjs";
               <label class="block text-sm font-medium theme-text-primary mb-2"
                 >Période d'affichage</label
               >
-              <p-dropdown
+              <p-select
                 [options]="timeRangeOptions"
                 [(ngModel)]="selectedTimeRange"
                 (onChange)="updateChartData()"
                 placeholder="Sélectionner période"
                 class="w-full"
               >
-              </p-dropdown>
+              </p-select>
             </div>
 
             <!-- Chart Type Selector -->
@@ -63,14 +63,14 @@ import { Subscription } from "rxjs";
               <label class="block text-sm font-medium theme-text-primary mb-2"
                 >Type de graphique</label
               >
-              <p-dropdown
+              <p-select
                 [options]="chartTypeOptions"
                 [(ngModel)]="selectedChartType"
                 (onChange)="updateChartData()"
                 placeholder="Type de graphique"
                 class="w-full"
               >
-              </p-dropdown>
+              </p-select>
             </div>
 
             <!-- Data Series Toggle -->

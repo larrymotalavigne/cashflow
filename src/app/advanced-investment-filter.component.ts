@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 import { FormsModule } from "@angular/forms";
 import { InputTextModule } from "primeng/inputtext";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { MultiSelectModule } from "primeng/multiselect";
 import { SliderModule } from "primeng/slider";
 import { ButtonModule } from "primeng/button";
@@ -29,7 +29,7 @@ export interface InvestmentFilter {
   imports: [
     FormsModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     MultiSelectModule,
     SliderModule,
     ButtonModule,
@@ -109,13 +109,13 @@ export interface InvestmentFilter {
               >Trier par</label
             >
             <div class="flex gap-2">
-              <p-dropdown
+              <p-select
                 [options]="sortOptions"
                 [(ngModel)]="currentFilter.sortBy"
                 (onChange)="onFilterChange()"
                 class="flex-1"
               >
-              </p-dropdown>
+              </p-select>
               <p-button
                 [icon]="
                   currentFilter.sortDirection === 'asc'

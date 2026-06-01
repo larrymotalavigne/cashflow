@@ -8,7 +8,7 @@ import { TabViewModule } from "primeng/tabview";
 import { TooltipModule } from "primeng/tooltip";
 import { SliderModule } from "primeng/slider";
 import { ChartModule } from "primeng/chart";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { FinancialCounterComponent } from "./loading.component";
 
 interface CalculationResult {
@@ -30,7 +30,7 @@ interface CalculationResult {
     TooltipModule,
     SliderModule,
     ChartModule,
-    DropdownModule,
+    SelectModule,
     FinancialCounterComponent,
   ],
   template: `

@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { ButtonModule } from "primeng/button";
 
 @Component({
   selector: "app-job-selection",
   standalone: true,
-  imports: [FormsModule, DropdownModule, ButtonModule],
+  imports: [FormsModule, SelectModule, ButtonModule],
   template: `
-    <p-dropdown
+    <p-select
       [options]="jobs"
       [(ngModel)]="selectedJob"
       placeholder="Choisissez un métier"
-    ></p-dropdown>
+    ></p-select>
     <p-button label="Démarrer" (click)="startGame()" class="mt-2"></p-button>
   `,
 })

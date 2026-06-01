@@ -1,7 +1,7 @@
 import { Component, computed } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { InputTextModule } from "primeng/inputtext";
 import { InputNumberModule } from "primeng/inputnumber";
 import { ButtonModule } from "primeng/button";
@@ -23,7 +23,7 @@ import { DifficultyLevel } from "./data";
   standalone: true,
   imports: [
     FormsModule,
-    DropdownModule,
+    SelectModule,
     InputTextModule,
     InputNumberModule,
     ButtonModule,

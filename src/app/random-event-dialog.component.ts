@@ -5,7 +5,7 @@ import { ButtonModule } from "primeng/button";
 import { GameConfigService } from "./game-config.service";
 import { GameService } from "./game.service";
 import { Investment } from "./data";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { FormsModule } from "@angular/forms";
 import { InputTextModule } from "primeng/inputtext";
 import { DividerModule } from "primeng/divider";
@@ -19,7 +19,7 @@ import { TranslationService } from "./translation.service";
   imports: [
     DialogModule,
     ButtonModule,
-    DropdownModule,
+    SelectModule,
     FormsModule,
     InputTextModule,
     DividerModule,
